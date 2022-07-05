@@ -41,6 +41,26 @@ def owncastWebhook():
             print("Integrity Error.")
             print(f"User ID {user_id} probably does not exist.")
     
+    elif data["type"] == "CHAT":
+        user_id = data["eventData"]["user"]["id"]
+        if "!points" in data["body"]:
+            try:
+                cursor = db.execute(
+                    "SELECT points FROM points WHERE id = ?",
+                    (user_id),
+                )
+                print("{}'s points: {}".format(user_id, cursor.fetchone()))
+        else: #debug: give points for message
+            try:
+                db.execute(
+                    "UPDATE points SET points = points + 10 WHERE id = ?",
+                    (user_id),
+                )
+                db.commit()
+            except sqlite3.Error as e:
+                print("Error occured:", e.args[0])
+                print("To user:", user_id)
+
     return data
 
 if __name__ == '__main__':
