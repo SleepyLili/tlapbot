@@ -50,7 +50,7 @@ def owncastWebhook():
                     (user_id),
                 )
                 print("{}'s points: {}".format(user_id, cursor.fetchone()))
-        else: #debug: give points for message
+        else: # DEBUG: give points for message
             try:
                 db.execute(
                     "UPDATE points SET points = points + 10 WHERE id = ?",
