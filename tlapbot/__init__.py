@@ -25,9 +25,13 @@ def create_app(test_config=None):
         pass
 
     from . import db
+    from . import owncastWebhooks
+    app.register_blueprint(owncastWebhooks.bp)
     db.init_app(app)
 
     return app
+
+
 
 if __name__ == '__main__':
     create_app()
