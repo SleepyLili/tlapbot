@@ -35,6 +35,12 @@ def addUserToDatabase(user_id, db):
         print("Error occured adding user to db:", e.args[0])
         print("To user:", user_id)
 
+def sendChat(message): # TODO: url to constant?
+    url = 'http://localhost:8080/api/integrations/chat/send'
+    headers = {"Authorization": "Bearer " + OWNCAST_ACCESS_TOKEN}
+    r = requests.post(url, headers=headers, json={"body": message})
+    return r.json()
+
 @bp.route('/owncastWebhook',methods=['POST'])
 def owncastWebhook():
     data = request.json
@@ -60,7 +66,10 @@ def owncastWebhook():
                     "SELECT points FROM points WHERE id = ?",
                     (user_id,)
                 )
-                print("{}'s points: {}".format(display_name, cursor.fetchone()[0]))
+                message = "{}'s points: {}".format(display_name, cursor.fetchone()[0])
+                print(message)
+                sendChat(message)
+                
             except Error as e:
                 print("Error occured reading points:", e.args[0])
                 print("To user:", user_id)
@@ -77,6 +86,3 @@ def owncastWebhook():
                 print("To user:", user_id)
 
     return data
-
-if __name__ == '__main__':
-    app.run(debug=True)
