@@ -36,7 +36,7 @@ def addUserToDatabase(user_id, db):
         print("To user:", user_id)
 
 def sendChat(message): # TODO: url to constant?
-    url = 'http://localhost:8080/api/integrations/chat/send'
+    url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/chat/send'
     headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
     r = requests.post(url, headers=headers, json={"body": message})
     return r.json()
