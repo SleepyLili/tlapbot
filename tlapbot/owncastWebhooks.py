@@ -1,4 +1,4 @@
-from flask import Flask,request,json,g,Blueprint
+from flask import Flask,request,json,g,Blueprint,current_app
 from sqlite3 import Error
 from tlapbot.db import get_db
 import requests
@@ -37,7 +37,7 @@ def addUserToDatabase(user_id, db):
 
 def sendChat(message): # TODO: url to constant?
     url = 'http://localhost:8080/api/integrations/chat/send'
-    headers = {"Authorization": "Bearer " + OWNCAST_ACCESS_TOKEN}
+    headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
     r = requests.post(url, headers=headers, json={"body": message})
     return r.json()
 
