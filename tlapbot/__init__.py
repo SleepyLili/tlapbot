@@ -14,8 +14,8 @@ def create_app(test_config=None):
         pass
 
     from . import db
-    from . import owncastWebhooks
-    app.register_blueprint(owncastWebhooks.bp)
+    from . import owncast_webhooks
+    app.register_blueprint(owncast_webhooks.bp)
     db.init_app(app)
 
     return app

@@ -1,7 +1,7 @@
 from flask import Flask,request,json,Blueprint
 from sqlite3 import Error
 from tlapbot.db import get_db
-from tlapbot.owncastHelpers import user_exists, add_user_to_database, send_chat
+from tlapbot.owncast_helpers import user_exists, add_user_to_database, send_chat
 
 bp = Blueprint('owncast_webhooks', __name__)
 
