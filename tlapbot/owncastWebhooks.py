@@ -1,17 +1,17 @@
 from flask import Flask,request,json,Blueprint
 from sqlite3 import Error
 from tlapbot.db import get_db
-from tlapbot.owncastHelpers import userExists, addUserToDatabase, sendChat
+from tlapbot.owncastHelpers import user_exists, add_user_to_database, send_chat
 
-bp = Blueprint('owncastWebhooks', __name__)
+bp = Blueprint('owncast_webhooks', __name__)
 
 @bp.route('/owncastWebhook',methods=['POST'])
-def owncastWebhook():
+def owncast_webhook():
     data = request.json
     db = get_db()
     if data["type"] == "USER_JOINED":
         user_id = data["eventData"]["user"]["id"]
-        addUserToDatabase(user_id, db)
+        add_user_to_database(user_id, db)
     elif data["type"] == "CHAT":
         display_name = data["eventData"]["user"]["displayName"]
         print("New chat message:")
@@ -19,8 +19,8 @@ def owncastWebhook():
         print(f'{data["eventData"]["body"]}')
         user_id = data["eventData"]["user"]["id"]  
         if "!points" in data["eventData"]["body"]:
-            if not userExists(user_id, db):
-                addUserToDatabase(user_id, db)
+            if not user_exists(user_id, db):
+                add_user_to_database(user_id, db)
             try:
                 cursor = db.execute(
                     "SELECT points FROM points WHERE id = ?",
@@ -28,7 +28,7 @@ def owncastWebhook():
                 )
                 message = "{}'s points: {}".format(display_name, cursor.fetchone()[0])
                 print(message)
-                sendChat(message)
+                send_chat(message)
             except Error as e:
                 print("Error occured reading points:", e.args[0])
                 print("To user:", user_id)

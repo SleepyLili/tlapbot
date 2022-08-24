@@ -2,7 +2,8 @@ from flask import current_app
 import requests
 from sqlite3 import Error
 
-def userExists(user_id, db):
+
+def user_exists(user_id, db):
     try:
         cursor = db.execute(
             "SELECT points FROM points WHERE id = ?",
@@ -16,7 +17,7 @@ def userExists(user_id, db):
         print("To user:", user_id)
 
 # only adds user if they aren't already in.
-def addUserToDatabase(user_id, db):
+def add_user_to_database(user_id, db):
     try:
         cursor = db.execute(
             "SELECT points FROM points WHERE id = ?",
@@ -32,7 +33,7 @@ def addUserToDatabase(user_id, db):
         print("Error occured adding user to db:", e.args[0])
         print("To user:", user_id)
 
-def sendChat(message): # TODO: url to constant?
+def send_chat(message): # TODO: url to constant?
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/chat/send'
     headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
     r = requests.post(url, headers=headers, json={"body": message})
