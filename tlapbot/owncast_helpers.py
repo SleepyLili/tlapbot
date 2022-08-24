@@ -9,7 +9,6 @@ def read_users_points(db, user_id):
             (user_id,)
         )
         return cursor.fetchone()[0]
-        
     except Error as e:
         print("Error occured reading points:", e.args[0])
         print("To user:", user_id)
@@ -23,7 +22,18 @@ def give_points_to_user(db, user_id, points):
         db.commit()
     except Error as e:
         print("Error occured giving DEBUG points:", e.args[0])
-        print("To user:", user_id)
+        print("To user:", user_id, "  amount of points:", points)
+
+def use_points(db, user_id, points):
+    try:
+        db.execute(
+        "UPDATE points SET points = points - ? WHERE id = ?",
+        (points, user_id,)
+        )
+        db.commit()
+    except Error as e:
+        print("Error occured using points:", e.args[0])
+        print("From user:", user_id, "  amount of points:", points)
 
 def give_points_to_chat(db):
     points_given = 10
