@@ -1,7 +1,7 @@
 from flask import Flask,request,json,Blueprint
 from sqlite3 import Error
 from tlapbot.db import get_db
-from tlapbot.owncast_helpers import user_exists, add_user_to_database, send_chat, give_points_to_user, read_users_points
+from tlapbot.owncast_helpers import *
 
 bp = Blueprint('owncast_webhooks', __name__)
 
@@ -26,6 +26,12 @@ def owncast_webhook():
             message = "{}'s points: {}".format(display_name, points)
             print(message)
             send_chat(message)
+        elif "!drink" in data["eventData"]["body"]:
+            points = read_users_points(db, user_id)
+            if points is not None:
+                if points > 60:
+                    use_points(db, user_id, 60)
+                    send_chat("Enjoy your DRINK........... sips")
         else: # DEBUG: give points for message
-            give_points_to_user(db, user_id, 10)
+            give_points_to_chat(db)
     return data
