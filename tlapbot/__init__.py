@@ -25,7 +25,7 @@ def create_app(test_config=None):
             give_points_to_chat(get_db())
 
     points_giver = BackgroundScheduler()
-    points_giver.add_job(proxy_job, 'interval', seconds=10)
+    points_giver.add_job(proxy_job, 'interval', seconds=10) # change to 10 minutes out of testing
     points_giver.start()
 
     return app
