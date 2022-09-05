@@ -32,6 +32,6 @@ def owncast_webhook():
                 if points > 60:
                     use_points(db, user_id, 60)
                     send_chat("Enjoy your DRINK........... sips")
-        else: # DEBUG: give points for message
-            give_points_to_chat(db)
+        # else: # DEBUG: give points for message
+        #     give_points_to_chat(db)
     return data

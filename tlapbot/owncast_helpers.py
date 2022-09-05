@@ -36,12 +36,13 @@ def use_points(db, user_id, points):
         print("From user:", user_id, "  amount of points:", points)
 
 def give_points_to_chat(db):
-    points_given = 10
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/clients'
     headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
     r = requests.post(url, headers=headers)
     for user_object in r.json():
-        give_points_to_user(db, user_object["user"]["id"], points_given)
+        give_points_to_user(db,
+                            user_object["user"]["id"],
+                            current_app.config['POINTS_AMOUNT_GIVEN'])
 
 def user_exists(db, user_id):
     try:
