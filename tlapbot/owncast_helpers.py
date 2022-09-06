@@ -21,7 +21,7 @@ def give_points_to_user(db, user_id, points):
         )
         db.commit()
     except Error as e:
-        print("Error occured giving DEBUG points:", e.args[0])
+        print("Error occured giving points:", e.args[0])
         print("To user:", user_id, "  amount of points:", points)
 
 def use_points(db, user_id, points):
@@ -58,7 +58,7 @@ def user_exists(db, user_id):
         print("To user:", user_id)
 
 """ Adds a new user to the database. Does nothing if user is already in."""
-def add_user_to_database(db, user_id):
+def add_user_to_database(db, user_id, display_name):
     try:
         cursor = db.execute(
             "SELECT points FROM points WHERE id = ?",
@@ -66,13 +66,24 @@ def add_user_to_database(db, user_id):
         )
         if cursor.fetchone() == None:
             cursor.execute(
-                "INSERT INTO points(id, points) VALUES(?, 10)",
-                (user_id,)
+                "INSERT INTO points(id, name, points) VALUES(?, ?, 10)",
+                (user_id, display_name)
             )
         db.commit()
     except Error as e:
         print("Error occured adding user to db:", e.args[0])
-        print("To user:", user_id)
+        print("To user:", user_id, display_name)
+
+def change_display_name(db, user_id, new_name):
+    try:
+        cursor = db.execute(
+                "UPDATE points SET name = ? WHERE id = ?",
+                (user_id, new_name,)
+            )
+        db.commit()
+    except Error as e:
+        print("Error occured changing display name:", e.args[0])
+        print("To user:", user_id, new_name)
 
 def send_chat(message):
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/chat/send'

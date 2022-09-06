@@ -22,6 +22,7 @@ def create_app(test_config=None):
 
     def proxy_job():
         with app.app_context():
+            #TODO: make this not give points when stream is offline lol
             give_points_to_chat(get_db())
 
     points_giver = BackgroundScheduler()
