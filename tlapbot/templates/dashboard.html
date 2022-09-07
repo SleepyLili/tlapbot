@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Redeems Dashboard</title>
+</head>
+<body>
+    <table>
+        <tbody>
+            <td> Number of drinks: </td>
+            <td> {{ number_of_drinks }} </td>
+        </tbody>
+    </table>
+
+    <table>
+        <thead>
+            <tr>
+                <th>time</th>
+                <th>redeem</th>
+                <th>redeemer</th>
+            </tr>
+        </thead>
+        {% for row in queue %}
+        <tbody>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+        </tbody>
+        {% endfor %}
+    </table>
+</body>
+</html>

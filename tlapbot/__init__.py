@@ -17,7 +17,9 @@ def create_app(test_config=None):
 
     from . import db
     from . import owncast_webhooks
+    from . import owncast_redeem_dashboard
     app.register_blueprint(owncast_webhooks.bp)
+    app.register_blueprint(owncast_redeem_dashboard.bp)
     db.init_app(app)
 
     def proxy_job():

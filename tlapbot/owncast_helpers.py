@@ -31,9 +31,11 @@ def use_points(db, user_id, points):
         (points, user_id,)
         )
         db.commit()
+        return True
     except Error as e:
         print("Error occured using points:", e.args[0])
         print("From user:", user_id, "  amount of points:", points)
+        return False
 
 def give_points_to_chat(db):
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/clients'
@@ -90,3 +92,23 @@ def send_chat(message):
     headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
     r = requests.post(url, headers=headers, json={"body": message})
     return r.json()
+
+def add_to_redeem_queue(db, user_id, redeem_name):
+    try:
+        cursor = db.execute(
+                "INSERT INTO redeem_queue(redeem, redeemer_id) VALUES(?, ?)",
+                (redeem_name, user_id)
+            )
+        db.commit()
+    except Error as e:
+        print("Error occured adding to redeem queue:", e.args[0])
+        print("To user:", user_id, " with redeem:", redeem_name)
+
+def whole_redeem_queue(db):
+    try:
+        cursor = db.execute(
+                "SELECT * from redeem_queue"
+            )
+        return cursor.fetchall()
+    except Error as e:
+        print("Error occured printing redeem queue:", e.args[0])
