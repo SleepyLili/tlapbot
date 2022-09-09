@@ -80,7 +80,7 @@ def change_display_name(db, user_id, new_name):
     try:
         cursor = db.execute(
                 "UPDATE points SET name = ? WHERE id = ?",
-                (user_id, new_name,)
+                (new_name, user_id)
             )
         db.commit()
     except Error as e:

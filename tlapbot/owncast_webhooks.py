@@ -18,12 +18,10 @@ def owncast_webhook():
         user_id = data["eventData"]["user"]["id"]
         new_name = data["eventData"]["newName"]
         old_names = data["eventData"]["user"]["previousNames"]
-        print("Changing name:")
-        print(f'from {old_names} to {new_name}')
         change_display_name(db, user_id, new_name)
     elif data["type"] == "CHAT":
-        user_id = data["eventData"]["user"]["id"]
         if data["eventData"]["visible"]:
+            user_id = data["eventData"]["user"]["id"]
             display_name = data["eventData"]["user"]["displayName"]
             print("New chat message:")
             print(f'from {display_name}:')
@@ -50,6 +48,10 @@ def owncast_webhook():
                         send_chat("Pitíčko not redeemed because of an error.")
                 else:
                     send_chat("Can't redeem pitíčko, you don't have enough points.")
+            elif "!name_update" in data["eventData"]["body"]:
+                # Forces name update in case bot didn't catch the NAME_CHANGE
+                # event. Theoretically only needed when bot was off.
+                change_display_name(db, user_id, display_name)
             elif "!clear" in data["eventData"]["body"]:
                 clear_redeem_queue(db)
             elif "!queue" in data["eventData"]["body"]:
