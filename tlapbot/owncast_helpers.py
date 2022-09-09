@@ -104,6 +104,27 @@ def add_to_redeem_queue(db, user_id, redeem_name):
         print("Error occured adding to redeem queue:", e.args[0])
         print("To user:", user_id, " with redeem:", redeem_name)
 
+def clear_redeem_queue(db):
+    try:
+        cursor = db.execute(
+                "DELETE FROM redeem_queue"
+            )
+        db.commit()
+    except Error as e:
+        print("Error occured deleting redeem queue:", e.args[0])
+
+def pretty_redeem_queue(db):
+    try:
+        cursor = db.execute(
+            """SELECT redeem_queue.created, redeem_queue.redeem, points.name
+            FROM redeem_queue
+            INNER JOIN points
+            on redeem_queue.redeemer_id = points.id"""
+        )
+        return cursor.fetchall()
+    except Error as e:
+        print("Error occured selecting pretty redeem queue:", e.args[0])
+
 def whole_redeem_queue(db):
     try:
         cursor = db.execute(
@@ -111,4 +132,4 @@ def whole_redeem_queue(db):
             )
         return cursor.fetchall()
     except Error as e:
-        print("Error occured printing redeem queue:", e.args[0])
+        print("Error occured selecting redeem queue:", e.args[0])
