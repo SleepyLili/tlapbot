@@ -28,7 +28,13 @@ def owncast_webhook():
             print("New chat message:")
             print(f'from {display_name}:')
             print(f'{data["eventData"]["body"]}')
-            if "!points" in data["eventData"]["body"]:
+            if "!help" in data["eventData"]["body"]:
+                message = """Tlapbot commands:
+                !points to see your points.
+                !drink to redeem a pitíčko for 60 points.
+                That's it for now."""
+                send_chat(message)
+            elif "!points" in data["eventData"]["body"]:
                 if not user_exists(db, user_id):
                     add_user_to_database(db, user_id, display_name)
                 points = read_users_points(db, user_id)
@@ -39,11 +45,18 @@ def owncast_webhook():
                 if points is not None and points > 60:
                     if use_points(db, user_id, 60):
                         add_to_redeem_queue(db, user_id, "drink")
+                        send_chat("Pitíčko redeemed for 60 points.")
+                    else:
+                        send_chat("Pitíčko not redeemed because of an error.")
+                else:
+                    send_chat("Can't redeem pitíčko, you don't have enough points.")
+            elif "!clear" in data["eventData"]["body"]:
+                clear_redeem_queue(db)
             elif "!queue" in data["eventData"]["body"]:
-                queue = whole_redeem_queue(db)
-                print("ID | timestamp         | redeem | redeemer_id ")
+                queue = pretty_redeem_queue(db)
+                print("timestamp           | redeem | redeemer")
                 for row in queue:
-                    print(row[0], " ", row[1], " ", row[2], "   ", row[3])
+                    print(row[0], " ", row[1], "  ", row[2])
             # else: # DEBUG: give points for message
             #     give_points_to_chat(db)
     return data
