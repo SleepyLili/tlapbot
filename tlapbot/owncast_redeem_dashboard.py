@@ -8,7 +8,8 @@ bp = Blueprint('redeem_dashboard', __name__)
 def dashboard():
     queue = pretty_redeem_queue(get_db())
     number_of_drinks = 0
-    for row in queue:
-        if row[1] == "drink":
-            number_of_drinks += 1
+    if queue is not None:
+        for row in queue:
+            if row[1] == "drink":
+                number_of_drinks += 1
     return render_template('dashboard.html', queue=queue, number_of_drinks=number_of_drinks)

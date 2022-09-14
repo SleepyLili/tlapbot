@@ -11,7 +11,7 @@
             <td> {{ number_of_drinks }} </td>
         </tbody>
     </table>
-
+    {% if queue %}
     <table>
         <thead>
             <tr>
@@ -28,5 +28,6 @@
         </tbody>
         {% endfor %}
     </table>
+    {% endif %}
 </body>
 </html>
