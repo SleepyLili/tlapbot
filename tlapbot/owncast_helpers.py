@@ -2,6 +2,31 @@ from flask import current_app
 import requests
 from sqlite3 import Error
 
+
+# # # requests stuff # # #
+def is_stream_live():
+    url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/status'
+    r = requests.post(url)
+    print(r.json()["online"])
+    return r.json()["online"]
+
+def give_points_to_chat(db):
+    url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/clients'
+    headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
+    r = requests.post(url, headers=headers)
+    for user_object in r.json():
+        give_points_to_user(db,
+                            user_object["user"]["id"],
+                            current_app.config['POINTS_AMOUNT_GIVEN'])
+
+def send_chat(message):
+    url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/chat/send'
+    headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
+    r = requests.post(url, headers=headers, json={"body": message})
+    return r.json()
+
+
+# # # db stuff # # #
 def read_users_points(db, user_id):
     try:
         cursor = db.execute(
@@ -36,15 +61,6 @@ def use_points(db, user_id, points):
         print("Error occured using points:", e.args[0])
         print("From user:", user_id, "  amount of points:", points)
         return False
-
-def give_points_to_chat(db):
-    url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/clients'
-    headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
-    r = requests.post(url, headers=headers)
-    for user_object in r.json():
-        give_points_to_user(db,
-                            user_object["user"]["id"],
-                            current_app.config['POINTS_AMOUNT_GIVEN'])
 
 def user_exists(db, user_id):
     try:
@@ -87,11 +103,7 @@ def change_display_name(db, user_id, new_name):
         print("Error occured changing display name:", e.args[0])
         print("To user:", user_id, new_name)
 
-def send_chat(message):
-    url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/chat/send'
-    headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
-    r = requests.post(url, headers=headers, json={"body": message})
-    return r.json()
+
 
 def add_to_redeem_queue(db, user_id, redeem_name):
     try:

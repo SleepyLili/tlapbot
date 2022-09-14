@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 from tlapbot.db import get_db
-from tlapbot.owncast_helpers import give_points_to_chat
+from tlapbot.owncast_helpers import is_stream_live, give_points_to_chat
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -24,8 +24,8 @@ def create_app(test_config=None):
 
     def proxy_job():
         with app.app_context():
-            #TODO: make this not give points when stream is offline lol
-            give_points_to_chat(get_db())
+            if is_stream_live():
+                give_points_to_chat(get_db())
 
     points_giver = BackgroundScheduler()
     points_giver.add_job(proxy_job, 'interval', seconds=app.config['POINTS_CYCLE_TIME']) # change to 10 minutes out of testing
