@@ -1,0 +1,4 @@
+include tlapbot/schema.sql
+graft tlapbot/static
+graft tlapbot/templates
+global-exclude *.pyc
