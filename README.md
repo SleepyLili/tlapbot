@@ -34,9 +34,10 @@ Initialize db:
 ```bash
 python -m flask init-db
 ```
-Create a `tlapbot/config.py` file and fill it in as needed.
+Create an `instance/config.py` file and fill it in as needed.
 Default values are included in `tlapbot/default_config`, and values in
-`config.py` overwrite them.
+`config.py` overwrite them. (The database also lives in the `instance` folder
+by default.)
 
 Tlapbot will probably not work if you don't overwrite these:
 ```bash
@@ -49,7 +50,7 @@ In Owncast, navigate to the admin interface at `/admin`,
 and then go to Integrations.
 #### Access Token
 In Access Tokens, generate an Access Token to put in
-`tlapbot/config.py`. At the moment, the only permission the Access Token needs
+`instance/config.py`. At the moment, the only permission the Access Token needs
 is sending messages, the bot doesn't perform any administrative actions.
 #### Webhook
 In webhooks, create a Webhook, and point it at your bot's URL with
@@ -87,7 +88,7 @@ python -m flask --debug run
 ### Running in prod:
 To be added when I actually run a prod version of the bot.
 ## Config
-Values you can include in `tlapbot/config.py` to change how the bot behaves.
+Values you can include in `instance/config.py` to change how the bot behaves.
 ### Channel points interval and amount
 `POINTS_CYCLE_TIME` decides how often channel points are given to users in chat,
 in seconds. 
