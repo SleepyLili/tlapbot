@@ -6,6 +6,9 @@ from tlapbot.owncast_helpers import is_stream_live, give_points_to_chat
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        DATABASE=os.path.join(app.instance_path, "tlapbot.sqlite")
+    )
     app.config.from_object('tlapbot.default_config')
     app.config.from_pyfile('config.py')
 
