@@ -40,7 +40,7 @@ def owncast_webhook():
                 send_chat(message)
             elif "!drink" in data["eventData"]["body"]:
                 points = read_users_points(db, user_id)
-                if points is not None and points > 60:
+                if points is not None and points >= 60:
                     if use_points(db, user_id, 60):
                         add_to_redeem_queue(db, user_id, "drink")
                         send_chat("Pitíčko redeemed for 60 points.")
