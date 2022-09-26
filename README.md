@@ -45,7 +45,7 @@ In Owncast, navigate to the admin interface at `/admin`,
 and then go to Integrations.
 ### Access Token
 In Access Tokens, generate an Access Token to put in
-`instance/config.py`. The both needs both the "send chat messages" and "perform administrative actions"
+`instance/config.py`. The bot needs both the "send chat messages" and "perform administrative actions"
 permissions, since getting the list of all connected chat users is an administrator-only
 action.
 ### Webhook
