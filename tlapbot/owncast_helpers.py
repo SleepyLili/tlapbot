@@ -1,7 +1,9 @@
 from flask import current_app
 import requests
 from sqlite3 import Error
-
+import click
+from flask.cli import with_appcontext
+from db import get_db
 
 # # # requests stuff # # #
 def is_stream_live():
@@ -145,3 +147,10 @@ def whole_redeem_queue(db):
         return cursor.fetchall()
     except Error as e:
         print("Error occured selecting redeem queue:", e.args[0])
+
+@click.command('clear-queue')
+@with_appcontext
+def clear_queue_command():
+    """Remove all redeems from the redeem queue."""
+    clear_redeem_queue(get_db())
+    click.echo('Cleared redeem queue.')
