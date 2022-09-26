@@ -22,7 +22,7 @@
         </thead>
         {% for row in queue %}
         <tbody>
-            <td>{{ row[0].time() }}</td>
+            <td>{{ row[0].replace(tzinfo=utc_timezone).astimezone().hour}}:{{row[0].replace(tzinfo=utc_timezone).astimezone().minute }}</td>
             <td>{{ row[1] }}</td>
             <td>{{ row[2] }}</td>
         </tbody>
