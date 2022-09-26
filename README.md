@@ -21,38 +21,33 @@ recent redeems.
 ## Setup
 The Python prerequisites for running tlapbot are the libraries `flask`,
 `requests` and `apscheduler`.
-### First time setup
-Install prerequisites:
-```bash
-pip install flask
-pip install requests
-pip install apscheduler
-```
-(Or install them in your virtual environment if you prefer to use one)
-
-Initialize db:
-```bash
-python -m flask init-db
-```
-Create an `instance/config.py` file and fill it in as needed.
+### Dev setup (from git repository)
+1. Clone the repository.
+2. Run `pip install -e .` in the root folder. This will install tlapbot
+as a package in editable more, along with all its prerequisites.
+3. Initialize db:
+    ```bash
+    python -m flask init-db
+    ```
+4. Create an `instance/config.py` file and fill it in as needed.
 Default values are included in `tlapbot/default_config`, and values in
 `config.py` overwrite them. (The database also lives in the `instance` folder
 by default.)
 
-Tlapbot will probably not work if you don't overwrite these:
-```bash
-SECRET_KEY # get one from running `python -c 'import secrets; print(secrets.token_hex())'`
-OWNCAST_ACCESS_TOKEN # get one from owncast instance
-OWNCAST_INSTANCE_URL
-```
-### Owncast setup
+    Tlapbot might not work if you don't overwrite these:
+    ```bash
+    SECRET_KEY # get one from running `python -c 'import secrets; print(secrets.token_hex())'`
+    OWNCAST_ACCESS_TOKEN # get one from owncast instance
+    OWNCAST_INSTANCE_URL # default points to localhost owncast on default port
+    ```
+## Owncast setup
 In Owncast, navigate to the admin interface at `/admin`,
 and then go to Integrations.
-#### Access Token
+### Access Token
 In Access Tokens, generate an Access Token to put in
 `instance/config.py`. At the moment, the only permission the Access Token needs
 is sending messages, the bot doesn't perform any administrative actions.
-#### Webhook
+### Webhook
 In webhooks, create a Webhook, and point it at your bot's URL with
 `/owncastWebhook` added.
 
@@ -60,18 +55,20 @@ In debug, this will be something like `localhost:5000/owncastWebhook`,
 or, if you're not running the debug Owncast instance and bot on the same machine,
 you can use a tool like [ngrok](https://ngrok.com/)
 to redirect the Owncast traffic to your `localhost`.
-#### External Action
+### External Action
 In External Actions, point the external action to your bot's URL with `/dashboard` added.
 
-In debug, this might be something like `localhost:5000/dashboard`,
-or you can use a tool like ngrok again.
+In debug, pointing the External Action to an address like `localhost:5000/dashboard` might not work because your localhost address doesn't provide https, which owncast requires.
+
+If you use [ngrok](https://ngrok.com/) to redirect Owncast traffic to localhost,
+it will work because the ngrok connection is https.
 
 **Example:**
 ```
 URL: MyTlapbotServer.com/dashboard
 Action Title: Redeems Dashboard
 ```
-
+## Running the bot
 ### Running in debug:
 Set the FLASK_APP variable:
 ```bash
