@@ -3,7 +3,7 @@ import requests
 from sqlite3 import Error
 import click
 from flask.cli import with_appcontext
-from db import get_db
+from tlapbot.db import get_db
 
 # # # requests stuff # # #
 def is_stream_live():
