@@ -50,6 +50,4 @@ def owncast_webhook():
             # Forces name update in case bot didn't catch the NAME_CHANGE
             # event. Theoretically only needed when bot was off.
             change_display_name(db, user_id, display_name)
-        elif "!clear" in data["eventData"]["body"]:
-            clear_redeem_queue(db)
     return data
