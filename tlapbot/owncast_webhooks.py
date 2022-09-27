@@ -17,7 +17,6 @@ def owncast_webhook():
     elif data["type"] == "NAME_CHANGE":
         user_id = data["eventData"]["user"]["id"]
         new_name = data["eventData"]["newName"]
-        old_names = data["eventData"]["user"]["previousNames"]
         change_display_name(db, user_id, new_name)
     elif data["type"] == "CHAT":
         user_id = data["eventData"]["user"]["id"]
