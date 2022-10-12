@@ -141,6 +141,15 @@ def clear_redeem_queue(db):
     except Error as e:
         print("Error occured deleting redeem queue:", e.args[0])
 
+def all_counters(db):
+    try:
+        cursor = db.execute(
+            """SELECT counters.name, counters.count FROM counters"""
+        )
+        return cursor.fetchall()
+    except Error as e:
+        print("Error occured selecting all counters:", e.args[0])
+
 def pretty_redeem_queue(db):
     try:
         cursor = db.execute(
