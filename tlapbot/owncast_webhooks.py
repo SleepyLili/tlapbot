@@ -42,6 +42,6 @@ def owncast_webhook():
             # Forces name update in case bot didn't catch the NAME_CHANGE
             # event. Theoretically only needed when bot was off.
             change_display_name(db, user_id, display_name)
-        elif "!" in data["eventData"]["body"]:
-            handle_redeem(data["eventData"]["body"])
+        elif data["eventData"]["body"].startswith("!"): # TODO: make prefix configurable
+            handle_redeem(data["eventData"]["body"], user_id)
     return data
