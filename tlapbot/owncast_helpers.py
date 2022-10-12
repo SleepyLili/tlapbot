@@ -44,8 +44,8 @@ def read_users_points(db, user_id):
 def give_points_to_user(db, user_id, points):
     try:
         db.execute(
-        "UPDATE points SET points = points + ? WHERE id = ?",
-        (points, user_id,)
+            "UPDATE points SET points = points + ? WHERE id = ?",
+            (points, user_id,)
         )
         db.commit()
     except Error as e:
@@ -55,8 +55,8 @@ def give_points_to_user(db, user_id, points):
 def use_points(db, user_id, points):
     try:
         db.execute(
-        "UPDATE points SET points = points - ? WHERE id = ?",
-        (points, user_id,)
+            "UPDATE points SET points = points - ? WHERE id = ?",
+            (points, user_id,)
         )
         db.commit()
         return True
@@ -98,32 +98,45 @@ def add_user_to_database(db, user_id, display_name):
 def change_display_name(db, user_id, new_name):
     try:
         cursor = db.execute(
-                "UPDATE points SET name = ? WHERE id = ?",
-                (new_name, user_id)
-            )
+            "UPDATE points SET name = ? WHERE id = ?",
+            (new_name, user_id)
+        )
         db.commit()
     except Error as e:
         print("Error occured changing display name:", e.args[0])
         print("To user:", user_id, new_name)
 
 
-
-def add_to_redeem_queue(db, user_id, redeem_name):
+def add_to_counter(db, counter_name):
     try:
         cursor = db.execute(
-                "INSERT INTO redeem_queue(redeem, redeemer_id) VALUES(?, ?)",
-                (redeem_name, user_id)
+            "UPDATE counters SET count = count + 1 WHERE name = ?",
+            (counter_name,)
+        )
+        db.commit()
+    except Error as e:
+        print("Error occured adding to counter:", e.args[0])
+        print("To counter:", counter_name)
+
+def add_to_redeem_queue(db, user_id, redeem_name, note=None):
+    try:
+        cursor = db.execute(
+            "INSERT INTO redeem_queue(redeem, redeemer_id, note) VALUES(?, ?, ?)",
+            (redeem_name, user_id, note)
             )
         db.commit()
     except Error as e:
         print("Error occured adding to redeem queue:", e.args[0])
-        print("To user:", user_id, " with redeem:", redeem_name)
+        print("To user:", user_id, " with redeem:", redeem_name, "with note:", note)
 
 def clear_redeem_queue(db):
     try:
         cursor = db.execute(
-                "DELETE FROM redeem_queue"
-            )
+            "DELETE FROM redeem_queue"
+        )
+        cursor.execute(
+            """UPDATE counters SET counter_count = 0"""
+        )
         db.commit()
     except Error as e:
         print("Error occured deleting redeem queue:", e.args[0])
@@ -131,7 +144,7 @@ def clear_redeem_queue(db):
 def pretty_redeem_queue(db):
     try:
         cursor = db.execute(
-            """SELECT redeem_queue.created, redeem_queue.redeem, points.name
+            """SELECT redeem_queue.created, redeem_queue.redeem, redeem_queue.note, points.name
             FROM redeem_queue
             INNER JOIN points
             on redeem_queue.redeemer_id = points.id"""
@@ -143,8 +156,8 @@ def pretty_redeem_queue(db):
 def whole_redeem_queue(db):
     try:
         cursor = db.execute(
-                "SELECT * from redeem_queue"
-            )
+            "SELECT * from redeem_queue"
+        )
         return cursor.fetchall()
     except Error as e:
         print("Error occured selecting redeem queue:", e.args[0])
