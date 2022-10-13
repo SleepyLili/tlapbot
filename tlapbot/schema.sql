@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS counters;
 DROP TABLE IF EXISTS redeem_queue;
 
-CREATE TABLE points (
+CREATE TABLE IF NOT EXISTS points (
   id TEXT PRIMARY KEY,
   name TEXT,
   points INTEGER
