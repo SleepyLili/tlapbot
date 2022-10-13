@@ -12,11 +12,12 @@
                 <th>Counters</th>
             </tr>
         </thead>
+        {% for counter in counters %}
         <tbody>
-            {% for counter in counters %}
             <td> {{ counter[0] }} </td>
-            <td> {{ counter[1] }} </td>
+            <td> {{ counter[1] }} </td>   
         </tbody>
+        {% endfor %}
     </table>
     {% endif %}
 

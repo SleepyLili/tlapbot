@@ -1,6 +1,6 @@
 from flask import render_template, Blueprint
 from tlapbot.db import get_db
-from tlapbot.owncast_helpers import pretty_redeem_queue
+from tlapbot.owncast_helpers import pretty_redeem_queue, all_counters
 from datetime import datetime, timezone
 
 bp = Blueprint('redeem_dashboard', __name__)
