@@ -3,7 +3,7 @@ from tlapbot.db import get_db
 from tlapbot.owncast_helpers import (use_points, add_to_redeem_queue,
     add_to_counter, read_users_points, send_chat)
 
-def handle_redeem(message, user_id)
+def handle_redeem(message, user_id):
     split_message = message[1:].split(maxsplit=1)
     redeem = split_message[0]
     if len(split_message) == 1:

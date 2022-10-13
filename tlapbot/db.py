@@ -27,10 +27,12 @@ def insert_counters(db):
         if redeem_info["type"] == "counter":
             try:
                 cursor = db.execute(
-                "INSERT INTO counters(name, count) VALUES(?, 0)",
-                (redeem,)
-            )
+                    "INSERT INTO counters(name, count) VALUES(?, 0)",
+                    (redeem,)
+                )
                 db.commit()
+            except Error as e:
+                print("Failed inserting counters to db:", e.args[0])
 
 def init_db():
     db = get_db()
