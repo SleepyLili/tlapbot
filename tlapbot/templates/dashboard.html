@@ -35,8 +35,10 @@
         <tbody>
             <td>{{ row[0].replace(tzinfo=utc_timezone).astimezone().strftime("%H:%M") }}</td>
             <td>{{ row[1] }}</td>
-            <td>{{ row[2] }}</td>
             <td>{{ row[3] }}</td>
+            {% if row[2] %}
+            <td>{{ row[2] }}</td>
+            {% endif %}
         </tbody>
         {% endfor %}
     </table>

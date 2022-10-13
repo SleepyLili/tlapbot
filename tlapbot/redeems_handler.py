@@ -20,14 +20,16 @@ def handle_redeem(message, user_id):
             if use_points(db, user_id, price):
                 if redeem_type == "counter":
                     add_to_counter(db, redeem)
+                    send_chat(f"{redeem} redeemed for {price} points.")
                 elif redeem_type == "list":
                     add_to_redeem_queue(db, user_id, redeem)
+                    send_chat(f"{redeem} redeemed for {price} points.")
                 elif redeem_type == "note":
                     if note is not None:
                         add_to_redeem_queue(db, user_id, redeem, note)
+                        send_chat(f"{redeem} redeemed for {price} points.")
                     else:
                         send_chat(f"Cannot redeem {redeem}, no note included.")
-                send_chat(f"{redeem} redeemed for {price} points.")
             else:
                 send_chat(f"{redeem} not redeemed because of an error.")
         else:
