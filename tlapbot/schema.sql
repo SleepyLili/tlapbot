@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS points;
+DROP TABLE IF EXISTS counters;
 DROP TABLE IF EXISTS redeem_queue;
 
 CREATE TABLE points (
