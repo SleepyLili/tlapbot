@@ -22,6 +22,7 @@ def close_db(e=None):
     if db is not None:
         db.close()
 
+
 def insert_counters(db):
     for redeem, redeem_info in current_app.config['REDEEMS'].items():
         if redeem_info["type"] == "counter":
@@ -34,12 +35,13 @@ def insert_counters(db):
             except Error as e:
                 print("Failed inserting counters to db:", e.args[0])
 
+
 def init_db():
     db = get_db()
 
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
-    
+
     insert_counters(db)
 
 
@@ -49,6 +51,7 @@ def init_db_command():
     """Clear the existing data and create new tables."""
     init_db()
     click.echo('Initialized the database.')
+
 
 def init_app(app):
     app.teardown_appcontext(close_db)

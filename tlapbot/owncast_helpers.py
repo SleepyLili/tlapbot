@@ -5,12 +5,14 @@ import click
 from flask.cli import with_appcontext
 from tlapbot.db import get_db
 
+
 # # # requests stuff # # #
 def is_stream_live():
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/status'
     r = requests.post(url)
     print(r.json()["online"])
     return r.json()["online"]
+
 
 def give_points_to_chat(db):
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/clients'
@@ -21,6 +23,7 @@ def give_points_to_chat(db):
         give_points_to_user(db,
                             user_id,
                             current_app.config['POINTS_AMOUNT_GIVEN'])
+
 
 def send_chat(message):
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/chat/send'
@@ -41,6 +44,7 @@ def read_users_points(db, user_id):
         print("Error occured reading points:", e.args[0])
         print("To user:", user_id)
 
+
 def give_points_to_user(db, user_id, points):
     try:
         db.execute(
@@ -51,6 +55,7 @@ def give_points_to_user(db, user_id, points):
     except Error as e:
         print("Error occured giving points:", e.args[0])
         print("To user:", user_id, "  amount of points:", points)
+
 
 def use_points(db, user_id, points):
     try:
@@ -65,27 +70,29 @@ def use_points(db, user_id, points):
         print("From user:", user_id, "  amount of points:", points)
         return False
 
+
 def user_exists(db, user_id):
     try:
         cursor = db.execute(
             "SELECT points FROM points WHERE id = ?",
             (user_id,)
         )
-        if cursor.fetchone() == None:
+        if cursor.fetchone() is None:
             return False
         return True
     except Error as e:
         print("Error occured checking if user exists:", e.args[0])
         print("To user:", user_id)
 
-""" Adds a new user to the database. Does nothing if user is already in."""
+
 def add_user_to_database(db, user_id, display_name):
+    """ Adds a new user to the database. Does nothing if user is already in."""
     try:
         cursor = db.execute(
             "SELECT points FROM points WHERE id = ?",
             (user_id,)
         )
-        if cursor.fetchone() == None:
+        if cursor.fetchone() is None:
             cursor.execute(
                 "INSERT INTO points(id, name, points) VALUES(?, ?, 10)",
                 (user_id, display_name)
@@ -94,6 +101,7 @@ def add_user_to_database(db, user_id, display_name):
     except Error as e:
         print("Error occured adding user to db:", e.args[0])
         print("To user:", user_id, display_name)
+
 
 def change_display_name(db, user_id, new_name):
     try:
@@ -118,6 +126,7 @@ def add_to_counter(db, counter_name):
         print("Error occured adding to counter:", e.args[0])
         print("To counter:", counter_name)
 
+
 def add_to_redeem_queue(db, user_id, redeem_name, note=None):
     try:
         cursor = db.execute(
@@ -128,6 +137,7 @@ def add_to_redeem_queue(db, user_id, redeem_name, note=None):
     except Error as e:
         print("Error occured adding to redeem queue:", e.args[0])
         print("To user:", user_id, " with redeem:", redeem_name, "with note:", note)
+
 
 def clear_redeem_queue(db):
     try:
@@ -141,6 +151,7 @@ def clear_redeem_queue(db):
     except Error as e:
         print("Error occured deleting redeem queue:", e.args[0])
 
+
 def all_counters(db):
     try:
         cursor = db.execute(
@@ -149,6 +160,7 @@ def all_counters(db):
         return cursor.fetchall()
     except Error as e:
         print("Error occured selecting all counters:", e.args[0])
+
 
 def pretty_redeem_queue(db):
     try:
@@ -162,6 +174,7 @@ def pretty_redeem_queue(db):
     except Error as e:
         print("Error occured selecting pretty redeem queue:", e.args[0])
 
+
 def whole_redeem_queue(db):
     try:
         cursor = db.execute(
@@ -170,6 +183,7 @@ def whole_redeem_queue(db):
         return cursor.fetchall()
     except Error as e:
         print("Error occured selecting redeem queue:", e.args[0])
+
 
 @click.command('clear-queue')
 @with_appcontext

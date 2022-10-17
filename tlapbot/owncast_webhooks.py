@@ -2,12 +2,13 @@ from flask import Flask, request, json, Blueprint
 from sqlite3 import Error
 from tlapbot.db import get_db
 from tlapbot.owncast_helpers import (add_user_to_database, change_display_name,
-    user_exists, send_chat, read_users_points)
+        user_exists, send_chat, read_users_points)
 from tlapbot.redeems_handler import handle_redeem
 
 bp = Blueprint('owncast_webhooks', __name__)
 
-@bp.route('/owncastWebhook',methods=['POST'])
+
+@bp.route('/owncastWebhook', methods=['POST'])
 def owncast_webhook():
     data = request.json
     db = get_db()
@@ -42,6 +43,6 @@ def owncast_webhook():
             # Forces name update in case bot didn't catch the NAME_CHANGE
             # event. Theoretically only needed when bot was off.
             change_display_name(db, user_id, display_name)
-        elif data["eventData"]["body"].startswith("!"): # TODO: make prefix configurable
+        elif data["eventData"]["body"].startswith("!"):  # TODO: make prefix configurable
             handle_redeem(data["eventData"]["body"], user_id)
     return data

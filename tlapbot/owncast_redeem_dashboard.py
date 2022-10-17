@@ -5,7 +5,8 @@ from datetime import datetime, timezone
 
 bp = Blueprint('redeem_dashboard', __name__)
 
-@bp.route('/dashboard',methods=['GET'])
+
+@bp.route('/dashboard', methods=['GET'])
 def dashboard():
     db = get_db()
     queue = pretty_redeem_queue(db)
