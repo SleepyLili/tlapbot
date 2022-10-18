@@ -5,6 +5,20 @@
     <title>Redeems Dashboard</title>
 </head>
 <body>
+    {% if (username and user_points ) %}
+    <table>
+        <thead>
+            <tr>
+                <th>Your points balance:</th>
+            </tr>
+        </thead>
+        <tbody>
+            <td> {{ username }} </td>
+            <td> {{ user_points }} </td>   
+        </tbody>
+    </table>
+    {% endif %}
+
     {% if counters %}
     <table>
         <thead>

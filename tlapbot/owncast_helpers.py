@@ -45,6 +45,17 @@ def read_users_points(db, user_id):
         print("To user:", user_id)
 
 
+def read_users_points_from_username(db, username):
+    try:
+        cursor = db.execute(
+            "SELECT points FROM points WHERE name = ?",
+            (username,)
+        )
+        return cursor.fetchone()[0]
+    except Error as e:
+        print("Error occured reading points from username:", e.args[0])
+        print("To user:", username)
+
 def give_points_to_user(db, user_id, points):
     try:
         db.execute(
