@@ -34,6 +34,7 @@ def send_chat(message):
 
 # # # db stuff # # #
 def read_users_points(db, user_id):
+    """Errors out if user doesn't exist."""
     try:
         cursor = db.execute(
             "SELECT points FROM points WHERE id = ?",
@@ -46,12 +47,17 @@ def read_users_points(db, user_id):
 
 
 def read_users_points_from_username(db, username):
+    """Returns None if user doesn't exist, their points otherwise."""
     try:
         cursor = db.execute(
             "SELECT points FROM points WHERE name = ?",
             (username,)
         )
-        return cursor.fetchone()[0]
+        points = cursor.fetchone()
+        if points is None:
+            return None
+        else:
+            return cursor.fetchone()[0]
     except Error as e:
         print("Error occured reading points from username:", e.args[0])
         print("To user:", username)
