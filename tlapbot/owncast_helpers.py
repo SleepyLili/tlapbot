@@ -57,7 +57,7 @@ def read_users_points_from_username(db, username):
         if points is None:
             return None
         else:
-            return cursor.fetchone()[0]
+            return points[0]
     except Error as e:
         print("Error occured reading points from username:", e.args[0])
         print("To user:", username)
