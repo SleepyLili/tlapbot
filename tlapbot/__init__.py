@@ -15,11 +15,12 @@ def create_app(test_config=None):
         pass
 
     # Prepare config: set db to instance folder, then load default, then
-    # overwrite it with config.py
+    # overwrite it with config.py and redeems.py
     app.config.from_mapping(
         DATABASE=os.path.join(app.instance_path, "tlapbot.sqlite")
     )
     app.config.from_object('tlapbot.default_config')
+    app.config.from_object('tlapbot.default_redeems')
     app.config.from_pyfile('config.py')
     app.config.from_pyfile('redeems.py')
 
