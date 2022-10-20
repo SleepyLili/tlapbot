@@ -5,17 +5,19 @@
     <title>Redeems Dashboard</title>
 </head>
 <body>
-    {% if (username and user_points ) %}
+    {% if (username and users ) %}
     <table>
         <thead>
             <tr>
-                <th>Your points balance:</th>
+                <th>Points balance:</th>
             </tr>
         </thead>
+        {% for user in users %}
         <tbody>
-            <td> {{ username }} </td>
-            <td> {{ user_points }} </td>   
+            <td> {{ user[0] }} </td>
+            <td> {{ user[1] }} </td>   
         </tbody>
+        {% endfor %}
     </table>
     {% endif %}
 

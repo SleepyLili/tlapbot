@@ -46,18 +46,14 @@ def read_users_points(db, user_id):
         print("To user:", user_id)
 
 
-def read_users_points_from_username(db, username):
-    """Returns None if user doesn't exist, their points otherwise."""
+def read_all_users_with_username(db, username):
     try:
         cursor = db.execute(
-            "SELECT points FROM points WHERE name = ?",
+            "SELECT name, points FROM points WHERE name = ?",
             (username,)
         )
-        points = cursor.fetchone()
-        if points is None:
-            return None
-        else:
-            return points[0]
+        users = cursor.fetchall()
+        return users
     except Error as e:
         print("Error occured reading points from username:", e.args[0])
         print("To user:", username)
