@@ -203,5 +203,4 @@ def whole_redeem_queue(db):
 def clear_queue_command():
     """Remove all redeems from the redeem queue."""
     clear_redeem_queue(get_db())
-    clear_counters(get_db())
     click.echo('Cleared redeem queue.')
