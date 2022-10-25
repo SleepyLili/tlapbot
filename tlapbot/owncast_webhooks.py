@@ -17,10 +17,14 @@ def owncast_webhook():
         display_name = data["eventData"]["user"]["displayName"]
         # CONSIDER: join points for joining stream
         add_user_to_database(db, user_id, display_name)
+        if data["eventData"]["user"]["authenticated"]:
+            remove_duplicate_usernames(db, user_id, display_name)
     elif data["type"] == "NAME_CHANGE":
         user_id = data["eventData"]["user"]["id"]
         new_name = data["eventData"]["newName"]
         change_display_name(db, user_id, new_name)
+        if data["eventData"]["user"]["authenticated"]:
+            remove_duplicate_usernames(db, user_id, display_name)
     elif data["type"] == "CHAT":
         user_id = data["eventData"]["user"]["id"]
         display_name = data["eventData"]["user"]["displayName"]
@@ -44,8 +48,11 @@ def owncast_webhook():
             send_chat(message)
         elif "!name_update" in data["eventData"]["body"]:
             # Forces name update in case bot didn't catch the NAME_CHANGE
-            # event. Theoretically only needed when bot was off.
+            # event. Also removes saved usernames from users with same name
+            # if user is authenticated.
             change_display_name(db, user_id, display_name)
+            if data["eventData"]["user"]["authenticated"]:
+                remove_duplicate_usernames(db, user_id, display_name)
         elif data["eventData"]["body"].startswith("!"):  # TODO: make prefix configurable
             handle_redeem(data["eventData"]["body"], user_id)
     return data
