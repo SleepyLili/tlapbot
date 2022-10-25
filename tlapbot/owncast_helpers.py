@@ -158,7 +158,7 @@ def clear_redeem_queue(db):
             "DELETE FROM redeem_queue"
         )
         cursor.execute(
-            """UPDATE counters SET counter_count = 0"""
+            """UPDATE counters SET count = 0"""
         )
         db.commit()
     except Error as e:
@@ -203,4 +203,5 @@ def whole_redeem_queue(db):
 def clear_queue_command():
     """Remove all redeems from the redeem queue."""
     clear_redeem_queue(get_db())
+    clear_counters(get_db())
     click.echo('Cleared redeem queue.')
