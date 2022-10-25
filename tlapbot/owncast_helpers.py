@@ -198,6 +198,19 @@ def whole_redeem_queue(db):
         print("Error occured selecting redeem queue:", e.args[0])
 
 
+def remove_duplicate_usernames(db, user_id, username):
+    try:
+        cursor = db.execute(
+            """UPDATE points
+            SET username = NULL
+            WHERE username = ? AND WHERE NOT id = ?""",
+        (username, user_id)
+        )
+        db.commit()
+    except Error as e:
+        print("Error occured removing duplicate usernames:", e.args[0])
+
+
 @click.command('clear-queue')
 @with_appcontext
 def clear_queue_command():
