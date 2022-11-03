@@ -2,7 +2,7 @@ from flask import Flask, request, json, Blueprint, current_app
 from sqlite3 import Error
 from tlapbot.db import get_db
 from tlapbot.owncast_helpers import (add_user_to_database, change_display_name,
-        user_exists, send_chat, read_users_points)
+        user_exists, send_chat, read_users_points, remove_duplicate_usernames)
 from tlapbot.redeems_handler import handle_redeem
 
 bp = Blueprint('owncast_webhooks', __name__)

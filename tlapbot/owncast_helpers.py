@@ -102,13 +102,21 @@ def add_user_to_database(db, user_id, display_name):
     """ Adds a new user to the database. Does nothing if user is already in."""
     try:
         cursor = db.execute(
-            "SELECT points FROM points WHERE id = ?",
+            "SELECT points, name FROM points WHERE id = ?",
             (user_id,)
         )
-        if cursor.fetchone() is None:
+        user = cursor.fetchone()
+        if user is None:
             cursor.execute(
                 "INSERT INTO points(id, name, points) VALUES(?, ?, 10)",
                 (user_id, display_name)
+            )
+        if user is not None and user[1] == None:
+            cursor.execute(
+                """UPDATE points
+                SET name = ?
+                WHERE id = ?""",
+                (display_name, user_id)
             )
         db.commit()
     except Error as e:
@@ -202,8 +210,8 @@ def remove_duplicate_usernames(db, user_id, username):
     try:
         cursor = db.execute(
             """UPDATE points
-            SET username = NULL
-            WHERE username = ? AND WHERE NOT id = ?""",
+            SET name = NULL
+            WHERE name = ? AND NOT id = ?""",
         (username, user_id)
         )
         db.commit()
