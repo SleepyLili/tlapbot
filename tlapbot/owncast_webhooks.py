@@ -24,7 +24,7 @@ def owncast_webhook():
         new_name = data["eventData"]["newName"]
         change_display_name(db, user_id, new_name)
         if data["eventData"]["user"]["authenticated"]:
-            remove_duplicate_usernames(db, user_id, display_name)
+            remove_duplicate_usernames(db, user_id, new_name)
     elif data["type"] == "CHAT":
         user_id = data["eventData"]["user"]["id"]
         display_name = data["eventData"]["user"]["displayName"]
