@@ -21,8 +21,8 @@ def create_app(test_config=None):
     )
     app.config.from_object('tlapbot.default_config')
     app.config.from_object('tlapbot.default_redeems')
-    app.config.from_pyfile('config.py')
-    app.config.from_pyfile('redeems.py')
+    app.config.from_pyfile('config.py', silent=True)
+    app.config.from_pyfile('redeems.py', silent=True)
 
     # prepare webhooks and redeem dashboard blueprints
     from . import owncast_webhooks
