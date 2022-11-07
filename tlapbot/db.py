@@ -27,7 +27,7 @@ def insert_counters(db):
     for redeem, redeem_info in current_app.config['REDEEMS'].items():
         if redeem_info["type"] == "counter":
             try:
-                cursor = db.execute(
+                db.execute(
                     "INSERT INTO counters(name, count) VALUES(?, 0)",
                     (redeem,)
                 )
@@ -45,12 +45,64 @@ def init_db():
     insert_counters(db)
 
 
+def clear_redeem_queue():
+    db = get_db()
+
+    try:
+        cursor = db.execute(
+            "DELETE FROM redeem_queue"
+        )
+        cursor.execute(
+            """UPDATE counters SET count = 0"""
+        )
+        db.commit()
+    except Error as e:
+        print("Error occured deleting redeem queue:", e.args[0])
+
+
+def refresh_counters():
+    db = get_db()
+
+    try:
+        db.execute("DELETE FROM counters")
+        db.commit()
+    except Error as e:
+        print("Error occured deleting old counters:", e.args[0])
+    
+    for redeem, redeem_info in current_app.config['REDEEMS'].items():
+        if redeem_info["type"] == "counter":
+            try:
+                cursor = db.execute(
+                    "INSERT INTO counters(name, count) VALUES(?, 0)",
+                    (redeem,)
+                )
+                db.commit()
+            except Error as e:
+                print("Failed inserting counters to db:", e.args[0])
+
+
 @click.command('init-db')
 @with_appcontext
 def init_db_command():
     """Clear the existing data and create new tables."""
     init_db()
     click.echo('Initialized the database.')
+
+
+@click.command('clear-queue')
+@with_appcontext
+def clear_queue_command():
+    """Remove all redeems from the redeem queue."""
+    clear_redeem_queue()
+    click.echo('Cleared redeem queue.')
+
+
+@click.command('refresh-counters')
+@with_appcontext
+def refresh_counters_command():
+    """Refresh counters from current config file. (Remove old ones, add new ones.)"""
+    refresh_counters()
+    click.echo('Counters refreshed.')
 
 
 def init_app(app):
