@@ -5,12 +5,38 @@
     <title>Redeems Dashboard</title>
 </head>
 <body>
+    {% if (username and users ) %}
     <table>
+        <thead>
+            <tr>
+                <th>Points balance:</th>
+            </tr>
+        </thead>
+        {% for user in users %}
         <tbody>
-            <td> Number of drinks: </td>
-            <td> {{ number_of_drinks }} </td>
+            <td> {{ user[0] }} </td>
+            <td> {{ user[1] }} </td>   
         </tbody>
+        {% endfor %}
     </table>
+    {% endif %}
+
+    {% if counters %}
+    <table>
+        <thead>
+            <tr>
+                <th>Counters</th>
+            </tr>
+        </thead>
+        {% for counter in counters %}
+        <tbody>
+            <td> {{ counter[0] }} </td>
+            <td> {{ counter[1] }} </td>   
+        </tbody>
+        {% endfor %}
+    </table>
+    {% endif %}
+
     {% if queue %}
     <table>
         <thead>
@@ -18,13 +44,17 @@
                 <th>time</th>
                 <th>redeem</th>
                 <th>redeemer</th>
+                <th>note</th>
             </tr>
         </thead>
         {% for row in queue %}
         <tbody>
             <td>{{ row[0].replace(tzinfo=utc_timezone).astimezone().strftime("%H:%M") }}</td>
             <td>{{ row[1] }}</td>
+            <td>{{ row[3] }}</td>
+            {% if row[2] %}
             <td>{{ row[2] }}</td>
+            {% endif %}
         </tbody>
         {% endfor %}
     </table>
