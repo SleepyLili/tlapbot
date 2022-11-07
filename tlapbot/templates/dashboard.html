@@ -5,6 +5,7 @@
     <title>Redeems Dashboard</title>
 </head>
 <body>
+    <h3>Redeems Dashboard</h3>
     {% if (username and users ) %}
     <table>
         <thead>
@@ -54,6 +55,31 @@
             <td>{{ row[3] }}</td>
             {% if row[2] %}
             <td>{{ row[2] }}</td>
+            {% endif %}
+        </tbody>
+        {% endfor %}
+    </table>
+    {% endif %}
+</body>
+<h3>Currently Active Redeems</h3>
+<body>
+    {% if redeems %}
+    <table>
+        <thead>
+            <tr>
+                <th>redeem</th>
+                <th>price</th>
+                <th>type</th>
+                <th>description</th>
+            </tr>
+        </thead>
+        {% for redeem, redeem_info in redeems.items() %}
+        <tbody>
+            <td>{{ redeem }}</td>
+            <td>{{ redeem_info["price"] }}</td>
+            <td>{{ redeem_info["type"] }}</td>
+            {% if redeem_info["info"] %}
+            <td>{{ redeem_info["info"] }}</td>
             {% endif %}
         </tbody>
         {% endfor %}
