@@ -20,7 +20,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Points balance:</th>
+                        <th>Your points balance</th>
                     </tr>
                 </thead>
                 {% for user in users %}
@@ -36,7 +36,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Counters</th>
+                        <th>Active counters</th>
                     </tr>
                 </thead>
                 {% for counter in counters %}
@@ -51,6 +51,9 @@
             {% if queue %}
             <table>
                 <thead>
+                    <tr>
+                        <th>Recent redeems</th>
+                    </tr>
                     <tr>
                         <th>Time</th>
                         <th>Redeem</th>
@@ -74,7 +77,8 @@
     </div>
 
     <div id='redeems-list' class="tabcontent">
-        <h3>Currently Active Redeems</h3>
+        <h3>Currently active redeems</h3>
+        <p>If you have enough points, you can redeem those by typing the command in chat.</p>
         <body>
             {% if redeems %}
             <table>
@@ -88,7 +92,7 @@
                 </thead>
                 {% for redeem, redeem_info in redeems.items() %}
                 <tbody>
-                    <td>{{ redeem }}</td>
+                    <td>!{{ redeem }}</td>
                     <td>{{ redeem_info["price"] }}</td>
                     <td>{{ redeem_info["type"] }}</td>
                     {% if redeem_info["info"] %}
