@@ -9,8 +9,8 @@
 <script src="/static/dashboard.js"></script>
 
     <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'dashboard')", id="defaultOpen">Redeems Dashboard</button>
-        <button class="tablinks" onclick="openTab(event, 'redeems-list')">List of Redeems</button>
+        <button class="tablinks" onclick="openTab(event, 'dashboard')", id="defaultOpen">Tlapbot dashboard</button>
+        <button class="tablinks" onclick="openTab(event, 'redeems-list')">Redeems help</button>
     </div>
 
     <div id='dashboard' class="tabcontent">
@@ -78,7 +78,12 @@
 
     <div id='redeems-list' class="tabcontent">
         <h3>Currently active redeems</h3>
-        <p>If you have enough points, you can redeem those by typing the command in chat.</p>
+        <p>If you have enough points, you can redeem those redeems by typing the command in chat.</p>
+        <ul>
+            <li><strong>Counter</strong> redeems add +1 to their counter.</li>
+            <li><strong>List</strong> redeems get added to the list of recent redeems (without a note).</li>
+            <li><strong>Note</strong> redeems require you to send a message together with the redeem.</li>
+        </ul>
         <body>
             {% if redeems %}
             <table>
@@ -108,7 +113,6 @@
 </div>
 
 <script>
-    // Get the element with id="defaultOpen" and click on it
     document.getElementById("defaultOpen").click();
 </script>
 
