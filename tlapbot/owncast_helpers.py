@@ -1,7 +1,6 @@
 from flask import current_app
 import requests
 from sqlite3 import Error
-import click
 from flask.cli import with_appcontext
 from tlapbot.db import get_db
 
@@ -160,17 +159,6 @@ def add_to_redeem_queue(db, user_id, redeem_name, note=None):
         print("To user:", user_id, " with redeem:", redeem_name, "with note:", note)
 
 
-def clear_redeem_queue(db):
-    try:
-        cursor = db.execute(
-            "DELETE FROM redeem_queue"
-        )
-        cursor.execute(
-            """UPDATE counters SET count = 0"""
-        )
-        db.commit()
-    except Error as e:
-        print("Error occured deleting redeem queue:", e.args[0])
 
 
 def all_counters(db):
@@ -217,11 +205,3 @@ def remove_duplicate_usernames(db, user_id, username):
         db.commit()
     except Error as e:
         print("Error occured removing duplicate usernames:", e.args[0])
-
-
-@click.command('clear-queue')
-@with_appcontext
-def clear_queue_command():
-    """Remove all redeems from the redeem queue."""
-    clear_redeem_queue(get_db())
-    click.echo('Cleared redeem queue.')

@@ -21,8 +21,8 @@ def create_app(test_config=None):
     )
     app.config.from_object('tlapbot.default_config')
     app.config.from_object('tlapbot.default_redeems')
-    app.config.from_pyfile('config.py')
-    app.config.from_pyfile('redeems.py')
+    app.config.from_pyfile('config.py', silent=True)
+    app.config.from_pyfile('redeems.py', silent=True)
 
     # prepare webhooks and redeem dashboard blueprints
     from . import owncast_webhooks
@@ -30,14 +30,12 @@ def create_app(test_config=None):
     app.register_blueprint(owncast_webhooks.bp)
     app.register_blueprint(owncast_redeem_dashboard.bp)
 
-    # add db initialization CLI command
+    # add db CLI commands
     from . import db
     db.init_app(app)
-
-    # add clear queue CLI command
-    from . import owncast_helpers
-    app.cli.add_command(owncast_helpers.clear_queue_command)
-
+    app.cli.add_command(db.clear_queue_command)
+    app.cli.add_command(db.refresh_counters_command)
+    
     # scheduler job for giving points to users
     def proxy_job():
         with app.app_context():

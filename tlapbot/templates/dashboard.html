@@ -4,60 +4,116 @@
 <head>
     <title>Redeems Dashboard</title>
 </head>
-<body>
-    {% if (username and users ) %}
-    <table>
-        <thead>
-            <tr>
-                <th>Points balance:</th>
-            </tr>
-        </thead>
-        {% for user in users %}
-        <tbody>
-            <td> {{ user[0] }} </td>
-            <td> {{ user[1] }} </td>   
-        </tbody>
-        {% endfor %}
-    </table>
-    {% endif %}
+<div id="script">
 
-    {% if counters %}
-    <table>
-        <thead>
-            <tr>
-                <th>Counters</th>
-            </tr>
-        </thead>
-        {% for counter in counters %}
-        <tbody>
-            <td> {{ counter[0] }} </td>
-            <td> {{ counter[1] }} </td>   
-        </tbody>
-        {% endfor %}
-    </table>
-    {% endif %}
+<script src="/static/dashboard.js"></script>
 
-    {% if queue %}
-    <table>
-        <thead>
-            <tr>
-                <th>time</th>
-                <th>redeem</th>
-                <th>redeemer</th>
-                <th>note</th>
-            </tr>
-        </thead>
-        {% for row in queue %}
-        <tbody>
-            <td>{{ row[0].replace(tzinfo=utc_timezone).astimezone().strftime("%H:%M") }}</td>
-            <td>{{ row[1] }}</td>
-            <td>{{ row[3] }}</td>
-            {% if row[2] %}
-            <td>{{ row[2] }}</td>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'dashboard')", id="defaultOpen">Tlapbot dashboard</button>
+        <button class="tablinks" onclick="openTab(event, 'redeems-list')">Redeems help</button>
+    </div>
+
+    <div id='dashboard' class="tabcontent">
+        <body>
+            <h3>Redeems Dashboard</h3>
+            {% if (username and users ) %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Your points balance</th>
+                    </tr>
+                </thead>
+                {% for user in users %}
+                <tbody>
+                    <td> {{ user[0] }} </td>
+                    <td> {{ user[1] }} </td>   
+                </tbody>
+                {% endfor %}
+            </table>
             {% endif %}
-        </tbody>
-        {% endfor %}
-    </table>
-    {% endif %}
-</body>
+
+            {% if counters %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Active counters</th>
+                    </tr>
+                </thead>
+                {% for counter in counters %}
+                <tbody>
+                    <td> {{ counter[0] }} </td>
+                    <td> {{ counter[1] }} </td>   
+                </tbody>
+                {% endfor %}
+            </table>
+            {% endif %}
+
+            {% if queue %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Recent redeems</th>
+                    </tr>
+                    <tr>
+                        <th>Time</th>
+                        <th>Redeem</th>
+                        <th>Redeemer</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+                {% for row in queue %}
+            <tbody>
+                    <td>{{ row[0].replace(tzinfo=utc_timezone).astimezone().strftime("%H:%M") }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[3] }}</td>
+                    {% if row[2] %}
+                    <td>{{ row[2] }}</td>
+                    {% endif %}
+                </tbody>
+                {% endfor %}
+            </table>
+            {% endif %}
+        </body>
+    </div>
+
+    <div id='redeems-list' class="tabcontent">
+        <h3>Currently active redeems</h3>
+        <p>If you have enough points, you can redeem those redeems by typing the command in chat.</p>
+        <ul>
+            <li><strong>Counter</strong> redeems add +1 to their counter.</li>
+            <li><strong>List</strong> redeems get added to the list of recent redeems (without a note).</li>
+            <li><strong>Note</strong> redeems require you to send a message together with the redeem.</li>
+        </ul>
+        <body>
+            {% if redeems %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Redeem</th>
+                        <th>Price</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                {% for redeem, redeem_info in redeems.items() %}
+                <tbody>
+                    <td>!{{ redeem }}</td>
+                    <td>{{ redeem_info["price"] }}</td>
+                    <td>{{ redeem_info["type"] }}</td>
+                    {% if redeem_info["info"] %}
+                    <td>{{ redeem_info["info"] }}</td>
+                    {% endif %}
+                </tbody>
+                {% endfor %}
+            </table>
+            {% endif %}
+        </body>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById("defaultOpen").click();
+</script>
+
 </html>

@@ -3,7 +3,9 @@ from sqlite3 import Error
 from tlapbot.db import get_db
 from tlapbot.owncast_helpers import (add_user_to_database, change_display_name,
         user_exists, send_chat, read_users_points, remove_duplicate_usernames)
+from tlapbot.help_message import send_help
 from tlapbot.redeems_handler import handle_redeem
+
 
 bp = Blueprint('owncast_webhooks', __name__)
 
@@ -31,15 +33,7 @@ def owncast_webhook():
         print(f'New chat message from {display_name}:')
         print(f'{data["eventData"]["body"]}')
         if "!help" in data["eventData"]["body"]:
-            message = """Tlapbot commands:
-            !help to see this help message.
-            !points to see your points.
-            !name_update to force name update if tlapbot didn't catch it.
-            Tlapbot redeems:\n"""
-            for redeem, redeem_info in current_app.config['REDEEMS'].items():
-                message += (f"!{redeem} for {redeem_info['price']} points.\n")
-            # TODO: also make this customizable
-            send_chat(message)
+            send_help()
         elif "!points" in data["eventData"]["body"]:
             if not user_exists(db, user_id):
                 add_user_to_database(db, user_id, display_name)
