@@ -18,7 +18,7 @@ The redeems then show on a "Redeems dashboard" that everyone can view
 as an External Action on the Owncast stream, or at its standalone URL.
 This allows easy browsing of active challenges and recent redeems.
 ### Tlapbot bot commands
-Besides redeems, Tlapbot has a few other commands:
+Tlapbot has these basic commands:
 - `!help` sends a help string in the chat, explaining how tlapbot works.
 - `!points` shows a chatter how many points they have.
 - `!name_update` is a special debug command, to be used with the user's name displays wrong in the redeem dashboard. Normally, it shouldn't have to be used at all, as display names get updated automatically when the bot is running.
@@ -204,5 +204,3 @@ Each dictionary entry is a redeem, and the dictionary keys are strings that deci
 - `"price"` value should be an integer that decides how many points the redeem will cost.
 - `"type"` value should be either `"list"`, `"counter"` or `"note"`. This decided the redeem's type, and whether it will show up as a counter at the top of the dashboard or as an entry in the "recent redeems" chart.
 - `"info"` value should be a string that describes what the command does. It's optional, but I recommend writing one for all `"list"` and `"note"` redeems (so that chatters know that they should write a note).
-
-```"redeem_name": {"price": [integer], "type": ["list", "counter" or "note"], "info": "String that describes the redeem."}```
