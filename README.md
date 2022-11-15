@@ -17,6 +17,32 @@ doing.
 The redeems then show on a "Redeems dashboard" that everyone can view
 as an External Action on the Owncast stream, or at its standalone URL.
 This allows easy browsing of active challenges and recent redeems.
+### Tlapbot bot commands
+Besides redeems, Tlapbot has a few other commands:
+- `!help` sends a help string in the chat, explaining how tlapbot works.
+- `!points` shows a chatter how many points they have.
+- `!name_update` is a special debug command, to be used with the user's name displays wrong in the redeem dashboard. Normally, it shouldn't have to be used at all, as display names get updated automatically when the bot is running.
+
+Then, Tlapbot automatically adds a command for each redeem in the redeem file.
+### Tlapbot redeems types
+Tlapbot currently supports three different redeem types.
+#### List
+List redeems are basic redeems, most similar to the ones on Twitch.
+
+Every time a chatter redeems a List redeem, the redeem gets added to the list of recent redeems with a timestamp, similar to how redeems on Twitch get added to the [Twitch redeem queue](https://help.twitch.tv/s/article/making-the-most-of-channel-points?language=en_US#manage).
+
+Unlike the Note redeems, chatters can't write messages to send along with their List redeems, so make sure the redeem makes sense on its own, like "stop talking for one minute", or "drop your weapon", etc.
+#### Note
+Note redeems are like List redeems, they get added to the list of recent redeems.
+
+Unlike the List redeems, chatters can add a message to their Note redeems, so this is the ideal type for open-ended redeems like "choose what character I play as next", "choose what song to play next", etc.
+#### Counter
+Counter is a unique redeem type, in that it doesn't show up in the list of recent redeems, and counters don't list the people who redeemed them. This redeem type is good for any rewards or incentives where the important thing isn't "who redeemed it?" but rather "how many people redeemed it?"
+
+Instead, the tlapbot dashboard keeps a number for each "counter", and each redeems adds +1 to it.
+
+Counter redeems can be used to gauge interest, tally up votes, or to keep track of how many emotes should be added to the OBS stream window.
+
 ## Setup
 Tlapbot requires Python 3, probably a fairly recent version of it too. (My live instance runs on Python 3.9.2.)
 
@@ -46,7 +72,7 @@ by default.)
   If you don't add a redeems file, the bot will initialize the default redeems from `tlapbot/default_redeems.py`.  
   More details on how to write the config and redeems files are written later in the readme.
 
-## Owncast setup
+## Owncast  configuration
 In the Owncast web interface, navigate to the admin interface at `/admin`,
 and then go to Integrations.
 ### Access Token
@@ -136,13 +162,47 @@ I'd like to fix this shortcoming of tlapbot at some point in the future (so that
 ### config.py
 Values you can include in `config.py` to change how the bot behaves.
 
-(`config.py` should be in the instance folder: `/instance/config.py` for folder install, or `/[venv]/var/tlapbot-instance/config.py` for a `.whl` package install.)
-#### Channel points interval and amount
-`POINTS_CYCLE_TIME` decides how often channel points are given to users in chat,
+(`config.py` should be in the instance folder: `/instance/config.py` for folder install.)
+#### Mandatory
+Including these values is mandatory if you want tlapbot to work.
+- `SECRET_KEY` is your secret key. Get one from running `python -c 'import secrets; print(secrets.token_hex())'`
+- `OWNCAST_ACCESS_TOKEN` is the owncast access token that owncast will use to get list of users in chat. Generate one in your owncast instance.
+- `OWNCAST_INSTANCE_URL` is the full URL of your owncast instance, like `"http://MyTlapbotServer.com"`
+#### Optional
+Including these values will overwrite their defaults from `/tlapbot/default_config.py`.
+- `POINTS_CYCLE_TIME` decides how often channel points are given to users in chat,
 in seconds. 
-
-`POINTS_AMOUNT_GIVEN` decides how many channel points users receive.
-
-By default, everyone receives 10 points every 600 seconds (10 minutes).
+- `POINTS_AMOUNT_GIVEN` decides how many channel points users receive.
+- `LIST_REDEEMS` if `True`, all redeems will be listed after the `!help` command in chat.
+This makes the !help output quite long, so it's `False` by default.
+#### Example config:
+An example to show what your config like could look like
+```python
+SECRET_KEY= # string with secret key would be here.
+OWNCAST_ACCESS_TOKEN="5AT0gbe9ZuzDunsBG0rcwfalQNTi3fvV70NPvvQHk3I="
+OWNCAST_INSTANCE_URL="http://MyTlapbotServer.com"
+POINTS_CYCLE_TIME=300
+LIST_REDEEMS=True
+```
 ### redeems.py
-(`redeems.py` should be in the instance folder: `/instance/redeems.py` for folder install, or `/[venv]/var/tlapbot-instance/redeems.py` for a `.whl` package install.)
+`redeems.py` is a file where you define all your custom redeems. Tlapbot will work without it, but it will load a few default, generic redeems from `tlapbot/default_redeems.py`.
+
+(`redeems.py` should be in the instance folder: `/instance/redeems.py` for folder install.)
+#### Default `redeems.py`:
+```python
+REDEEMS={
+    "hydrate": {"price": 60, "type": "list"},
+    "lurk": {"price": 1, "type": "counter", "info": "Let us know you're going to lurk."},
+    "react": {"price": 200, "type": "note", "info": "Attach link to a video for me to react to."},
+    "request": {"price": 100, "type": "note", "info": "Request a level, gamemode, skin, etc."}
+}
+```
+#### File format
+`redeems.py` is a config file with just a `REDEEMS` key, that assigns a dictionary of redeems to it.
+Each dictionary entry is a redeem, and the dictionary keys are strings that decides the chat command for the redeem. The value is another dictionary that needs to have entries for `"price"`, `"type"` and optionally `"info"`.
+
+- `"price"` value should be an integer that decides how many points the redeem will cost.
+- `"type"` value should be either `"list"`, `"counter"` or `"note"`. This decided the redeem's type, and whether it will show up as a counter at the top of the dashboard or as an entry in the "recent redeems" chart.
+- `"info"` value should be a string that describes what the command does. It's optional, but I recommend writing one for all `"list"` and `"note"` redeems (so that chatters know that they should write a note).
+
+```"redeem_name": {"price": [integer], "type": ["list", "counter" or "note"], "info": "String that describes the redeem."}```
