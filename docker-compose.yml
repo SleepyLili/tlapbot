@@ -15,7 +15,8 @@ services:
     restart: unless-stopped
     network_mode: bridge
     ports:
-      - '127.0.0.1:8000:8000'
+      - '127.0.0.1:8080:8080'
+      - '0.0.0.0:1936:1936'
     volumes:
       - ./owncast-data:/app/data/:rw
     extra_hosts:
