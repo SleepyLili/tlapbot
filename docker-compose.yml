@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  bot:
+    image: tlapbot
+    container_name: tlapbot_bot
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q --spider --proxy=off localhost:8000 || exit 1",
+        ]
+    restart: always
+    network_mode: bridge
+    ports:
+      - '127.0.0.1:8000:8000'
+    build:
+      context: .
+      # Feel free to remove or override this section
+      args:
+        - "UID=1000"
+        - "GID=1000"
+    volumes:
+      - ./instance:/app/instance/:rw
+    environment:
+      FLASK_APP: tlapbot
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
