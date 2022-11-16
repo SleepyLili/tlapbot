@@ -10,8 +10,12 @@ services:
       test:
         [
           "CMD-SHELL",
-          "wget -q --spider --proxy=off localhost:8000 || exit 1",
+          "wget -q --spider --proxy=off localhost:8080/api/status || exit 1",
         ]
+      start_period: 30s
+      interval: 3s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
     ports:
       - '127.0.0.1:8080:8080'
@@ -41,8 +45,10 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
-      - owncast
-      - bot
+      owncast:
+        condition: service_healthy
+      bot:
+        condition: service_healthy
     profiles:
       - production
 
@@ -55,7 +61,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
-      - bot
+      bot:
+        condition: service_healthy
     profiles:
       - dev
     command: ngrok http host.docker.internal:8000
@@ -67,8 +74,12 @@ services:
       test:
         [
           "CMD-SHELL",
-          "wget -q --spider --proxy=off localhost:8000 || exit 1",
+          "wget -q --spider --proxy=off localhost:8000/api/status || exit 1",
         ]
+      start_period: 30s
+      interval: 3s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
     ports:
       - '127.0.0.1:8000:8000'

@@ -1,7 +1,7 @@
 import os
 import time
 import logging
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 from tlapbot.db import get_db
 from tlapbot.owncast_helpers import is_stream_live, give_points_to_chat
@@ -34,6 +34,10 @@ def create_app(test_config=None):
         timestamp = time.strftime('[%Y-%b-%d %H:%M]')
         logger.info('%s %s %s %s %s %s - %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status, request.data or "NODATA")
         return response
+
+    @app.route("/api/status")
+    def get_online():
+        return jsonify({"status": "online"})
 
     # Prepare config: set db to instance folder, then load default, then
     # overwrite it with config.py and redeems.py
