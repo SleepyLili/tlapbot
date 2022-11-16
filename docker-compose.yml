@@ -1,6 +1,26 @@
 version: '3.8'
 
 services:
+
+  # Example Owncast server
+  owncast:
+    image: gabekangas/owncast:latest
+    container_name: owncast
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q --spider --proxy=off localhost:8000 || exit 1",
+        ]
+    restart: always
+    network_mode: bridge
+    ports:
+      - '127.0.0.1:8000:8000'
+    volumes:
+      - ./owncast-data:/app/data/:rw
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   bot:
     image: tlapbot
     container_name: tlapbot_bot
