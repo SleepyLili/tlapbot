@@ -20,7 +20,7 @@ RUN chown -R tlapbot. /app/instance
 WORKDIR /app
 
 # Copy our project to the correct location
-COPY setup.py startup.sh .
+COPY setup.py startup.sh ./
 COPY tlapbot ./tlapbot
 
 # Run the production python setup commands
