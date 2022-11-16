@@ -12,7 +12,7 @@ services:
           "CMD-SHELL",
           "wget -q --spider --proxy=off localhost:8000 || exit 1",
         ]
-    restart: always
+    restart: unless-stopped
     network_mode: bridge
     ports:
       - '127.0.0.1:8000:8000'
@@ -30,7 +30,7 @@ services:
           "CMD-SHELL",
           "wget -q --spider --proxy=off localhost:8000 || exit 1",
         ]
-    restart: always
+    restart: unless-stopped
     network_mode: bridge
     ports:
       - '127.0.0.1:8000:8000'
