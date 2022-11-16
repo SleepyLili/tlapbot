@@ -1,9 +1,13 @@
 import os
-from flask import Flask
+import time
+import logging
+from flask import Flask, request
 from apscheduler.schedulers.background import BackgroundScheduler
 from tlapbot.db import get_db
 from tlapbot.owncast_helpers import is_stream_live, give_points_to_chat
 
+logger = logging.getLogger('tlapbot')
+logger.setLevel(logging.INFO)
 
 def get_instance(app, path):
     """Return the path with the instance folder as it's parent."""
@@ -18,6 +22,18 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    # Log incoming requests (useful for debugging)
+    @app.after_request
+    def after_request(response):
+
+        # Don't log unless explicitly enabled
+        if not app.config['ENABLE_LOGGING']:
+            return
+
+        timestamp = time.strftime('[%Y-%b-%d %H:%M]')
+        logger.info('%s %s %s %s %s %s - %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status, request.data or "NODATA")
+        return response
 
     # Prepare config: set db to instance folder, then load default, then
     # overwrite it with config.py and redeems.py
