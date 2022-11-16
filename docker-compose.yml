@@ -58,7 +58,7 @@ services:
       - bot
     profiles:
       - dev
-    command: http host.docker.internal:8000
+    command: ngrok http host.docker.internal:8000
 
   bot:
     image: tlapbot
