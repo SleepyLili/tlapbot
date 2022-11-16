@@ -29,7 +29,7 @@ def create_app(test_config=None):
 
         # Don't log unless explicitly enabled
         if not app.config['ENABLE_LOGGING']:
-            return
+            return response
 
         timestamp = time.strftime('[%Y-%b-%d %H:%M]')
         logger.info('%s %s %s %s %s %s - %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status, request.data or "NODATA")
