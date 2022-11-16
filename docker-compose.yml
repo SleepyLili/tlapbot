@@ -89,7 +89,7 @@ services:
 
 networks:
   web:
-    external: true
+    external: false
   internal:
     external: false
     driver: bridge
