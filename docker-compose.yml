@@ -13,14 +13,52 @@ services:
           "wget -q --spider --proxy=off localhost:8000 || exit 1",
         ]
     restart: unless-stopped
-    network_mode: bridge
     ports:
       - '127.0.0.1:8080:8080'
       - '0.0.0.0:1936:1936'
     volumes:
       - ./owncast-data:/app/data/:rw
+    networks:
+      - internal
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    profiles:
+      - production
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /caddy/data:/data
+      - /caddy/config:/config
+    networks:
+      - web
+      - internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - owncast
+      - bot
+    profiles:
+      - production
+
+  ngrok:
+    image: wernight/ngrok
+    ports:
+      - '127.0.0.1:4040:4040'
+    networks:
+      - internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - bot
+    profiles:
+      - dev
+    command: http host.docker.internal:8000
 
   bot:
     image: tlapbot
@@ -32,7 +70,6 @@ services:
           "wget -q --spider --proxy=off localhost:8000 || exit 1",
         ]
     restart: unless-stopped
-    network_mode: bridge
     ports:
       - '127.0.0.1:8000:8000'
     build:
@@ -45,5 +82,14 @@ services:
       - ./instance:/app/instance/:rw
     environment:
       FLASK_APP: tlapbot
+    networks:
+      - internal
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false
+    driver: bridge
