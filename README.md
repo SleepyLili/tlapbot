@@ -171,6 +171,28 @@ get given points by each worker. (So running the app with `-w 4` means users get
 
 I'd like to fix this shortcoming of tlapbot at some point in the future (so that it can take advantage of extra workers), but for now it's broken like this.
 
+## CLI commands: updating config + redeems
+Tlapbot comes with a few Click CLI commands. The commands let you clear out counters and the redeems dashboard.
+
+#### init-db
+The init-db command initializes the database.
+
+**This command should only be run when first installing tlapbot.**
+#### clear-queue
+The clear-queue command clears the redeem queue and resets all active counters to zero.
+You should run this command if you're about to start a new stream, and want to start with empty counters and queue.
+
+**If you've changed the config, and want new/different counters to work, you should run the `refresh-counters` command first.**
+```bash
+python -m flask clear-queue
+```
+#### refresh-counters
+This command deletes old counters that are no longer in the config file, and then adds all counters from the config file.
+You should run this command every time you've added or removed counters from `redeems.py`.
+```bash
+python -m flask refresh-counters
+```
+This command only changes counters, so if you want to clear the queue with list and note redeems too, you should run `clear-queue` after it.
 ## Configuration files
 ### config.py
 Values you can include in `config.py` to change how the bot behaves.
