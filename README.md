@@ -1,5 +1,5 @@
 # Tlapbot
-Tlapbot is an [Owncast](https://owncast.online/) bot, aiming to add the feature of channel points and
+Tlapbot is an [Owncast](https://owncast.online/) bot that adds channel points and
 channel point redeems to Owncast.
 
 This bot is currently in-development. The goal is to have an experience similar
@@ -43,6 +43,16 @@ Instead, the tlapbot dashboard keeps a number for each "counter", and each redee
 
 Counter redeems can be used to gauge interest, tally up votes, or to keep track of how many emotes should be added to the OBS stream window.
 
+### Tlapbot dashboard
+All of the recent redeems and active counters are shown together in the Tlapbot dashboard. The counters are on top, along with the number of times they've been redeemed, followed by a chronological list of recent List and Note redeems.
+
+Tlapbot dashboard is a standalone page available at `/dashboard`, made to be easily viewable as an owncast external action.
+
+![Tlapbot dashboard]()
+## License & Contributions
+Tlapbot as it currently is does not come with a license. If you're a content creator, streamer, vtuber, etc. I'll be happy to give you permission to use Tlapbot, or make changes that'd fit your stream.
+
+I didn't make Tlapbot available under a permissive or a free software license, as Owncast is also used by some religious groups, extremist individuals, and dubious corporations to self-host their streams, and I do not want for them to use the bot.
 ## Setup
 Tlapbot requires Python 3, probably a fairly recent version of it too. (My live instance runs on Python 3.9.2.)
 
@@ -72,6 +82,9 @@ by default.)
   If you don't add a redeems file, the bot will initialize the default redeems from `tlapbot/default_redeems.py`.  
   More details on how to write the config and redeems files are written later in the readme.
 
+This installation is fine both for just running Tlapbot as it is, but it also works as a dev setup if you want to make changes or contribute.
+
+Updating should be as easy as `git pull`ing the new version.
 ## Owncast  configuration
 In the Owncast web interface, navigate to the admin interface at `/admin`,
 and then go to Integrations.
@@ -103,9 +116,9 @@ URL: MyTlapbotServer.com/dashboard
 Action Title: Redeems Dashboard
 ```
 #### Note about https and reverse proxying
-Since External Actions require a secure https connection (for the tlapbot dashboard to work), you will need to set up a reverse proxy for tlapbot on your server. I'm not including a lot of information about it here, since I'm assuming you have some knowledge of the topic since you set up your own Owncast instance.
+Since External Actions require a secure https connection (for the tlapbot dashboard to work), you will need to set up a reverse proxy for tlapbot on your server. I'm not including much information about it here, since some knowledge of the topic is required to set up Owncast itself.
 
-If you don't, the Owncast documentation about SSL and Reverse proxying is here: https://owncast.online/docs/sslproxies/
+The Owncast documentation about SSL and Reverse proxying is here: https://owncast.online/docs/sslproxies/
 
 If your followed the [Owncast recommendation to use Caddy](https://owncast.online/docs/sslproxies/caddy/) you'd only need to include this in your caddyfile to make the tlapbot dashboard work:
 
@@ -138,7 +151,7 @@ Set the FLASK_APP variable:
 export FLASK_APP=tlapbot
 ```
 
-Using the flask debug server for running apps for non-development purposes is not recommended. Rather, you should be using a proper Python WSGI server.
+Using the flask debug server for running apps for non-development purposes is not recommended. Rather, you should be using a proper [Python WSGI server](https://flask.palletsprojects.com/en/2.2.x/deploying/).
 On my own live owncast instance, I use gunicorn.
 
 Install gunicorn (if you don't have it installed):
