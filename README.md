@@ -51,6 +51,7 @@ Tlapbot dashboard is a standalone page available at `/dashboard`, made to be eas
 Tlapbot dashboard also shows the chatter's points balance when they open it as an external action.
 
 ![Tlapbot dashboard](https://ak.kawen.space/media/67c1ac6ed0d2f4efb09937c1cbfe864102182e990796853507860f50db7ff5f5.png)
+
 *Tlapbot dashboard when viewed as an external action.*
 ## License & Contributions
 Tlapbot as it currently is does not come with a license. If you're a content creator, streamer, vtuber, etc. I'll be happy to give you permission to use Tlapbot, or make changes that'd fit your stream.
