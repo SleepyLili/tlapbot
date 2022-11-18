@@ -53,6 +53,9 @@ Tlapbot dashboard also shows the chatter's points balance when they open it as a
 ![Tlapbot dashboard](https://ak.kawen.space/media/67c1ac6ed0d2f4efb09937c1cbfe864102182e990796853507860f50db7ff5f5.png)
 
 *Tlapbot dashboard when viewed as an external action.*
+#### Redeems help tab
+The dashboard also has a "Redeems help" tab. It shows an explanation of redeem types,
+and lists all active redeems, along with their price, type and description.
 ## License & Contributions
 Tlapbot as it currently is does not come with a license. If you're a content creator, streamer, vtuber, etc. I'll be happy to give you permission to use Tlapbot, or make changes that'd fit your stream.
 
