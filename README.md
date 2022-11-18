@@ -1,9 +1,9 @@
 # Tlapbot
 Tlapbot is an [Owncast](https://owncast.online/) bot that adds channel points and
-channel point redeems to Owncast.
+channel point redeems to your Owncast page.
 
 This bot is currently in-development. The goal is to have an experience similar
-to [Twitch channel points](https://help.twitch.tv/s/article/viewer-channel-point-guide), while making use of [Owncast webhooks](https://owncast.online/thirdparty/webhooks/) and especially
+to [Twitch channel points](https://help.twitch.tv/s/article/viewer-channel-point-guide) by making use of [Owncast webhooks](https://owncast.online/thirdparty/webhooks/) and 
 [External actions](https://owncast.online/thirdparty/actions/).
 ## Features
 The bot gives points to everyone in chat -- 10 points every 10 minutes by
@@ -41,7 +41,7 @@ Counter is a unique redeem type, in that it doesn't show up in the list of recen
 
 Instead, the tlapbot dashboard keeps a number for each "counter", and each redeems adds +1 to it.
 
-Counter redeems can be used to gauge interest, tally up votes, or to keep track of how many emotes should be added to the OBS stream window.
+Counter redeems can be used to gauge interest, tally up votes, or to keep track of how many emotes should be added to the OBS scene.
 
 ### Tlapbot dashboard
 All of the recent redeems and active counters are shown together in the Tlapbot dashboard. The counters are on top, along with the number of times they've been redeemed, followed by a chronological list of recent List and Note redeems.
@@ -73,7 +73,7 @@ as a package in editable more.
     ```
 4. Create a `instance/config.py` file and fill it in as needed.
 Default values are included in `tlapbot/default_config`, and values in
-`config.py` overwrite them. (The database also lives in the `instance` folder
+`config.py` overwrite them. (The database also lives in the instance folder
 by default.)
 
     Tlapbot might not work if you don't overwrite these:
@@ -94,7 +94,7 @@ In the Owncast web interface, navigate to the admin interface at `/admin`,
 and then go to Integrations.
 ### Access Token
 In the Access Tokens tab, generate an Access Token to put in
-`instance/config.py`. The bot needs both the "send chat messages" and "perform administrative actions"
+the config file in the instance folder. The bot needs both the "send chat messages" and "perform administrative actions"
 permissions, since getting the list of all connected chat users is an administrator-only
 action.
 ### Webhook
@@ -186,10 +186,11 @@ The init-db command initializes the database.
 The clear-queue command clears the redeem queue and resets all active counters to zero.
 You should run this command if you're about to start a new stream, and want to start with empty counters and queue.
 
-**If you've changed the config, and want new/different counters to work, you should run the `refresh-counters` command first.**
 ```bash
 python -m flask clear-queue
 ```
+
+**If you've changed the config, and want new/different counters to work, you should run the `refresh-counters` command first.**
 #### refresh-counters
 This command deletes old counters that are no longer in the config file, and then adds all counters from the config file.
 You should run this command every time you've added or removed counters from `redeems.py`.
