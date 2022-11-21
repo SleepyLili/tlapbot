@@ -23,7 +23,7 @@ Tlapbot has these basic commands:
 - `!points` shows a chatter how many points they have.
 - `!name_update` is a special debug command, to be used with the user's name displays wrong in the redeem dashboard. Normally, it shouldn't have to be used at all, as display names get updated automatically when the bot is running.
 
-Then, Tlapbot automatically adds a command for each redeem in the redeem file.
+Tlapbot also automatically adds a command for each redeem in the redeems file.
 ### Tlapbot redeems types
 Tlapbot currently supports three different redeem types.
 #### List
@@ -41,12 +41,12 @@ Counter is a unique redeem type, in that it doesn't show up in the list of recen
 
 Instead, the tlapbot dashboard keeps a number for each "counter", and each redeems adds +1 to it.
 
-Counter redeems can be used to gauge interest, tally up votes, or to keep track of how many emotes should be added to the OBS scene.
+Counter redeems can be used to gauge interest, tally up votes, or to keep track of how many emotes should be added to an OBS scene.
 
 ### Tlapbot dashboard
-All of the recent redeems and active counters are shown together in the Tlapbot dashboard. The counters are on top, along with the number of times they've been redeemed, followed by a chronological list of recent List and Note redeems.
+Tlapbot dashboard is a standalone page available at `/dashboard`, made to be easily viewable as an owncast external action. The Tlapbot dashboard shows all redeems and active counters.
 
-Tlapbot dashboard is a standalone page available at `/dashboard`, made to be easily viewable as an owncast external action.
+Counters are at the top, followed by a chronological list of recent List and Note redeems.
 
 Tlapbot dashboard also shows the chatter's points balance when they open it as an external action.
 
@@ -66,6 +66,8 @@ Tlapbot requires Python 3, probably a fairly recent version of it too. (My live 
 The Python prerequisites for running tlapbot are the libraries `flask`,
 `requests` and `apscheduler`. If you follow the installation steps below,
 they should automatically be installed if you don't have them.
+
+You can also run Tlapbot in a [Python virtual environment](https://flask.palletsprojects.com/en/2.2.x/installation/#virtual-environments).
 ### Install from git repo (as a folder)
 1. Clone the repository.
 2. Run `pip install -e .` in the root folder. This will install tlapbot
