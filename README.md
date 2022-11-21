@@ -72,11 +72,15 @@ You can also run Tlapbot in a [Python virtual environment](https://flask.pallets
 1. Clone the repository.
 2. Run `pip install -e .` in the root folder. This will install tlapbot
 as a package in editable more.
-3. Initialize the database:
+3. Set the `FLASK_APP` environment variable.
+    ```bash
+    export FLASK_APP=tlapbot
+    ```
+4. Initialize the database:
     ```bash
     python -m flask init-db
     ```
-4. Create a `instance/config.py` file and fill it in as needed.
+5. Create a `instance/config.py` file and fill it in as needed.
 Default values are included in `tlapbot/default_config`, and values in
 `config.py` overwrite them. (The database also lives in the instance folder
 by default.)
@@ -87,7 +91,7 @@ by default.)
     OWNCAST_ACCESS_TOKEN # get one from owncast instance
     OWNCAST_INSTANCE_URL # default points to localhost owncast on default port
     ```
-5. OPTIONAL: Create an `instance/redeems.py` file and add your custom redeems.  
+6. OPTIONAL: Create an `instance/redeems.py` file and add your custom redeems.  
   If you don't add a redeems file, the bot will initialize the default redeems from `tlapbot/default_redeems.py`.  
   More details on how to write the config and redeems files are written later in the readme.
 
