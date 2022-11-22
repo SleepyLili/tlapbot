@@ -23,7 +23,7 @@ Tlapbot has these basic commands:
 - `!points` shows a chatter how many points they have.
 - `!name_update` is a special debug command, to be used with the user's name displays wrong in the redeem dashboard. Normally, it shouldn't have to be used at all, as display names get updated automatically when the bot is running.
 
-Then, Tlapbot automatically adds a command for each redeem in the redeem file.
+Tlapbot also automatically adds a command for each redeem in the redeems file.
 ### Tlapbot redeems types
 Tlapbot currently supports three different redeem types.
 #### List
@@ -41,12 +41,12 @@ Counter is a unique redeem type, in that it doesn't show up in the list of recen
 
 Instead, the tlapbot dashboard keeps a number for each "counter", and each redeems adds +1 to it.
 
-Counter redeems can be used to gauge interest, tally up votes, or to keep track of how many emotes should be added to the OBS scene.
+Counter redeems can be used to gauge interest, tally up votes, or to keep track of how many emotes should be added to an OBS scene.
 
 ### Tlapbot dashboard
-All of the recent redeems and active counters are shown together in the Tlapbot dashboard. The counters are on top, along with the number of times they've been redeemed, followed by a chronological list of recent List and Note redeems.
+Tlapbot dashboard is a standalone page available at `/dashboard`, made to be easily viewable as an owncast external action. The Tlapbot dashboard shows all redeems and active counters.
 
-Tlapbot dashboard is a standalone page available at `/dashboard`, made to be easily viewable as an owncast external action.
+Counters are at the top, followed by a chronological list of recent List and Note redeems.
 
 Tlapbot dashboard also shows the chatter's points balance when they open it as an external action.
 
@@ -66,15 +66,21 @@ Tlapbot requires Python 3, probably a fairly recent version of it too. (My live 
 The Python prerequisites for running tlapbot are the libraries `flask`,
 `requests` and `apscheduler`. If you follow the installation steps below,
 they should automatically be installed if you don't have them.
+
+You can also run Tlapbot in a [Python virtual environment](https://flask.palletsprojects.com/en/2.2.x/installation/#virtual-environments).
 ### Install from git repo (as a folder)
 1. Clone the repository.
 2. Run `pip install -e .` in the root folder. This will install tlapbot
 as a package in editable more.
-3. Initialize the database:
+3. Set the `FLASK_APP` environment variable.
+    ```bash
+    export FLASK_APP=tlapbot
+    ```
+4. Initialize the database:
     ```bash
     python -m flask init-db
     ```
-4. Create a `instance/config.py` file and fill it in as needed.
+5. Create a `instance/config.py` file and fill it in as needed.
 Default values are included in `tlapbot/default_config`, and values in
 `config.py` overwrite them. (The database also lives in the instance folder
 by default.)
@@ -85,7 +91,7 @@ by default.)
     OWNCAST_ACCESS_TOKEN # get one from owncast instance
     OWNCAST_INSTANCE_URL # default points to localhost owncast on default port
     ```
-5. OPTIONAL: Create an `instance/redeems.py` file and add your custom redeems.  
+6. OPTIONAL: Create an `instance/redeems.py` file and add your custom redeems.  
   If you don't add a redeems file, the bot will initialize the default redeems from `tlapbot/default_redeems.py`.  
   More details on how to write the config and redeems files are written later in the readme.
 
