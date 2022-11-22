@@ -1,5 +1,4 @@
-from flask import Flask, request, json, Blueprint, current_app
-from sqlite3 import Error
+from flask import Flask, request, json, Blueprint
 from tlapbot.db import get_db
 from tlapbot.owncast_helpers import (add_user_to_database, change_display_name,
         user_exists, send_chat, read_users_points, remove_duplicate_usernames)

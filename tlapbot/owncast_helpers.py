@@ -1,8 +1,6 @@
 from flask import current_app
 import requests
 from sqlite3 import Error
-from flask.cli import with_appcontext
-from tlapbot.db import get_db
 
 
 # # # requests stuff # # #
