@@ -16,7 +16,7 @@ def dashboard():
     username = request.args.get("username")
     if username is not None:
         users = read_all_users_with_username(db, username)
-    else: 
+    else:
         users = []
     utc_timezone = timezone.utc
     return render_template('dashboard.html',

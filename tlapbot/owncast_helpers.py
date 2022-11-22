@@ -55,6 +55,7 @@ def read_all_users_with_username(db, username):
         print("Error occured reading points from username:", e.args[0])
         print("To user:", username)
 
+
 def give_points_to_user(db, user_id, points):
     try:
         db.execute(
@@ -108,7 +109,7 @@ def add_user_to_database(db, user_id, display_name):
                 "INSERT INTO points(id, name, points) VALUES(?, ?, 10)",
                 (user_id, display_name)
             )
-        if user is not None and user[1] == None:
+        if user is not None and user[1] is None:
             cursor.execute(
                 """UPDATE points
                 SET name = ?
@@ -157,8 +158,6 @@ def add_to_redeem_queue(db, user_id, redeem_name, note=None):
         print("To user:", user_id, " with redeem:", redeem_name, "with note:", note)
 
 
-
-
 def all_counters(db):
     try:
         cursor = db.execute(
@@ -198,7 +197,7 @@ def remove_duplicate_usernames(db, user_id, username):
             """UPDATE points
             SET name = NULL
             WHERE name = ? AND NOT id = ?""",
-        (username, user_id)
+            (username, user_id)
         )
         db.commit()
     except Error as e:

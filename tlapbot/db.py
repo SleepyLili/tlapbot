@@ -68,7 +68,7 @@ def refresh_counters():
         db.commit()
     except Error as e:
         print("Error occured deleting old counters:", e.args[0])
-    
+
     for redeem, redeem_info in current_app.config['REDEEMS'].items():
         if redeem_info["type"] == "counter":
             try:
