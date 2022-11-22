@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+
+  # Example Owncast server
+  owncast:
+    image: gabekangas/owncast:latest
+    container_name: owncast
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q --spider --proxy=off localhost:8080/api/status || exit 1",
+        ]
+      start_period: 30s
+      interval: 3s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:8080:8080'
+      - '0.0.0.0:1936:1936'
+    volumes:
+      - ./owncast-data:/app/data/:rw
+    networks:
+      - internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    profiles:
+      - production
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/data:/data
+      - ./caddy/config:/config
+    networks:
+      - web
+      - internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      owncast:
+        condition: service_healthy
+      bot:
+        condition: service_healthy
+    profiles:
+      - production
+
+  ngrok:
+    image: wernight/ngrok
+    ports:
+      - '127.0.0.1:4040:4040'
+    networks:
+      - internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      bot:
+        condition: service_healthy
+    profiles:
+      - dev
+    command: ngrok http host.docker.internal:8000
+
+  bot:
+    image: tlapbot
+    container_name: tlapbot_bot
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q --spider --proxy=off localhost:8000/api/status || exit 1",
+        ]
+      start_period: 30s
+      interval: 3s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:8000:8000'
+    build:
+      context: .
+      # Feel free to remove or override this section
+      args:
+        - "UID=1000"
+        - "GID=1000"
+    volumes:
+      - ./instance:/app/instance/:rw
+    environment:
+      FLASK_APP: tlapbot
+    networks:
+      - internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  web:
+    external: false
+  internal:
+    external: false
+    driver: bridge

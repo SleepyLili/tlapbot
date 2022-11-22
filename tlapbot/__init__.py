@@ -1,9 +1,18 @@
 import os
-from flask import Flask
+import time
+import logging
+from flask import Flask, request, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 from tlapbot.db import get_db
 from tlapbot.owncast_helpers import is_stream_live, give_points_to_chat
 
+logger = logging.getLogger('tlapbot')
+logger.setLevel(logging.INFO)
+
+def get_instance(app, path):
+    """Return the path with the instance folder as it's parent."""
+
+    return os.path.join(app.instance_path, path)
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -14,15 +23,31 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    # Log incoming requests (useful for debugging)
+    @app.after_request
+    def after_request(response):
+
+        # Don't log unless explicitly enabled
+        if not app.config['ENABLE_LOGGING']:
+            return response
+
+        timestamp = time.strftime('[%Y-%b-%d %H:%M]')
+        logger.info('%s %s %s %s %s %s - %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status, request.data or "NODATA")
+        return response
+
+    @app.route("/api/status")
+    def get_online():
+        return jsonify({"status": "online"})
+
     # Prepare config: set db to instance folder, then load default, then
     # overwrite it with config.py and redeems.py
     app.config.from_mapping(
-        DATABASE=os.path.join(app.instance_path, "tlapbot.sqlite")
+        DATABASE=get_instance(app, "tlapbot.sqlite")
     )
     app.config.from_object('tlapbot.default_config')
     app.config.from_object('tlapbot.default_redeems')
-    app.config.from_pyfile('config.py', silent=True)
-    app.config.from_pyfile('redeems.py', silent=True)
+    app.config.from_pyfile(get_instance(app, 'config.py'), silent=True)
+    app.config.from_pyfile(get_instance(app, 'redeems.py'), silent=True)
 
     # prepare webhooks and redeem dashboard blueprints
     from . import owncast_webhooks

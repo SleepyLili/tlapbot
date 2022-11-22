@@ -1,0 +1,14 @@
+{
+	email webmaster@mydomain.com
+	local_certs
+}
+
+owncast.mydomain.com {
+	encode gzip
+	reverse_proxy host.docker.internal:8080
+	tls webmaster@mydomain.com
+}
+
+tlapbot.mydomain.com {
+	reverse_proxy host.docker.internal:8000
+}
