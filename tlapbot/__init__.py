@@ -1,4 +1,5 @@
 import os
+import logging
 from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 from tlapbot.db import get_db
@@ -7,7 +8,7 @@ from tlapbot.owncast_helpers import is_stream_live, give_points_to_chat
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-
+    
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
@@ -23,6 +24,12 @@ def create_app(test_config=None):
     app.config.from_object('tlapbot.default_redeems')
     app.config.from_pyfile('config.py', silent=True)
     app.config.from_pyfile('redeems.py', silent=True)
+
+    # Make logging work for gunicorn-ran instances of tlapbot.
+    if app.config['GUNICORN'] is True:
+        gunicorn_logger = logging.getLogger('gunicorn.error')
+        app.logger.handlers = gunicorn_logger.handlers
+        app.logger.setLevel(gunicorn_logger.level)
 
     # prepare webhooks and redeem dashboard blueprints
     from . import owncast_webhooks
