@@ -40,7 +40,10 @@ def create_app(test_config=None):
     def proxy_job():
         with app.app_context():
             if is_stream_live():
+                app.logger.info("Stream is LIVE. Giving points to chat.")
                 give_points_to_chat(get_db())
+            else:
+                app.logger.info("Stream is NOT LIVE. (Not giving points to chat.)")
 
     # start scheduler that will give points to users
     points_giver = BackgroundScheduler()

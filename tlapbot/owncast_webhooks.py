@@ -1,4 +1,4 @@
-from flask import Flask, request, json, Blueprint
+from flask import Flask, request, json, Blueprint, current_app
 from tlapbot.db import get_db
 from tlapbot.owncast_helpers import (add_user_to_database, change_display_name,
         user_exists, send_chat, read_users_points, remove_duplicate_usernames)
@@ -29,8 +29,8 @@ def owncast_webhook():
     elif data["type"] == "CHAT":
         user_id = data["eventData"]["user"]["id"]
         display_name = data["eventData"]["user"]["displayName"]
-        print(f'New chat message from {display_name}:')
-        print(f'{data["eventData"]["body"]}')
+        current_app.logger.debug(f'New chat message from {display_name}:')
+        current_app.logger.debug(f'{data["eventData"]["body"]}')
         if "!help" in data["eventData"]["body"]:
             send_help()
         elif "!points" in data["eventData"]["body"]:
