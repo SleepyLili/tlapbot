@@ -176,6 +176,8 @@ Run the app (with gunicorn):
 gunicorn -w 1 'tlapbot:create_app()'
 ```
 
+You should also set `GUNICORN` in your `config.py` file to `True` to see Tlapbot logs in your gunicorn output. By default, gunicorn will only show `error` and `critical` warnings, but you can set the `--log-level` argument when running the app to set it to `warning`, `debug` or `info` too.
+
 **⚠️WARNING:** Because of the way the scheduler is initialized in the project,
 I recommend running tlapbot with only one gunicorn worker. (`-w 1`)
 
@@ -224,6 +226,7 @@ in seconds.
 - `POINTS_AMOUNT_GIVEN` decides how many channel points users receive.
 - `LIST_REDEEMS` if `True`, all redeems will be listed after the `!help` command in chat.
 This makes the !help output quite long, so it's `False` by default.
+- `GUNICORN` if `True`, sets logging to use gunicorn's logger. Only set this to True if you're using Gunicorn to run tlapbot.
 #### Example config:
 An example to show what your config like could look like
 ```python
