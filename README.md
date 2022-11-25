@@ -178,6 +178,10 @@ gunicorn -w 1 'tlapbot:create_app()'
 
 You should also set `GUNICORN` in your `config.py` file to `True` to see Tlapbot logs in your gunicorn output. By default, gunicorn will only show `error` and `critical` warnings, but you can set the `--log-level` argument when running the app to set it to `warning`, `debug` or `info` too.
 
+```bash
+gunicorn -w 1 --log-level debug 'tlapbot:create_app()'
+```
+
 **⚠️WARNING:** Because of the way the scheduler is initialized in the project,
 I recommend running tlapbot with only one gunicorn worker. (`-w 1`)
 
