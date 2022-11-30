@@ -26,7 +26,7 @@ def create_app(test_config=None):
     app.config.from_pyfile('redeems.py', silent=True)
 
     # Make logging work for gunicorn-ran instances of tlapbot.
-    if app.config['GUNICORN'] is True:
+    if app.config['GUNICORN']:
         gunicorn_logger = logging.getLogger('gunicorn.error')
         app.logger.handlers = gunicorn_logger.handlers
         app.logger.setLevel(gunicorn_logger.level)
