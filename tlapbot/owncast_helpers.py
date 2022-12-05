@@ -6,14 +6,14 @@ from sqlite3 import Error
 # # # requests stuff # # #
 def is_stream_live():
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/status'
-    r = requests.post(url)
+    r = requests.get(url)
     return r.json()["online"]
 
 
 def give_points_to_chat(db):
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/clients'
     headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
-    r = requests.post(url, headers=headers)
+    r = requests.get(url, headers=headers)
     unique_users = list(set(map(lambda user_object: user_object["user"]["id"], r.json())))
     for user_id in unique_users:
         give_points_to_user(db,
