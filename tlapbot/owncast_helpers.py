@@ -14,7 +14,7 @@ def give_points_to_chat(db):
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/clients'
     headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
     r = requests.get(url, headers=headers)
-    unique_users = list(set(map(lambda user_object: user_object["user"]["id"], r.json())))
+    unique_users = set(map(lambda user_object: user_object["user"]["id"], r.json()))
     for user_id in unique_users:
         give_points_to_user(db,
                             user_id,
