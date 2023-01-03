@@ -154,7 +154,8 @@ def add_to_redeem_queue(db, user_id, redeem_name, note=None):
         db.commit()
     except Error as e:
         current_app.logger.error("Error occured adding to redeem queue:", e.args[0])
-        current_app.logger.error("To user:", user_id, " with redeem:", redeem_name, "with note:", note)
+        current_app.logger.error("To user:", user_id, " with redeem:",
+                                 redeem_name, "with note:", note)
 
 
 def all_counters(db):
