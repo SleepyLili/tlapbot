@@ -51,8 +51,8 @@ def read_all_users_with_username(db, username):
         users = cursor.fetchall()
         return users
     except Error as e:
-        current_app.logger.error("Error occured reading points from username:", e.args[0])
-        current_app.logger.error("To user:", username)
+        current_app.logger.error("Error occured reading points by username:", e.args[0])
+        current_app.logger.error("To everyone with username:", username)
 
 
 def give_points_to_user(db, user_id, points):
