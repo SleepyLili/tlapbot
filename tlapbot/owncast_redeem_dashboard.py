@@ -20,6 +20,7 @@ def dashboard():
                            queue=pretty_redeem_queue(db),
                            counters=all_counters(db),
                            redeems=current_app.config['REDEEMS'],
+                           prefix=current_app.config['PREFIX'],
                            username=username,
                            users=users,
                            utc_timezone=utc_timezone)

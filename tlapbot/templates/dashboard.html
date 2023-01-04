@@ -97,7 +97,7 @@
                 </thead>
                 {% for redeem, redeem_info in redeems.items() %}
                 <tbody>
-                    <td>!{{ redeem }}</td>
+                    <td>{{ prefix }}{{ redeem }}</td>
                     <td>{{ redeem_info["price"] }}</td>
                     <td>{{ redeem_info["type"] }}</td>
                     {% if redeem_info["info"] %}
