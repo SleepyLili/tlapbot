@@ -133,16 +133,35 @@ def change_display_name(db, user_id, new_name):
         current_app.logger.error("To user:", user_id, new_name)
 
 
-def add_to_counter(db, counter_name):
+def check_counter_exists(db, counter_name):
     try:
         cursor = db.execute(
-            "UPDATE counters SET count = count + 1 WHERE name = ?",
+            "SELECT counter FROM counters WHERE name = ?",
             (counter_name,)
         )
-        db.commit()
+        counter = cursor.fetchone()
+        if counter is None:
+            current_app.logger.warning("Counter not found in database.")
+            current_app.logger.warning("Maybe you forgot to run the refresh-counters CLI command "
+                                       "after you added a new counter to the config?")
+            return False
+        return True
     except Error as e:
-        current_app.logger.error("Error occured adding to counter:", e.args[0])
-        current_app.logger.error("To counter:", counter_name)
+        current_app.logger.error("Error occured checking if counter exists:", e.args[0])
+        current_app.logger.error("For counter:", counter_name)
+
+
+def add_to_counter(db, counter_name):
+    if check_counter_exists(db, counter_name):
+        try:
+            cursor = db.execute(
+                "UPDATE counters SET count = count + 1 WHERE name = ?",
+                (counter_name,)
+            )
+            db.commit()
+        except Error as e:
+            current_app.logger.error("Error occured adding to counter:", e.args[0])
+            current_app.logger.error("To counter:", counter_name)
 
 
 def add_to_redeem_queue(db, user_id, redeem_name, note=None):
