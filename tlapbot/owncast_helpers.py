@@ -136,7 +136,7 @@ def change_display_name(db, user_id, new_name):
 def check_counter_exists(db, counter_name):
     try:
         cursor = db.execute(
-            "SELECT counter FROM counters WHERE name = ?",
+            "SELECT count FROM counters WHERE name = ?",
             (counter_name,)
         )
         counter = cursor.fetchone()
