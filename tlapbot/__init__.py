@@ -30,6 +30,11 @@ def create_app(test_config=None):
         gunicorn_logger = logging.getLogger('gunicorn.error')
         app.logger.handlers = gunicorn_logger.handlers
         app.logger.setLevel(gunicorn_logger.level)
+    
+    # Check for wrong config that would break Tlapbot
+    if len(app.config['PREFIX']) != 1:
+        raise RuntimeError("Prefix is >1 character. "
+                           "Change your config to set 1-character prefix.")
 
     # prepare webhooks and redeem dashboard blueprints
     from . import owncast_webhooks
