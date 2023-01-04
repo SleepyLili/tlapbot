@@ -47,6 +47,6 @@ def owncast_webhook():
             change_display_name(db, user_id, display_name)
             if data["eventData"]["user"]["authenticated"]:
                 remove_duplicate_usernames(db, user_id, display_name)
-        elif data["eventData"]["body"].startswith(prefix):  # TODO: make prefix configurable
+        elif data["eventData"]["body"].startswith(prefix):
             handle_redeem(data["eventData"]["body"], user_id)
     return data
