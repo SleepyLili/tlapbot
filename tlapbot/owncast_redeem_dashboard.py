@@ -10,9 +10,6 @@ bp = Blueprint('redeem_dashboard', __name__)
 @bp.route('/dashboard', methods=['GET'])
 def dashboard():
     db = get_db()
-    queue = pretty_redeem_queue(db)
-    counters = all_counters(db)
-    redeems = current_app.config['REDEEMS']
     username = request.args.get("username")
     if username is not None:
         users = read_all_users_with_username(db, username)
@@ -20,9 +17,9 @@ def dashboard():
         users = []
     utc_timezone = timezone.utc
     return render_template('dashboard.html',
-                           queue=queue,
-                           counters=counters,
-                           redeems=redeems,
+                           queue=pretty_redeem_queue(db),
+                           counters=all_counters(db),
+                           redeems=current_app.config['REDEEMS'],
                            username=username,
                            users=users,
                            utc_timezone=utc_timezone)
