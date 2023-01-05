@@ -38,8 +38,8 @@ def read_users_points(db, user_id):
         )
         return cursor.fetchone()[0]
     except Error as e:
-        current_app.logger.error("Error occured reading points:", e.args[0])
-        current_app.logger.error("To user:", user_id)
+        current_app.logger.error(f"Error occured reading points: {e.args[0]}")
+        current_app.logger.error(f"To user: {user_id}")
 
 
 def read_all_users_with_username(db, username):
@@ -51,8 +51,8 @@ def read_all_users_with_username(db, username):
         users = cursor.fetchall()
         return users
     except Error as e:
-        current_app.logger.error("Error occured reading points by username:", e.args[0])
-        current_app.logger.error("To everyone with username:", username)
+        current_app.logger.error(f"Error occured reading points by username: {e.args[0]}")
+        current_app.logger.error(f"To everyone with username: {username}")
 
 
 def give_points_to_user(db, user_id, points):
@@ -63,8 +63,8 @@ def give_points_to_user(db, user_id, points):
         )
         db.commit()
     except Error as e:
-        current_app.logger.error("Error occured giving points:", e.args[0])
-        current_app.logger.error("To user:", user_id, "  amount of points:", points)
+        current_app.logger.error(f"Error occured giving points: {e.args[0]}")
+        current_app.logger.error(f"To user: {user_id} amount of points: {points}")
 
 
 def use_points(db, user_id, points):
@@ -76,8 +76,8 @@ def use_points(db, user_id, points):
         db.commit()
         return True
     except Error as e:
-        current_app.logger.error("Error occured using points:", e.args[0])
-        current_app.logger.error("From user:", user_id, "  amount of points:", points)
+        current_app.logger.error(f"Error occured using points: {e.args[0]}")
+        current_app.logger.error(f"From user: {user_id} amount of points: {points}")
         return False
 
 
@@ -91,8 +91,8 @@ def user_exists(db, user_id):
             return False
         return True
     except Error as e:
-        current_app.logger.error("Error occured checking if user exists:", e.args[0])
-        current_app.logger.error("To user:", user_id)
+        current_app.logger.error(f"Error occured checking if user exists: {e.args[0]}")
+        current_app.logger.error(f"To user: {user_id}")
 
 
 def add_user_to_database(db, user_id, display_name):
@@ -117,8 +117,8 @@ def add_user_to_database(db, user_id, display_name):
             )
         db.commit()
     except Error as e:
-        current_app.logger.error("Error occured adding user to db:", e.args[0])
-        current_app.logger.error("To user:", user_id, display_name)
+        current_app.logger.error(f"Error occured adding user to db: {e.args[0]}")
+        current_app.logger.error(f"To user id: {user_id}, with display name: {display_name}")
 
 
 def change_display_name(db, user_id, new_name):
@@ -129,8 +129,8 @@ def change_display_name(db, user_id, new_name):
         )
         db.commit()
     except Error as e:
-        current_app.logger.error("Error occured changing display name:", e.args[0])
-        current_app.logger.error("To user:", user_id, new_name)
+        current_app.logger.error(f"Error occured changing display name: {e.args[0]}")
+        current_app.logger.error(f"To user id: {user_id}, with display name: {new_name}")
 
 
 def check_counter_exists(db, counter_name):
@@ -147,8 +147,8 @@ def check_counter_exists(db, counter_name):
             return False
         return True
     except Error as e:
-        current_app.logger.error("Error occured checking if counter exists:", e.args[0])
-        current_app.logger.error("For counter:", counter_name)
+        current_app.logger.error(f"Error occured checking if counter exists: {e.args[0]}")
+        current_app.logger.error(f"For counter: {counter_name}")
 
 
 def add_to_counter(db, counter_name):
@@ -161,8 +161,8 @@ def add_to_counter(db, counter_name):
             db.commit()
             return True
         except Error as e:
-            current_app.logger.error("Error occured adding to counter:", e.args[0])
-            current_app.logger.error("To counter:", counter_name)
+            current_app.logger.error(f"Error occured adding to counter: {e.args[0]}")
+            current_app.logger.error(f"To counter: {counter_name}")
     return False
 
 
@@ -175,9 +175,8 @@ def add_to_redeem_queue(db, user_id, redeem_name, note=None):
         db.commit()
         return True
     except Error as e:
-        current_app.logger.error("Error occured adding to redeem queue:", e.args[0])
-        current_app.logger.error("To user:", user_id, " with redeem:",
-                                 redeem_name, "with note:", note)
+        current_app.logger.error(f"Error occured adding to redeem queue: {e.args[0]}")
+        current_app.logger.error(f"To user: {user_id} with redeem: {redeem_name} with note: {note}")
         return False
 
 
@@ -188,7 +187,7 @@ def all_counters(db):
         )
         return cursor.fetchall()
     except Error as e:
-        current_app.logger.error("Error occured selecting all counters:", e.args[0])
+        current_app.logger.error(f"Error occured selecting all counters: {e.args[0]}")
 
 
 def pretty_redeem_queue(db):
@@ -201,7 +200,7 @@ def pretty_redeem_queue(db):
         )
         return cursor.fetchall()
     except Error as e:
-        current_app.logger.error("Error occured selecting pretty redeem queue:", e.args[0])
+        current_app.logger.error(f"Error occured selecting pretty redeem queue: {e.args[0]}")
 
 
 def whole_redeem_queue(db):
@@ -211,7 +210,7 @@ def whole_redeem_queue(db):
         )
         return cursor.fetchall()
     except Error as e:
-        current_app.logger.error("Error occured selecting redeem queue:", e.args[0])
+        current_app.logger.error(f"Error occured selecting redeem queue: {e.args[0]}")
 
 
 def remove_duplicate_usernames(db, user_id, username):
@@ -224,4 +223,4 @@ def remove_duplicate_usernames(db, user_id, username):
         )
         db.commit()
     except Error as e:
-        current_app.logger.error("Error occured removing duplicate usernames:", e.args[0])
+        current_app.logger.error(f"Error occured removing duplicate usernames: {e.args[0]}")
