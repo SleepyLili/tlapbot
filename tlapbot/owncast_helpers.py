@@ -159,9 +159,11 @@ def add_to_counter(db, counter_name):
                 (counter_name,)
             )
             db.commit()
+            return True
         except Error as e:
             current_app.logger.error("Error occured adding to counter:", e.args[0])
             current_app.logger.error("To counter:", counter_name)
+    return False
 
 
 def add_to_redeem_queue(db, user_id, redeem_name, note=None):
@@ -171,10 +173,12 @@ def add_to_redeem_queue(db, user_id, redeem_name, note=None):
             (redeem_name, user_id, note)
             )
         db.commit()
+        return True
     except Error as e:
         current_app.logger.error("Error occured adding to redeem queue:", e.args[0])
         current_app.logger.error("To user:", user_id, " with redeem:",
                                  redeem_name, "with note:", note)
+        return False
 
 
 def all_counters(db):
