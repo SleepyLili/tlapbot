@@ -39,7 +39,10 @@ def owncast_webhook():
             send_help()
         elif data["eventData"]["body"].startswith(f"{prefix}points"):
             points = read_users_points(db, user_id)
-            send_chat(f"{display_name}'s points: {points}")
+            if points is None:
+                send_chat("Error reading points.")
+            else:
+                send_chat(f"{display_name}'s points: {points}")
         elif data["eventData"]["body"].startswith(f"{prefix}name_update"):
             # Forces name update in case bot didn't catch the NAME_CHANGE
             # event. Also removes saved usernames from users with same name
