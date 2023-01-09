@@ -1,7 +1,7 @@
 from flask import current_app
 import requests
 from sqlite3 import Error
-
+from re import sub
 
 # # # requests stuff # # #
 def is_stream_live():
@@ -27,6 +27,12 @@ def send_chat(message):
     r = requests.post(url, headers=headers, json={"body": message})
     return r.json()
 
+def remove_emoji(message):
+    return sub(
+        r'<img class="emoji" alt="(:.*:)" title=":.*:" src="/img/emoji/.*">',
+        r'\1',
+        message
+    )
 
 # # # db stuff # # #
 def read_users_points(db, user_id):
