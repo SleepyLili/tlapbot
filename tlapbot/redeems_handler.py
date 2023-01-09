@@ -31,7 +31,8 @@ def handle_redeem(message, user_id):
         else:
             send_chat(f"Redeeming {redeem} failed.")
     elif redeem_type == "list":
-        if add_to_redeem_queue(db, user_id, redeem) and use_points(db, user_id, price):
+        if (add_to_redeem_queue(db, user_id, redeem) and
+                use_points(db, user_id, price)):
             send_chat(f"{redeem} redeemed for {price} points.")
         else:
             send_chat(f"Redeeming {redeem} failed.")
@@ -39,7 +40,8 @@ def handle_redeem(message, user_id):
         if not note:
             send_chat(f"Cannot redeem {redeem}, no note included.")
             return
-        if add_to_redeem_queue(db, user_id, redeem, remove_emoji(note)) and use_points(db, user_id, price):
+        if (add_to_redeem_queue(db, user_id, redeem, remove_emoji(note)) and
+                use_points(db, user_id, price)):
             send_chat(f"{redeem} redeemed for {price} points.")
         else:
             send_chat(f"Redeeming {redeem} failed.")
