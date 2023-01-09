@@ -100,7 +100,8 @@ def clear_queue_command():
 @click.command('refresh-counters')
 @with_appcontext
 def refresh_counters_command():
-    """Refresh counters from current config file. (Remove old ones, add new ones.)"""
+    """Refresh counters from current config file.
+    (Remove old ones, add new ones.)"""
     refresh_counters()
     click.echo('Counters refreshed.')
 
