@@ -29,7 +29,7 @@ def send_chat(message):
 
 def remove_emoji(message):
     return sub(
-        r'<img class="emoji" alt="(:.*:)" title=":.*:" src="/img/emoji/.*">',
+        r'<img class="emoji" alt="(:.*?:)" title=":.*?:" src="/img/emoji/.*?">',
         r'\1',
         message
     )
