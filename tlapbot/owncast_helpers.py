@@ -27,12 +27,6 @@ def send_chat(message):
     r = requests.post(url, headers=headers, json={"body": message})
     return r.json()
 
-def remove_emoji(message):
-    return sub(
-        r'<img class="emoji" alt="(:.*?:)" title=":.*?:" src="/img/emoji/.*?">',
-        r'\1',
-        message
-    )
 
 # # # db stuff # # #
 def read_users_points(db, user_id):
@@ -230,3 +224,16 @@ def remove_duplicate_usernames(db, user_id, username):
         db.commit()
     except Error as e:
         current_app.logger.error(f"Error occured removing duplicate usernames: {e.args[0]}")
+
+
+# # # misc. stuff # # #
+def remove_emoji(message):
+    return sub(
+        r'<img class="emoji" alt="(:.*?:)" title=":.*?:" src="/img/emoji/.*?">',
+        r'\1',
+        message
+    )
+
+
+def remove_inactive_redeems(redeems):
+    
