@@ -242,4 +242,5 @@ def is_redeem_active(redeem, active_categories):
 
 
 def remove_inactive_redeems(redeems, active_categories):
-    return dict(filter(lambda redeem: is_redeem_active(redeem, active_categories), redeems.items()))
+    return dict(filter(lambda redeem: is_redeem_active(redeem, active_categories),
+                       redeems.items()))
