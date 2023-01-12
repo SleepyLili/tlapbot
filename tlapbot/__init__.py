@@ -3,8 +3,8 @@ import logging
 from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 from tlapbot.db import get_db
-from tlapbot.owncast_helpers import is_stream_live, give_points_to_chat
-
+from tlapbot.owncast_helpers import (is_stream_live, give_points_to_chat,
+        remove_inactive_redeems)
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -24,6 +24,10 @@ def create_app(test_config=None):
     app.config.from_object('tlapbot.default_redeems')
     app.config.from_pyfile('config.py', silent=True)
     app.config.from_pyfile('redeems.py', silent=True)
+    app.config.from_mapping(
+        REDEEMS=remove_inactive_redeems(app.config['REDEEMS'],
+                                        app.config['ACTIVE_TYPES'])
+    )
 
     # Make logging work for gunicorn-ran instances of tlapbot.
     if app.config['GUNICORN']:
