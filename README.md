@@ -25,7 +25,13 @@ Tlapbot has these basic commands:
 
 Tlapbot also automatically adds a command for each redeem in the redeems file.
 ### Tlapbot redeems types
-Tlapbot currently supports three different redeem types.
+Tlapbot currently supports three different redeem types. Each type of a redeem
+works slightly differently, and displays differently on the redeems dashboard.
+
+Redeems can also optionally be sorted into "categories" that can be turned on
+or off in the config file. This means that the redeems file can list redeems
+for different types of streams, and you can turn them on or off. Examples on how
+to do that are listed later in the config file examples.
 #### List
 List redeems are basic redeems, most similar to the ones on Twitch.
 
@@ -212,7 +218,12 @@ You should run this command every time you've added or removed counters from `re
 ```bash
 python -m flask refresh-counters
 ```
-This command only changes counters, so if you want to clear the queue with list and note redeems too, you should run `clear-queue` after it.
+This command only changes counters, so if you want to clear the queue with list and note redeems too, you should run `clear-queue` after it, or run `clear-refresh` to do both actions together.
+
+#### clear-refresh
+Does the same as `clear-queue` and `refresh-counters` together.
+
+Only run this if you're adding/removing counters, want to reset them to zero and want to clear all redeems as well.
 ## Configuration files
 ### config.py
 Values you can include in `config.py` to change how the bot behaves.
@@ -231,6 +242,7 @@ in seconds.
 - `LIST_REDEEMS` if `True`, all redeems will be listed after the `!help` command in chat.
 This makes the !help output quite long, so it's `False` by default.
 - `GUNICORN` if `True`, sets logging to use gunicorn's logger. Only set this to True if you're using Gunicorn to run tlapbot.
+- `ACTIVE_CATEGORIES` can be an empty list `[]`, or a list of strings of activated categories (i.e. `["chatting", "singing"]`). Redeems with a category included in the list will be active, redeems from other categories will not be active. Redeems with no category are always active.
 #### Example config:
 An example to show what your config like could look like
 ```python
@@ -239,24 +251,27 @@ OWNCAST_ACCESS_TOKEN="5AT0gbe9ZuzDunsBG0rcwfalQNTi3fvV70NPvvQHk3I="
 OWNCAST_INSTANCE_URL="http://MyTlapbotServer.com"
 POINTS_CYCLE_TIME=300
 LIST_REDEEMS=True
+ACTIVE_CATEGORIES=["gaming"]
 ```
 ### redeems.py
 `redeems.py` is a file where you define all your custom redeems. Tlapbot will work without it, but it will load a few default, generic redeems from `tlapbot/default_redeems.py`.
 
 (`redeems.py` should be in the instance folder: `/instance/redeems.py` for folder install.)
-#### Default `redeems.py`:
+#### `default_redeems.py`:
 ```python
 REDEEMS={
     "hydrate": {"price": 60, "type": "list"},
     "lurk": {"price": 1, "type": "counter", "info": "Let us know you're going to lurk."},
     "react": {"price": 200, "type": "note", "info": "Attach link to a video for me to react to."},
-    "request": {"price": 100, "type": "note", "info": "Request a level, gamemode, skin, etc."}
+    "request": {"price": 100, "type": "note", "info": "Request a level, gamemode, skin, etc."},
+    "inactive": {"price": 100, "type": "note", "info": "Example redeem that is inactive by default", "category": ["inactive"]}
 }
 ```
 #### File format
 `redeems.py` is a config file with just a `REDEEMS` key, that assigns a dictionary of redeems to it.
-Each dictionary entry is a redeem, and the dictionary keys are strings that decides the chat command for the redeem. The value is another dictionary that needs to have entries for `"price"`, `"type"` and optionally `"info"`.
+Each dictionary entry is a redeem, and the dictionary keys are strings that decides the chat command for the redeem. The value is another dictionary that needs to have entries for `"price"`, `"type"` and optionally `"info"` and `"category"`.
 
 - `"price"` value should be an integer that decides how many points the redeem will cost.
 - `"type"` value should be either `"list"`, `"counter"` or `"note"`. This decided the redeem's type, and whether it will show up as a counter at the top of the dashboard or as an entry in the "recent redeems" chart.
 - `"info"` value should be a string that describes what the command does. It's optional, but I recommend writing one for all `"list"` and `"note"` redeems (so that chatters know that they should write a note).
+- `"category"` is an optional list of strings, the categories the redeem is in. If a category from the list is in `ACTIVE_CATEGORIES` from `config.py`, then the redeem will be active. Otherwise it will not appear at all. **If you want a redeem to be always active, leave this field out.**
