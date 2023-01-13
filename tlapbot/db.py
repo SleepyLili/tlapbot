@@ -106,6 +106,15 @@ def refresh_counters_command():
     click.echo('Counters refreshed.')
 
 
+@click.command('clear-refresh')
+@with_appcontext
+def refresh_and_clear_command():
+    """Refresh counters and clear queue."""
+    refresh_counters()
+    clear_redeem_queue()
+    click.echo('Counters refreshed and queue cleared.')
+
+
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)

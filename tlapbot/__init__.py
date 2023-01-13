@@ -51,6 +51,7 @@ def create_app(test_config=None):
     db.init_app(app)
     app.cli.add_command(db.clear_queue_command)
     app.cli.add_command(db.refresh_counters_command)
+    app.cli.add_command(db.refresh_and_clear_command)
     
     # scheduler job for giving points to users
     def proxy_job():
