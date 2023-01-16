@@ -236,7 +236,7 @@ def remove_emoji(message):
 
 
 def is_redeem_active(redeem, active_categories):
-    if "category" in redeem[1]:
+    if "category" in redeem[1] and redeem[1]["category"]:
         for category in redeem[1]["category"]:
             if category in active_categories:
                 return True
