@@ -248,7 +248,7 @@ An example to show what your config like could look like
 ```python
 SECRET_KEY= # string with secret key would be here.
 OWNCAST_ACCESS_TOKEN="5AT0gbe9ZuzDunsBG0rcwfalQNTi3fvV70NPvvQHk3I="
-OWNCAST_INSTANCE_URL="http://MyTlapbotServer.com"
+OWNCAST_INSTANCE_URL="http://MyTlapbotServer.example"
 POINTS_CYCLE_TIME=300
 LIST_REDEEMS=True
 ACTIVE_CATEGORIES=["gaming"]
