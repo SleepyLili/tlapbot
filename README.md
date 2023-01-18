@@ -23,6 +23,9 @@ Tlapbot has these basic commands:
 - `!points` shows a chatter how many points they have.
 - `!name_update` is a special debug command, to be used with the user's name displays wrong in the redeem dashboard. Normally, it shouldn't have to be used at all, as display names get updated automatically when the bot is running.
 
+(If you change the default prefix of `!` to something else, these commands will
+use the new prefix instead.)
+
 Tlapbot also automatically adds a command for each redeem in the redeems file.
 ### Tlapbot redeems types
 Tlapbot currently supports three different redeem types. Each type of a redeem
@@ -245,6 +248,7 @@ in seconds.
 This makes the !help output quite long, so it's `False` by default.
 - `GUNICORN` if `True`, sets logging to use gunicorn's logger. Only set this to True if you're using Gunicorn to run tlapbot.
 - `ACTIVE_CATEGORIES` can be an empty list `[]`, or a list of strings of activated categories (i.e. `["chatting", "singing"]`). Redeems with a category included in the list will be active, redeems from other categories will not be active. Redeems with no category are always active.
+- `PREFIX` is a *single character string* that decides what character gets used as a prefix for tlapbot commands. (i.e. you can use `?` instead of `!`). Symbols are recommended. Prefix cannot be longer than one character.
 #### Example config:
 An example to show what your config like could look like
 ```python
