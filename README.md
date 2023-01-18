@@ -274,4 +274,7 @@ Each dictionary entry is a redeem, and the dictionary keys are strings that deci
 - `"price"` value should be an integer that decides how many points the redeem will cost.
 - `"type"` value should be either `"list"`, `"counter"` or `"note"`. This decided the redeem's type, and whether it will show up as a counter at the top of the dashboard or as an entry in the "recent redeems" chart.
 - `"info"` value should be a string that describes what the command does. It's optional, but I recommend writing one for all `"list"` and `"note"` redeems (so that chatters know that they should write a note).
-- `"category"` is an optional list of strings, the categories the redeem is in. If a category from the list is in `ACTIVE_CATEGORIES` from `config.py`, then the redeem will be active.
+- `"category"` is an optional list of strings, the categories the redeem is in.
+If a category from the list is in `ACTIVE_CATEGORIES` from `config.py`,
+then the redeem will be active. It will not be active if none of the categories
+are in `ACTIVE_CATEGORIES`. Redeems with no category are always active.
