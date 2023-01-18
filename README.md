@@ -131,7 +131,7 @@ it will work because the ngrok connection is https.
 
 **External Action config example:**
 ```
-URL: MyTlapbotServer.com/dashboard
+URL: MyTlapbotServer.example/dashboard
 Action Title: Redeems Dashboard
 ```
 #### Note about https and reverse proxying
@@ -142,14 +142,14 @@ The Owncast documentation about SSL and Reverse proxying is here: https://owncas
 If your followed the [Owncast recommendation to use Caddy](https://owncast.online/docs/sslproxies/caddy/) you'd only need to include this in your caddyfile to make the tlapbot dashboard work:
 
 ```
-MyTlapbotServer.com {
+MyTlapbotServer.example {
         reverse_proxy localhost:8000
 }
 ```
-then MyTlapbotServer.com/owncastWebhook is the URL for webhooks,
-and MyTlapbotServer.com/dashboard is the URL for the dashboard.
+then MyTlapbotServer.example/owncastWebhook is the URL for webhooks,
+and MyTlapbotServer.example/dashboard is the URL for the dashboard.
 
-(And, obviously, you'd need to own the MyTlapbotServer.com domain, and have an A record pointing to your server's IP address.)
+(And, obviously, you'd need to own the MyTlapbotServer.example domain, and have an A record pointing to your server's IP address.)
 ## Running the bot
 ### Running in debug:
 Set the FLASK_APP variable:
@@ -223,7 +223,7 @@ This command only changes counters, so if you want to clear the queue with list 
 #### clear-refresh
 Does the same as `clear-queue` and `refresh-counters` together.
 
-Only run this if you're adding/removing counters, want to reset them to zero and want to clear all redeems as well.
+Run this if you're adding/removing counters, want to reset them to zero and want to clear all redeems as well.
 ## Configuration files
 ### config.py
 Values you can include in `config.py` to change how the bot behaves.
