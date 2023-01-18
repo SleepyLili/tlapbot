@@ -222,7 +222,9 @@ This command only changes counters, so if you want to clear the queue with list 
 
 #### clear-refresh
 Does the same as `clear-queue` and `refresh-counters` together.
-
+```bash
+python -m flask clear-refresh
+```
 Run this if you're adding/removing counters, want to reset them to zero and want to clear all redeems as well.
 ## Configuration files
 ### config.py
