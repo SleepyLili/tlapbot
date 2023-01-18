@@ -196,7 +196,7 @@ get given points by each worker. (So running the app with `-w 4` means users get
 
 I'd like to fix this shortcoming of tlapbot at some point in the future (so that it can take advantage of extra workers), but for now it's broken like this.
 
-## CLI commands: updating config + redeems
+## CLI commands: Updating redeems, clearing the queue
 Tlapbot comes with a few Click CLI commands. The commands let you clear out counters and the redeems dashboard.
 
 #### init-db
@@ -233,7 +233,7 @@ Values you can include in `config.py` to change how the bot behaves.
 Including these values is mandatory if you want tlapbot to work.
 - `SECRET_KEY` is your secret key. Get one from running `python -c 'import secrets; print(secrets.token_hex())'`
 - `OWNCAST_ACCESS_TOKEN` is the owncast access token that owncast will use to get list of users in chat. Generate one in your owncast instance.
-- `OWNCAST_INSTANCE_URL` is the full URL of your owncast instance, like `"http://MyTlapbotServer.com"`
+- `OWNCAST_INSTANCE_URL` is the full URL of your owncast instance, like `"http://MyTlapbotServer.example"`
 #### Optional
 Including these values will overwrite their defaults from `/tlapbot/default_config.py`.
 - `POINTS_CYCLE_TIME` decides how often channel points are given to users in chat,
