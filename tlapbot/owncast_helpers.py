@@ -6,7 +6,11 @@ from re import sub
 # # # requests stuff # # #
 def is_stream_live():
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/status'
-    r = requests.get(url)
+    try:
+        r = requests.get(url)
+    except requests.exceptions.RequestException as e:
+        current_app.logger.error(f"Error occured checking if stream is live: {e.args[0]}")
+        return False
     return r.json()["online"]
 
 
