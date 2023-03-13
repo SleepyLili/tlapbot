@@ -30,26 +30,27 @@ def owncast_webhook():
         if data["eventData"]["user"]["authenticated"]:
             remove_duplicate_usernames(db, user_id, new_name)
     elif data["type"] == "CHAT":
-        prefix = current_app.config['PREFIX']
-        user_id = data["eventData"]["user"]["id"]
-        display_name = data["eventData"]["user"]["displayName"]
-        current_app.logger.debug(f'New chat message from {display_name}:')
-        current_app.logger.debug(f'{data["eventData"]["body"]}')
-        if data["eventData"]["body"].startswith(f"{prefix}help"):
-            send_help()
-        elif data["eventData"]["body"].startswith(f"{prefix}points"):
-            points = read_users_points(db, user_id)
-            if points is None:
-                send_chat("Error reading points.")
-            else:
-                send_chat(f"{display_name}'s points: {points}")
-        elif data["eventData"]["body"].startswith(f"{prefix}name_update"):
-            # Forces name update in case bot didn't catch the NAME_CHANGE
-            # event. Also removes saved usernames from users with same name
-            # if user is authenticated.
-            change_display_name(db, user_id, display_name)
-            if data["eventData"]["user"]["authenticated"]:
-                remove_duplicate_usernames(db, user_id, display_name)
-        elif data["eventData"]["body"].startswith(prefix):
-            handle_redeem(data["eventData"]["body"], user_id)
+        if not current_app.config['PASSIVE']:
+            prefix = current_app.config['PREFIX']
+            user_id = data["eventData"]["user"]["id"]
+            display_name = data["eventData"]["user"]["displayName"]
+            current_app.logger.debug(f'New chat message from {display_name}:')
+            current_app.logger.debug(f'{data["eventData"]["body"]}')
+            if data["eventData"]["body"].startswith(f"{prefix}help"):
+                send_help()
+            elif data["eventData"]["body"].startswith(f"{prefix}points"):
+                points = read_users_points(db, user_id)
+                if points is None:
+                    send_chat("Error reading points.")
+                else:
+                    send_chat(f"{display_name}'s points: {points}")
+            elif data["eventData"]["body"].startswith(f"{prefix}name_update"):
+                # Forces name update in case bot didn't catch the NAME_CHANGE
+                # event. Also removes saved usernames from users with same name
+                # if user is authenticated.
+                change_display_name(db, user_id, display_name)
+                if data["eventData"]["user"]["authenticated"]:
+                    remove_duplicate_usernames(db, user_id, display_name)
+            elif data["eventData"]["body"].startswith(prefix):
+                handle_redeem(data["eventData"]["body"], user_id)
     return data

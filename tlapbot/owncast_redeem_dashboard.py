@@ -21,6 +21,7 @@ def dashboard():
                            counters=all_counters(db),
                            redeems=current_app.config['REDEEMS'],
                            prefix=current_app.config['PREFIX'],
+                           passive=current_app.config['PASSIVE'],
                            username=username,
                            users=users,
                            utc_timezone=utc_timezone)
