@@ -51,8 +51,8 @@ def handle_redeem(message, user_id):
             send_chat(f"Cannot redeem {redeem}, no amount of points specified.")
         elif not note.isdigit():
             send_chat(f"Cannot redeem {redeem}, amount of points is not an integer.")
-        elif int(note) < points:
-            send_chat(f"Can't redeem {redeem}, you don't have enough points.")
+        elif int(note) > points:
+            send_chat(f"Can't redeem {redeem}, you don't have enough points.2")
         else:
             add_to_milestone(db, redeem, int(note))
     else:

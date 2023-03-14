@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 <head>
     <title>Redeems Dashboard</title>
 </head>
 <div id="script">
 
-<script src="/static/dashboard.js"></script>
+    <script src="/static/dashboard.js"></script>
 
     <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'dashboard')", id="defaultOpen">Tlapbot dashboard</button>
+        <button class="tablinks" onclick="openTab(event, 'dashboard')" , id="defaultOpen">Tlapbot dashboard</button>
         {% if not passive %}
         {% if queue %}
         <button class="tablinks" onclick="openTab(event, 'redeem-queue')">Redeem queue</button>
@@ -19,6 +20,7 @@
     </div>
 
     <div id='dashboard' class="tabcontent">
+
         <body>
             <h3>Redeems Dashboard</h3>
             {% if (username and users ) %}
@@ -31,7 +33,7 @@
                 {% for user in users %}
                 <tbody>
                     <td> {{ user[0] }} </td>
-                    <td> {{ user[1] }} </td>   
+                    <td> {{ user[1] }} </td>
                 </tbody>
                 {% endfor %}
             </table>
@@ -53,30 +55,42 @@
                 {% for counter in counters %}
                 <tbody>
                     <td> {{ counter[0] }} </td>
-                    <td> {{ counter[1] }} </td>   
+                    <td> {{ counter[1] }} </td>
                 </tbody>
                 {% endfor %}
             </table>
             {% endif %}
             {% if milestones %}
-            {% for milestone in milestones %}
-            <label for="file"> {{ milestone[0] }}</label>
-
-            <progress id="file" max={{ milestone[2] }} value={{ milestone[1] }}></progress>
-            {% endfor %}
-            {% endif %}
-            {% endif %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Active milestones</th>
+                    </tr>
+                </thead>
+                {% for milestone in milestones %}
+                <tbody>
+                    <td> <label for="file"> {{ milestone[0] }}</label> </td>
+                    <td> <progress id="file" max={{ milestone[2] }} value={{ milestone[1] }}></progress> </td>
+                </tbody>
+                {% endfor %}
+                {% endif %}
+                {% endif %}
         </body>
     </div>
 
     <div id='redeem-queue' class="tabcontent">
+        <p>Tlap tlap.</p>
+
         <body>
             <h3>Redeems Queue</h3>
+            <p>Tlap tlap 2.</p>
             {% if queue %}
+            <p>Tlap tlap. 3</p>
             <table>
                 <thead>
                     <tr>
                         <th colspan="2">Recent redeems</th>
+                        <p>Tlap tlap. 4</p>
                     </tr>
                     <tr>
                         <th>Time</th>
@@ -86,7 +100,7 @@
                     </tr>
                 </thead>
                 {% for row in queue %}
-            <tbody>
+                <tbody>
                     <td>{{ row[0].replace(tzinfo=utc_timezone).astimezone().strftime("%H:%M") }}</td>
                     <td>{{ row[1] }}</td>
                     <td>{{ row[3] }}</td>
@@ -94,10 +108,14 @@
                     <td>{{ row[2] }}</td>
                     {% endif %}
                 </tbody>
+                <p>Tlap tlap. 5</p>
                 {% endfor %}
             </table>
+            <p>Tlap tlap. 6</p>
             {% endif %}
+            <p>Tlap tlap. 7</p>
         </body>
+        <p>Tlap tlap. 8</p>
     </div>
 
     <div id='redeems-list' class="tabcontent">
@@ -107,9 +125,10 @@
             <li><strong>Counter</strong> redeems add +1 to their counter.</li>
             <li><strong>List</strong> redeems get added to the list of recent redeems (without a note).</li>
             <li><strong>Note</strong> redeems require you to send a message together with the redeem.</li>
-            <li><strong>Milestone</strong> redeems are long-term goals to which you can donate any amount of points you want.</li>
-            <li>They will be completed once the amount of points donated reaches the goal.</li>
+            <li><strong>Milestone</strong> redeems are long-term goals to which you can donate any amount of points you
+                want. They will be completed once the amount of points donated reaches the goal.</li>
         </ul>
+
         <body>
             {% if redeems %}
             <table>

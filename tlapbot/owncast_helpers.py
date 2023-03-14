@@ -184,27 +184,50 @@ def add_to_redeem_queue(db, user_id, redeem_name, note=None):
     return False
 
 
-def add_to_milestone(db, redeem_name, points):
+def start_milestone(db, redeem_name):
     try:
         cursor = db.execute(
             "SELECT count, goal FROM milestones WHERE name = ?",
             (redeem_name,)
         )
-        row = cursor.fetchone()
-        if row is not None:
-            count = row[0]
-            goal = row[1]
-            result = count + points
-            if result > goal:
-                result = goal
+        milestone = cursor.fetchone()
+        current_app.logger.error(f"Milestone: {milestone}")
+        if milestone is None:
+            current_app.logger.error(f"Adding milestone to db.")
             cursor = db.execute(
-                "UPDATE milestones SET count = ? WHERE name = ?",
-                (result, redeem_name)
-            )
-            db.commit()
-            return True
-    except (Error) as e:
+                    "INSERT INTO milestones(name, count, goal) VALUES(?, ?, ?)",
+                    (redeem_name, 0, current_app.config['REDEEMS'][redeem_name]['goal'])
+                )
+        db.commit()
+    except Error as e:
+        current_app.logger.error(f"Error occured adding a milestone: {e.args[0]}")
+
+
+
+def add_to_milestone(db, redeem_name, points):
+    try:
+        start_milestone(db, redeem_name)
+
+        cursor = db.execute(
+            "SELECT count, goal FROM milestones WHERE name = ?",
+            (redeem_name,)
+        )
+        row = cursor.fetchone()
+        count = row[0]
+        goal = row[1]
+        result = count + points
+        if result > goal:
+            result = goal
+        current_app.logger.error(f"Doing db operation to add to milestone.")
+        cursor = db.execute(
+            "UPDATE milestones SET count = ? WHERE name = ?",
+            (result, redeem_name)
+        )
+        db.commit()
+        return True
+    except Error as e:
         current_app.logger.error(f"Error occured updating milestone: {e.args[0]}")
+    current_app.logger.error(f"Milestone add failed.")
     return False
 
 
