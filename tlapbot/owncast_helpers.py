@@ -137,7 +137,7 @@ def change_display_name(db, user_id, new_name):
         current_app.logger.error(f"To user id: {user_id}, with display name: {new_name}")
 
 
-def check_counter_exists(db, counter_name):
+def counter_exists(db, counter_name):
     try:
         cursor = db.execute(
             "SELECT count FROM counters WHERE name = ?",
@@ -156,7 +156,7 @@ def check_counter_exists(db, counter_name):
 
 
 def add_to_counter(db, counter_name):
-    if check_counter_exists(db, counter_name):
+    if counter_exists(db, counter_name):
         try:
             cursor = db.execute(
                 "UPDATE counters SET count = count + 1 WHERE name = ?",
@@ -181,7 +181,31 @@ def add_to_redeem_queue(db, user_id, redeem_name, note=None):
     except Error as e:
         current_app.logger.error(f"Error occured adding to redeem queue: {e.args[0]}")
         current_app.logger.error(f"To user: {user_id} with redeem: {redeem_name} with note: {note}")
-        return False
+    return False
+
+
+def add_to_milestone(db, redeem_name, points):
+    try:
+        cursor = db.execute(
+            "SELECT count, goal FROM milestones WHERE name = ?",
+            (redeem_name,)
+        )
+        row = cursor.fetchone()
+        if row is not None:
+            count = row[0]
+            goal = row[1]
+            result = count + points
+            if result > goal:
+                result = goal
+            cursor = db.execute(
+                "UPDATE milestones SET count = ? WHERE name = ?",
+                (result, redeem_name)
+            )
+            db.commit()
+            return True
+    except (Error, Exception) as e:
+        current_app.logger.error(f"Error occured updating milestone: {e.args[0]}")
+    return False
 
 
 def all_counters(db):

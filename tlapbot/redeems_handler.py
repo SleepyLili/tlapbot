@@ -1,7 +1,8 @@
 from flask import current_app
 from tlapbot.db import get_db
 from tlapbot.owncast_helpers import (use_points, add_to_redeem_queue,
-        add_to_counter, read_users_points, send_chat, remove_emoji)
+        add_to_counter, read_users_points, send_chat, remove_emoji,
+        add_to_milestone)
 
 
 def handle_redeem(message, user_id):
@@ -45,5 +46,14 @@ def handle_redeem(message, user_id):
             send_chat(f"{redeem} redeemed for {price} points.")
         else:
             send_chat(f"Redeeming {redeem} failed.")
+    elif redeem_type == "milestone":
+        if not note:
+            send_chat(f"Cannot redeem {redeem}, no amount of points specified.")
+        elif not note.isdigit():
+            send_chat(f"Cannot redeem {redeem}, amount of points is not an integer.")
+        elif int(note) < points:
+            send_chat(f"Can't redeem {redeem}, you don't have enough points.")
+        else:
+            add_to_milestone(db, redeem, int(note))
     else:
         send_chat(f"{redeem} not redeemed, type of redeem not found.")
