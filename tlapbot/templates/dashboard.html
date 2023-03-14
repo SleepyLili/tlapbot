@@ -11,6 +11,9 @@
     <div class="tab">
         <button class="tablinks" onclick="openTab(event, 'dashboard')", id="defaultOpen">Tlapbot dashboard</button>
         {% if not passive %}
+        {% if queue %}
+        <button class="tablinks" onclick="openTab(event, 'redeem-queue')">Redeem queue</button>
+        {% endif %}
         <button class="tablinks" onclick="openTab(event, 'redeems-list')">Redeems help</button>
         {% endif %}
     </div>
@@ -40,47 +43,59 @@
             {% endif %}
 
             {% if not passive %}
-                {% if counters %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Active counters</th>
-                        </tr>
-                    </thead>
-                    {% for counter in counters %}
-                    <tbody>
-                        <td> {{ counter[0] }} </td>
-                        <td> {{ counter[1] }} </td>   
-                    </tbody>
-                    {% endfor %}
-                </table>
-                {% endif %}
-
-                {% if queue %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th colspan="2">Recent redeems</th>
-                        </tr>
-                        <tr>
-                            <th>Time</th>
-                            <th>Redeem</th>
-                            <th>Redeemer</th>
-                            <th>Note</th>
-                        </tr>
-                    </thead>
-                    {% for row in queue %}
+            {% if counters %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Active counters</th>
+                    </tr>
+                </thead>
+                {% for counter in counters %}
                 <tbody>
-                        <td>{{ row[0].replace(tzinfo=utc_timezone).astimezone().strftime("%H:%M") }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[3] }}</td>
-                        {% if row[2] %}
-                        <td>{{ row[2] }}</td>
-                        {% endif %}
-                    </tbody>
-                    {% endfor %}
-                </table>
-                {% endif %}
+                    <td> {{ counter[0] }} </td>
+                    <td> {{ counter[1] }} </td>   
+                </tbody>
+                {% endfor %}
+            </table>
+            {% endif %}
+            {% if milestones %}
+            {% for milestone in milestones %}
+            <label for="file"> {{ milestone[0] }}</label>
+
+            <progress id="file" max={{ milestone[2] }} value={{ milestone[1] }}></progress>
+            {% endfor %}
+            {% endif %}
+            {% endif %}
+        </body>
+    </div>
+
+    <div id='redeem-queue' class="tabcontent">
+        <body>
+            <h3>Redeems Queue</h3>
+            {% if queue %}
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2">Recent redeems</th>
+                    </tr>
+                    <tr>
+                        <th>Time</th>
+                        <th>Redeem</th>
+                        <th>Redeemer</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+                {% for row in queue %}
+            <tbody>
+                    <td>{{ row[0].replace(tzinfo=utc_timezone).astimezone().strftime("%H:%M") }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[3] }}</td>
+                    {% if row[2] %}
+                    <td>{{ row[2] }}</td>
+                    {% endif %}
+                </tbody>
+                {% endfor %}
+            </table>
             {% endif %}
         </body>
     </div>
@@ -92,6 +107,8 @@
             <li><strong>Counter</strong> redeems add +1 to their counter.</li>
             <li><strong>List</strong> redeems get added to the list of recent redeems (without a note).</li>
             <li><strong>Note</strong> redeems require you to send a message together with the redeem.</li>
+            <li><strong>Milestone</strong> redeems are long-term goals to which you can donate any amount of points you want.</li>
+            <li>They will be completed once the amount of points donated reaches the goal.</li>
         </ul>
         <body>
             {% if redeems %}

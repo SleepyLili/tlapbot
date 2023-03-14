@@ -208,6 +208,16 @@ def add_to_milestone(db, redeem_name, points):
     return False
 
 
+def all_milestones(db):
+    try:
+        cursor = db.execute(
+            """SELECT name, count, goal FROM milestones"""
+        )
+        return cursor.fetchall()
+    except Error as e:
+        current_app.logger.error(f"Error occured selecting all milestones: {e.args[0]}")
+
+
 def all_counters(db):
     try:
         cursor = db.execute(
