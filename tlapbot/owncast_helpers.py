@@ -203,7 +203,7 @@ def add_to_milestone(db, redeem_name, points):
             )
             db.commit()
             return True
-    except (Error, Exception) as e:
+    except (Error) as e:
         current_app.logger.error(f"Error occured updating milestone: {e.args[0]}")
     return False
 
