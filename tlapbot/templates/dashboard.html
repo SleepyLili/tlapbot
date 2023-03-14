@@ -69,28 +69,25 @@
                 </thead>
                 {% for milestone in milestones %}
                 <tbody>
-                    <td> <label for="file"> {{ milestone[0] }}</label> </td>
-                    <td> <progress id="file" max={{ milestone[2] }} value={{ milestone[1] }}></progress> </td>
+                    <td> {{ milestone[0] }} </td>
+                    <td> <progress id="file" max={{ milestone[2] }} value={{ milestone[1] }}></progress></td>
                 </tbody>
                 {% endfor %}
-                {% endif %}
-                {% endif %}
+            </table>
+            {% endif %}
+            {% endif %}
         </body>
     </div>
 
     <div id='redeem-queue' class="tabcontent">
-        <p>Tlap tlap.</p>
 
         <body>
             <h3>Redeems Queue</h3>
-            <p>Tlap tlap 2.</p>
             {% if queue %}
-            <p>Tlap tlap. 3</p>
             <table>
                 <thead>
                     <tr>
                         <th colspan="2">Recent redeems</th>
-                        <p>Tlap tlap. 4</p>
                     </tr>
                     <tr>
                         <th>Time</th>
@@ -108,14 +105,10 @@
                     <td>{{ row[2] }}</td>
                     {% endif %}
                 </tbody>
-                <p>Tlap tlap. 5</p>
                 {% endfor %}
             </table>
-            <p>Tlap tlap. 6</p>
             {% endif %}
-            <p>Tlap tlap. 7</p>
         </body>
-        <p>Tlap tlap. 8</p>
     </div>
 
     <div id='redeems-list' class="tabcontent">
@@ -126,7 +119,8 @@
             <li><strong>List</strong> redeems get added to the list of recent redeems (without a note).</li>
             <li><strong>Note</strong> redeems require you to send a message together with the redeem.</li>
             <li><strong>Milestone</strong> redeems are long-term goals to which you can donate any amount of points you
-                want. They will be completed once the amount of points donated reaches the goal.</li>
+                want.</li>
+            <li>They will be completed once the amount of points donated reaches the goal.</li>
         </ul>
 
         <body>
