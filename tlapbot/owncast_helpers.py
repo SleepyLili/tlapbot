@@ -187,15 +187,14 @@ def add_to_redeem_queue(db, user_id, redeem_name, note=None):
 def start_milestone(db, redeem_name):
     try:
         cursor = db.execute(
-            "SELECT count, goal FROM milestones WHERE name = ?",
+            "SELECT progress, goal FROM milestones WHERE name = ?",
             (redeem_name,)
         )
         milestone = cursor.fetchone()
         current_app.logger.error(f"Milestone: {milestone}")
         if milestone is None:
-            current_app.logger.error(f"Adding milestone to db.")
             cursor = db.execute(
-                    "INSERT INTO milestones(name, count, goal) VALUES(?, ?, ?)",
+                    "INSERT INTO milestones(name, progress, goal) VALUES(?, ?, ?)",
                     (redeem_name, 0, current_app.config['REDEEMS'][redeem_name]['goal'])
                 )
         db.commit()
@@ -203,38 +202,38 @@ def start_milestone(db, redeem_name):
         current_app.logger.error(f"Error occured adding a milestone: {e.args[0]}")
 
 
-
-def add_to_milestone(db, redeem_name, points):
+def add_to_milestone(db, user_id, redeem_name, points_donated):
     try:
-        start_milestone(db, redeem_name)
-
         cursor = db.execute(
-            "SELECT count, goal FROM milestones WHERE name = ?",
+            "SELECT progress, goal FROM milestones WHERE name = ?",
             (redeem_name,)
         )
         row = cursor.fetchone()
-        count = row[0]
+        if row is None:
+            current_app.logger.warning("Milestone not found in database.")
+            current_app.logger.warning("Maybe you forgot to run the refresh-milestones CLI command "
+                                       "after you added a new milestone to the config?")
+            return False
+        progress = row[0]
         goal = row[1]
-        result = count + points
-        if result > goal:
-            result = goal
-        current_app.logger.error(f"Doing db operation to add to milestone.")
-        cursor = db.execute(
-            "UPDATE milestones SET count = ? WHERE name = ?",
-            (result, redeem_name)
-        )
-        db.commit()
-        return True
+        if progress + points_donated > goal:
+            points_donated = goal - progress
+        if use_points(db, user_id, points_donated):
+            cursor = db.execute(
+                "UPDATE milestones SET progress = ? WHERE name = ?",
+                (progress + points_donated, redeem_name)
+            )
+            db.commit()
+            return True
     except Error as e:
         current_app.logger.error(f"Error occured updating milestone: {e.args[0]}")
-    current_app.logger.error(f"Milestone add failed.")
     return False
 
 
 def all_milestones(db):
     try:
         cursor = db.execute(
-            """SELECT name, count, goal FROM milestones"""
+            """SELECT name, progress, goal FROM milestones"""
         )
         return cursor.fetchall()
     except Error as e:
