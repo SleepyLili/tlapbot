@@ -81,6 +81,39 @@ def refresh_counters():
                 print("Failed inserting counters to db:", e.args[0])
 
 
+def refresh_milestones():
+    db = get_db()
+    # delete old milestones
+    try:
+        cursor = db.execute("SELECT name FROM milestones")
+        counters = cursor.fetchall()
+        to_delete = []
+        for counter in counters:
+            print(f"checking counter {counter}")
+            if counter not in current_app.config['REDEEMS'].items():
+                to_delete.append(counter)
+            elif current_app.config['REDEEMS'][counter]['type'] != "milestone":
+                to_delete.append(counter)
+        cursor.execute("DELETE FROM counters WHERE name IN ?", (to_delete,))
+        db.commit()
+    except Error as e:
+        print("Failed deleting old milestones from db:", e.args[0])
+
+    # add new milestones
+    try:
+        for redeem, redeem_info in current_app.config['REDEEMS'].items():
+        if redeem_info["type"] == "milestone":
+            cursor = db.execute(
+                "INSERT INTO milestones(name, progress, goal) VALUES(?, 0, 0)",
+                (redeem, 0, redeem_info['goal'])
+            )
+            db.commit()
+    except Error as e:
+        print("Failed inserting milestones to db:", e.args[0])
+
+
+
+
 @click.command('init-db')
 @with_appcontext
 def init_db_command():
@@ -113,6 +146,15 @@ def refresh_and_clear_command():
     refresh_counters()
     clear_redeem_queue()
     click.echo('Counters refreshed and queue cleared.')
+
+
+@click.command('refresh-milestones')
+@with_appcontext
+def refresh_milestones_command():
+    """Initialize all milestones from the redeems file, 
+    delete milestones not in redeem file."""
+    refresh_milestones()
+    click.echo('Refreshed milestones.')
 
 
 def init_app(app):
