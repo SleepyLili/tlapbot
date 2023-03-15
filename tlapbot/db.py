@@ -32,7 +32,7 @@ def insert_counters(db):
                     (redeem,)
                 )
                 db.commit()
-            except Error as e:
+            except sqlite3.Error as e:
                 print("Failed inserting counters to db:", e.args[0])
 
 
@@ -56,7 +56,7 @@ def clear_redeem_queue():
             """UPDATE counters SET count = 0"""
         )
         db.commit()
-    except Error as e:
+    except sqlite3.Error as e:
         print("Error occured deleting redeem queue:", e.args[0])
 
 
@@ -66,7 +66,7 @@ def refresh_counters():
     try:
         db.execute("DELETE FROM counters")
         db.commit()
-    except Error as e:
+    except sqlite3.Error as e:
         print("Error occured deleting old counters:", e.args[0])
 
     for redeem, redeem_info in current_app.config['REDEEMS'].items():
@@ -77,7 +77,7 @@ def refresh_counters():
                     (redeem,)
                 )
                 db.commit()
-            except Error as e:
+            except sqlite3.Error as e:
                 print("Failed inserting counters to db:", e.args[0])
 
 
@@ -86,29 +86,36 @@ def refresh_milestones():
     # delete old milestones
     try:
         cursor = db.execute("SELECT name FROM milestones")
-        counters = cursor.fetchall()
+        milestones = cursor.fetchall()
         to_delete = []
-        for counter in counters:
-            print(f"checking counter {counter}")
-            if counter not in current_app.config['REDEEMS'].items():
-                to_delete.append(counter)
-            elif current_app.config['REDEEMS'][counter]['type'] != "milestone":
-                to_delete.append(counter)
-        cursor.execute("DELETE FROM counters WHERE name IN ?", (to_delete,))
+        for milestone in milestones:
+            milestone = milestone[0]
+            print(f"Checking milestone {milestone}")
+            if milestone not in current_app.config['REDEEMS'].items():
+                to_delete.append(milestone)
+            elif current_app.config['REDEEMS'][milestone]['type'] != "milestone":
+                to_delete.append(milestone)
+        for milestone in to_delete:
+            cursor.execute("DELETE FROM counters WHERE name = ?", (milestone,))
         db.commit()
-    except Error as e:
+    except sqlite3.Error as e:
         print("Failed deleting old milestones from db:", e.args[0])
 
     # add new milestones
     try:
         for redeem, redeem_info in current_app.config['REDEEMS'].items():
-        if redeem_info["type"] == "milestone":
-            cursor = db.execute(
-                "INSERT INTO milestones(name, progress, goal) VALUES(?, 0, 0)",
-                (redeem, 0, redeem_info['goal'])
-            )
-            db.commit()
-    except Error as e:
+            if redeem_info["type"] == "milestone":
+                cursor = db.execute(
+                    "SELECT goal FROM milestones WHERE name = ?",
+                    (redeem,)
+                )
+                if cursor.fetchone() is None:
+                    cursor.execute(
+                        "INSERT INTO milestones(name, progress, goal) VALUES(?, 0, ?)",
+                        (redeem, redeem_info['goal'])
+                    )
+        db.commit()
+    except sqlite3.Error as e:
         print("Failed inserting milestones to db:", e.args[0])
 
 
