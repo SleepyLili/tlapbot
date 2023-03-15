@@ -90,13 +90,12 @@ def refresh_milestones():
         to_delete = []
         for milestone in milestones:
             milestone = milestone[0]
-            print(f"Checking milestone {milestone}")
-            if milestone not in current_app.config['REDEEMS'].items():
+            if milestone not in current_app.config['REDEEMS'].keys():
                 to_delete.append(milestone)
             elif current_app.config['REDEEMS'][milestone]['type'] != "milestone":
                 to_delete.append(milestone)
         for milestone in to_delete:
-            cursor.execute("DELETE FROM counters WHERE name = ?", (milestone,))
+            cursor.execute("DELETE FROM milestones WHERE name = ?", (milestone,))
         db.commit()
     except sqlite3.Error as e:
         print("Failed deleting old milestones from db:", e.args[0])
