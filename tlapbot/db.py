@@ -110,7 +110,7 @@ def refresh_milestones():
                 )
                 if cursor.fetchone() is None:
                     cursor.execute(
-                        "INSERT INTO milestones(name, progress, goal) VALUES(?, 0, ?)",
+                        "INSERT INTO milestones(name, progress, goal, complete) VALUES(?, 0, ?, FALSE)",
                         (redeem, redeem_info['goal'])
                     )
         db.commit()

@@ -214,8 +214,7 @@ def add_to_milestone(db, user_id, redeem_name, points_donated):
             current_app.logger.warning("Maybe you forgot to run the refresh-milestones CLI command "
                                        "after you added a new milestone to the config?")
             return False
-        progress = row[0]
-        goal = row[1]
+        progress, goal = row
         if progress + points_donated > goal:
             points_donated = goal - progress
         if use_points(db, user_id, points_donated):
@@ -228,6 +227,46 @@ def add_to_milestone(db, user_id, redeem_name, points_donated):
     except Error as e:
         current_app.logger.error(f"Error occured updating milestone: {e.args[0]}")
     return False
+
+
+def milestone_complete(db, redeem_name):
+    try:
+        cursor = db.execute(
+            "SELECT complete FROM milestones WHERE name = ?",
+            (redeem_name,)
+        )
+        row = cursor.fetchone()
+        if row is None:
+            current_app.logger.warning("Milestone not found in database.")
+            current_app.logger.warning("Maybe you forgot to run the refresh-milestones CLI command "
+                                       "after you added a new milestone to the config?")
+        return row[0]
+    except Error as e:
+        current_app.logger.error(f"Error occured checking if milestone is complete: {e.args[0]}")
+
+
+def check_apply_milestone_completion(db, redeem_name):
+    try:
+        cursor = db.execute(
+            "SELECT progress, goal FROM milestones WHERE name = ?",
+            (redeem_name,)
+        )
+        row = cursor.fetchone()
+        if row is None:
+            current_app.logger.warning("Milestone not found in database.")
+            current_app.logger.warning("Maybe you forgot to run the refresh-milestones CLI command "
+                                       "after you added a new milestone to the config?")
+        progress, goal = row
+        if progress == goal:
+            cursor = db.execute(
+                "UPDATE milestones SET complete = TRUE WHERE name = ?",
+                (redeem_name,)
+            )
+            return True
+        return False
+    except Error as e:
+        current_app.logger.error(f"Error occured applying milestone completion: {e.args[0]}")
+        return False
 
 
 def all_milestones(db):
