@@ -2,7 +2,7 @@ from flask import current_app
 from tlapbot.db import get_db
 from tlapbot.owncast_helpers import (use_points, add_to_redeem_queue,
         add_to_counter, read_users_points, send_chat, remove_emoji,
-        add_to_milestone)
+        add_to_milestone, check_apply_milestone_completion, milestone_complete)
 
 
 def handle_redeem(message, user_id):
