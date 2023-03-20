@@ -44,7 +44,7 @@ def create_app(test_config=None):
     from . import owncast_webhooks
     from . import owncast_redeem_dashboard
     app.register_blueprint(owncast_webhooks.bp)
-    app.register_blueprint(owncast_redeem_dashboard.bp)
+    app.register_blueprint(tlapbot_dashboard.bp)
 
     # add db CLI commands
     from . import db
