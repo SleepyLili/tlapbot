@@ -262,6 +262,7 @@ def check_apply_milestone_completion(db, redeem_name):
                 "UPDATE milestones SET complete = TRUE WHERE name = ?",
                 (redeem_name,)
             )
+            db.commit()
             return True
         return False
     except Error as e:
