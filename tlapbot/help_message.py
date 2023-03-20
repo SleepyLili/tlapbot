@@ -1,5 +1,5 @@
 from flask import current_app
-from tlapbot.owncast_helpers import send_chat
+from tlapbot.owncast_requests import send_chat
 
 
 def send_help():

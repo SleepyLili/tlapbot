@@ -1,7 +1,8 @@
 from flask import Flask, request, json, Blueprint, current_app
 from tlapbot.db import get_db
+from tlapbot.owncast_requests import send_chat
 from tlapbot.owncast_helpers import (add_user_to_database, change_display_name,
-        send_chat, read_users_points, remove_duplicate_usernames)
+        read_users_points, remove_duplicate_usernames)
 from tlapbot.help_message import send_help
 from tlapbot.redeems_handler import handle_redeem
 
