@@ -77,12 +77,14 @@ Counters are at the top, followed by a list of active milestones and their progr
 
 Tlapbot dashboard also shows the chatter's points balance when they open it as an external action.
 
-![Tlapbot dashboard](https://ak.kawen.space/media/f816d5dc43fefeeef6fee82e9440774e13996d2aeaccd9f94f3c4eaf06326262.png)
+![Tlapbot dashboard](https://ak.kawen.space/media/f9e29757f02996f363f25226f04a97ac711a95831bfaba9dcfd42158e78831c4.png)
 
 *Tlapbot dashboard when viewed as an external action.*
 #### Redeem queue tab
 The redeem queue shows a chronological list of note and list redeems with timestamps, the redeemer's username, and the note sent.
-![Redeem queue tab](https://ak.kawen.space/media/59c15946e169a419bef7675df7c09e170199c84e81e9fe822069f8f7fface839.png)
+![Redeem queue tab](https://ak.kawen.space/media/a1f44cc1a4011309a08361ca7f2ce24837d5daadd045910bf33fcd40b01d0a27.png)
+
+*Redeem queue tab.*
 #### Redeems help tab
 The dashboard also has a "Redeems help" tab. It shows an explanation of redeem types,
 and lists all active redeems, along with their price, type and description.
