@@ -2,7 +2,7 @@
 Tlapbot is an [Owncast](https://owncast.online/) bot that adds channel points and
 channel point redeems to your Owncast page.
 
-This bot is currently in-development. The goal is to have an experience similar
+The goal is to have an experience similar
 to [Twitch channel points](https://help.twitch.tv/s/article/viewer-channel-point-guide) by making use of [Owncast webhooks](https://owncast.online/thirdparty/webhooks/) and 
 [External actions](https://owncast.online/thirdparty/actions/).
 ## Features
@@ -27,6 +27,12 @@ Tlapbot has these basic commands:
 use the new prefix instead.)
 
 Tlapbot also automatically adds a command for each redeem in the redeems file.
+### Passive mode
+Tlapbot can also be run in passive mode. In passive mode, no redeems will be available, and Tlapbot will not send any messages.
+
+However, it will still give points to viewers, and track username changes.
+
+The Tlapbot dashboard will display a passive mode disclaimer instead of redeems.
 ### Tlapbot redeems types
 Tlapbot currently supports three different redeem types. Each type of a redeem
 works slightly differently, and displays differently on the redeems dashboard.
@@ -52,16 +58,31 @@ Instead, the tlapbot dashboard keeps a number for each "counter", and each redee
 
 Counter redeems can be used to gauge interest, tally up votes, or to keep track of how many emotes should be added to an OBS scene.
 
+#### Milestone
+Milestone redeems are long-term goals that are reset separately from other redeems.
+Viewers donate variable amounts of points that add up together to fulfill the milestone goal.
+
+Each milestone has a goal, a number of points required to send, and the points from
+all users add together to progress and reach the goal.
+
+Milestones show as a progress bar on the dashboard.
+
+Milestone redeems can be used as long-term community challenges, to start streamer
+challenges, decide new games to play, etc.
+
 ### Tlapbot dashboard
 Tlapbot dashboard is a standalone page available at `/dashboard`, made to be easily viewable as an owncast external action. The Tlapbot dashboard shows all redeems and active counters.
 
-Counters are at the top, followed by a chronological list of recent List and Note redeems.
+Counters are at the top, followed by a list of active milestones and their progress.
 
 Tlapbot dashboard also shows the chatter's points balance when they open it as an external action.
 
-![Tlapbot dashboard](https://ak.kawen.space/media/67c1ac6ed0d2f4efb09937c1cbfe864102182e990796853507860f50db7ff5f5.png)
+![Tlapbot dashboard](https://ak.kawen.space/media/f816d5dc43fefeeef6fee82e9440774e13996d2aeaccd9f94f3c4eaf06326262.png)
 
 *Tlapbot dashboard when viewed as an external action.*
+#### Redeem queue tab
+The redeem queue shows a chronological list of note and list redeems with timestamps, the redeemer's username, and the note sent.
+![Redeem queue tab](https://ak.kawen.space/media/59c15946e169a419bef7675df7c09e170199c84e81e9fe822069f8f7fface839.png)
 #### Redeems help tab
 The dashboard also has a "Redeems help" tab. It shows an explanation of redeem types,
 and lists all active redeems, along with their price, type and description.
@@ -205,7 +226,8 @@ Tlapbot comes with a few Click CLI commands. The commands let you clear out coun
 #### init-db
 The init-db command initializes the database.
 
-**This command should only be run when first installing tlapbot.**
+**This command should only be run when first installing tlapbot,
+or when updating to a tlapbot version that changed the database schema.**
 #### clear-queue
 The clear-queue command clears the redeem queue and resets all active counters to zero.
 You should run this command if you're about to start a new stream, and want to start with empty counters and queue.
@@ -229,6 +251,13 @@ Does the same as `clear-queue` and `refresh-counters` together.
 python -m flask clear-refresh
 ```
 Run this if you're adding/removing counters, want to reset them to zero and want to clear all redeems as well.
+#### refresh-milestones
+Deletes old milestones and initializes new ones from the redeems file.
+```bash
+python -m flask refresh-milestones
+```
+Running this command shouldn't reset progress on milestones that are already in the database
+and are still in the redeems file.
 ## Configuration files
 ### config.py
 Values you can include in `config.py` to change how the bot behaves.
@@ -244,6 +273,7 @@ Including these values will overwrite their defaults from `/tlapbot/default_conf
 - `POINTS_CYCLE_TIME` decides how often channel points are given to users in chat,
 in seconds. 
 - `POINTS_AMOUNT_GIVEN` decides how many channel points users receive.
+- `PASSIVE` if `True`, sets Tlapbot into passive mode, where no redeems are available. The bot will still track username changes and give out points.
 - `LIST_REDEEMS` if `True`, all redeems will be listed after the `!help` command in chat.
 This makes the !help output quite long, so it's `False` by default.
 - `GUNICORN` if `True`, sets logging to use gunicorn's logger. Only set this to True if you're using Gunicorn to run tlapbot.
@@ -278,8 +308,9 @@ REDEEMS={
 Each dictionary entry is a redeem, and the dictionary keys are strings that decides the chat command for the redeem. The value is another dictionary that needs to have entries for `"price"`, `"type"` and optionally `"info"` and `"category"`.
 
 - `"price"` value should be an integer that decides how many points the redeem will cost.
-- `"type"` value should be either `"list"`, `"counter"` or `"note"`. This decided the redeem's type, and whether it will show up as a counter at the top of the dashboard or as an entry in the "recent redeems" chart.
+- `"type"` value should be either `"list"`, `"counter"`, `"note"` or `"milestone"`. This decided the redeem's type, and whether it will show up as a counter at the top of the dashboard or as an entry in the "recent redeems" chart.
 - `"info"` value should be a string that describes what the command does. It's optional, but I recommend writing one for all `"list"` and `"note"` redeems (so that chatters know that they should write a note).
+- `"goal"` is a required field for `"milestone"` goals. It should be an integer, deciding the amount of points required to complete the milestone.
 - `"category"` is an optional list of strings, the categories the redeem is in.
 If a category from the list is in `ACTIVE_CATEGORIES` from `config.py`,
 then the redeem will be active. It will not be active if none of the categories
