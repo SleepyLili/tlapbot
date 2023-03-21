@@ -307,10 +307,10 @@ REDEEMS={
 `redeems.py` is a config file with just a `REDEEMS` key, that assigns a dictionary of redeems to it.
 Each dictionary entry is a redeem, and the dictionary keys are strings that decides the chat command for the redeem. The value is another dictionary that needs to have entries for `"price"`, `"type"` and optionally `"info"` and `"category"`.
 
-- `"price"` value should be an integer that decides how many points the redeem will cost.
+- `"price"` value should be an integer that decides how many points the redeem will cost. For milestone redeems, `"price"` determines minimum bid.
 - `"type"` value should be either `"list"`, `"counter"`, `"note"` or `"milestone"`. This decided the redeem's type, and whether it will show up as a counter at the top of the dashboard or as an entry in the "recent redeems" chart.
 - `"info"` value should be a string that describes what the command does. It's optional, but I recommend writing one for all `"list"` and `"note"` redeems (so that chatters know that they should write a note).
-- `"goal"` is a required field for `"milestone"` goals. It should be an integer, deciding the amount of points required to complete the milestone.
+- `"goal"` is a required field for milestone goals. It should be an integer, deciding the amount of points required to complete the milestone.
 - `"category"` is an optional list of strings, the categories the redeem is in.
 If a category from the list is in `ACTIVE_CATEGORIES` from `config.py`,
 then the redeem will be active. It will not be active if none of the categories
