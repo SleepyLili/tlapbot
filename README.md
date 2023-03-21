@@ -33,6 +33,25 @@ Tlapbot can also be run in passive mode. In passive mode, no redeems will be ava
 However, it will still give points to viewers, and track username changes.
 
 The Tlapbot dashboard will display a passive mode disclaimer instead of redeems.
+
+### Tlapbot dashboard
+Tlapbot dashboard is a standalone page available at `/dashboard`, made to be easily viewable as an owncast external action. The Tlapbot dashboard shows all redeems and active counters.
+
+Counters are at the top, followed by a list of active milestones and their progress.
+
+Tlapbot dashboard also shows the chatter's points balance when they open it as an external action.
+
+![Tlapbot dashboard](https://ak.kawen.space/media/f9e29757f02996f363f25226f04a97ac711a95831bfaba9dcfd42158e78831c4.png)
+
+*Tlapbot dashboard when viewed as an external action.*
+#### Redeem queue tab
+The redeem queue shows a chronological list of note and list redeems with timestamps, the redeemer's username, and the note sent.
+![Redeem queue tab](https://ak.kawen.space/media/a1f44cc1a4011309a08361ca7f2ce24837d5daadd045910bf33fcd40b01d0a27.png)
+
+*Redeem queue tab.*
+#### Redeems help tab
+The dashboard also has a "Redeems help" tab. It shows an explanation of redeem types,
+and lists all active redeems, along with their price, type and description.
 ### Tlapbot redeems types
 Tlapbot currently supports three different redeem types. Each type of a redeem
 works slightly differently, and displays differently on the redeems dashboard.
@@ -70,24 +89,7 @@ Milestones show as a progress bar on the dashboard.
 Milestone redeems can be used as long-term community challenges, to start streamer
 challenges, decide new games to play, etc.
 
-### Tlapbot dashboard
-Tlapbot dashboard is a standalone page available at `/dashboard`, made to be easily viewable as an owncast external action. The Tlapbot dashboard shows all redeems and active counters.
 
-Counters are at the top, followed by a list of active milestones and their progress.
-
-Tlapbot dashboard also shows the chatter's points balance when they open it as an external action.
-
-![Tlapbot dashboard](https://ak.kawen.space/media/f9e29757f02996f363f25226f04a97ac711a95831bfaba9dcfd42158e78831c4.png)
-
-*Tlapbot dashboard when viewed as an external action.*
-#### Redeem queue tab
-The redeem queue shows a chronological list of note and list redeems with timestamps, the redeemer's username, and the note sent.
-![Redeem queue tab](https://ak.kawen.space/media/a1f44cc1a4011309a08361ca7f2ce24837d5daadd045910bf33fcd40b01d0a27.png)
-
-*Redeem queue tab.*
-#### Redeems help tab
-The dashboard also has a "Redeems help" tab. It shows an explanation of redeem types,
-and lists all active redeems, along with their price, type and description.
 ## License & Contributions
 Tlapbot as it currently is does not come with a license. If you're a content creator, streamer, vtuber, etc. I'll be happy to give you permission to use Tlapbot, or make changes that'd fit your stream.
 
