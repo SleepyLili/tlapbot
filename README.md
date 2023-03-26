@@ -114,7 +114,7 @@ as a package in editable more.
     ```bash
     python -m flask init-db
     ```
-5. Create a `instance/config.py` file and fill it in as needed.
+5. Create a `tlapbot/instance/config.py` file and fill it in as needed.
 Default values are included in `tlapbot/default_config`, and values in
 `config.py` overwrite them. (The database also lives in the instance folder
 by default.)
@@ -125,13 +125,15 @@ by default.)
     OWNCAST_ACCESS_TOKEN # get one from owncast instance
     OWNCAST_INSTANCE_URL # default points to localhost owncast on default port
     ```
-6. OPTIONAL: Create an `instance/redeems.py` file and add your custom redeems.  
+6. OPTIONAL: Create an `tlapbot/instance/redeems.py` file and add your custom redeems.  
   If you don't add a redeems file, the bot will initialize the default redeems from `tlapbot/default_redeems.py`.  
   More details on how to write the config and redeems files are written later in the readme.
 
 This installation is fine both for just running Tlapbot as it is, but it also works as a dev setup if you want to make changes or contribute.
 
 Updating should be as easy as `git pull`ing the new version.
+Sometimes, if an update adds new database tables or columns, you will also need to
+rerun the `init-db` CLI command.
 ## Owncast  configuration
 In the Owncast web interface, navigate to the admin interface at `/admin`,
 and then go to Integrations.
@@ -263,10 +265,16 @@ python -m flask refresh-milestones
 Running this command shouldn't reset progress on milestones that are already in the database
 and are still in the redeems file.
 ## Configuration files
+Configuration files should be in the instance folder. For folder installation of tlapbot,
+that's `tlapbot/instance/` from the root of the Github repository.
+
+Take care not to replace `tlapbot/redeems.py` with your redeems config.
+`tlapbot/redeems.py` contains functions that handle redeems interactions with the db,
+and not the redeems config.
 ### config.py
 Values you can include in `config.py` to change how the bot behaves.
 
-(`config.py` should be in the instance folder: `/instance/config.py` for folder install.)
+(`config.py` should be in the instance folder: `tlapbot/instance/config.py` for folder install.)
 #### Mandatory
 Including these values is mandatory if you want tlapbot to work.
 - `SECRET_KEY` is your secret key. Get one from running `python -c 'import secrets; print(secrets.token_hex())'`
@@ -296,7 +304,7 @@ ACTIVE_CATEGORIES=["gaming"]
 ### redeems.py
 `redeems.py` is a file where you define all your custom redeems. Tlapbot will work without it, but it will load a few default, generic redeems from `tlapbot/default_redeems.py`.
 
-(`redeems.py` should be in the instance folder: `/instance/redeems.py` for folder install.)
+(`redeems.py` should be in the instance folder: `tlapbot/instance/redeems.py` for folder install.)
 #### `default_redeems.py`:
 ```python
 REDEEMS={
@@ -310,7 +318,7 @@ REDEEMS={
 ```
 #### File format
 `redeems.py` is a config file with just a `REDEEMS` key, that assigns a dictionary of redeems to it.
-Each dictionary entry is a redeem, and the dictionary keys are strings that decides the chat command for the redeem. The value is another dictionary that needs to have entries for `"price"`, `"type"` and optionally `"info"` and `"category"`.
+Each dictionary entry is a redeem, and the dictionary keys are strings that decides the chat command for the redeem. The value is another dictionary that needs to have entries for `"price"`, `"type"` and optionally `"info"` and `"category"`. If the `"type"` is `"milestone"`, there's an additional required `"goal"` field as well.
 
 - `"price"` value should be an integer that decides how many points the redeem will cost. For milestone redeems, `"price"` determines minimum bid.
 - `"type"` value should be either `"list"`, `"counter"`, `"note"` or `"milestone"`. This decided the redeem's type, and whether it will show up as a counter at the top of the dashboard or as an entry in the "recent redeems" chart.
