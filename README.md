@@ -115,7 +115,7 @@ as a package in editable more.
     python -m flask init-db
     ```
 5. Create an `instance/config.py` file and fill it in as needed.
-Default values are included in `tlapbot/default_config`, and values in
+Default values are included in `tlapbot/default_config.py`, and values in
 `config.py` overwrite them. (The database also lives in the instance folder
 by default.)
 
