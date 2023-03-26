@@ -82,6 +82,8 @@ def add_to_milestone(db, user_id, redeem_name, points_donated):
         progress, goal = row
         if progress + points_donated > goal:
             points_donated = goal - progress
+            if points_donated < 0:
+                points_donated = 0
         if use_points(db, user_id, points_donated):
             cursor = db.execute(
                 "UPDATE milestones SET progress = ? WHERE name = ?",
