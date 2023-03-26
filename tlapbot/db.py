@@ -108,10 +108,17 @@ def refresh_milestones():
                     "SELECT goal FROM milestones WHERE name = ?",
                     (redeem,)
                 )
-                if cursor.fetchone() is None:
+                result = cursor.fetchone()
+                if result is None:
                     cursor.execute(
                         "INSERT INTO milestones(name, progress, goal, complete) VALUES(?, 0, ?, FALSE)",
                         (redeem, redeem_info['goal'])
+                    )
+                # update existing milestone to new goal
+                elif result != redeem_info["goal"]:
+                    cursor.execute(
+                        "UPDATE milestones SET goal = ? WHERE name = ?",
+                        (redeem_info["goal"], redeem)
                     )
         db.commit()
     except sqlite3.Error as e:
