@@ -114,7 +114,7 @@ as a package in editable more.
     ```bash
     python -m flask init-db
     ```
-5. Create a `tlapbot/instance/config.py` file and fill it in as needed.
+5. Create an `instance/config.py` file and fill it in as needed.
 Default values are included in `tlapbot/default_config`, and values in
 `config.py` overwrite them. (The database also lives in the instance folder
 by default.)
@@ -125,7 +125,7 @@ by default.)
     OWNCAST_ACCESS_TOKEN # get one from owncast instance
     OWNCAST_INSTANCE_URL # default points to localhost owncast on default port
     ```
-6. OPTIONAL: Create an `tlapbot/instance/redeems.py` file and add your custom redeems.  
+6. OPTIONAL: Create an `instance/redeems.py` file and add your custom redeems.  
   If you don't add a redeems file, the bot will initialize the default redeems from `tlapbot/default_redeems.py`.  
   More details on how to write the config and redeems files are written later in the readme.
 
@@ -266,7 +266,7 @@ Running this command shouldn't reset progress on milestones that are already in 
 and are still in the redeems file.
 ## Configuration files
 Configuration files should be in the instance folder. For folder installation of tlapbot,
-that's `tlapbot/instance/` from the root of the Github repository.
+that's `instance/` from the root of the Github repository.
 
 Take care not to replace `tlapbot/redeems.py` with your redeems config.
 `tlapbot/redeems.py` contains functions that handle redeems interactions with the db,
@@ -274,7 +274,7 @@ and not the redeems config.
 ### config.py
 Values you can include in `config.py` to change how the bot behaves.
 
-(`config.py` should be in the instance folder: `tlapbot/instance/config.py` for folder install.)
+(`config.py` should be in the instance folder: `instance/config.py` for folder install.)
 #### Mandatory
 Including these values is mandatory if you want tlapbot to work.
 - `SECRET_KEY` is your secret key. Get one from running `python -c 'import secrets; print(secrets.token_hex())'`
@@ -304,7 +304,7 @@ ACTIVE_CATEGORIES=["gaming"]
 ### redeems.py
 `redeems.py` is a file where you define all your custom redeems. Tlapbot will work without it, but it will load a few default, generic redeems from `tlapbot/default_redeems.py`.
 
-(`redeems.py` should be in the instance folder: `tlapbot/instance/redeems.py` for folder install.)
+(`redeems.py` should be in the instance folder: `instance/redeems.py` for folder install.)
 #### `default_redeems.py`:
 ```python
 REDEEMS={
