@@ -68,17 +68,7 @@ def refresh_counters():
         db.commit()
     except sqlite3.Error as e:
         print("Error occured deleting old counters:", e.args[0])
-
-    for redeem, redeem_info in current_app.config['REDEEMS'].items():
-        if redeem_info["type"] == "counter":
-            try:
-                cursor = db.execute(
-                    "INSERT INTO counters(name, count) VALUES(?, 0)",
-                    (redeem,)
-                )
-                db.commit()
-            except sqlite3.Error as e:
-                print("Failed inserting counters to db:", e.args[0])
+    insert_counters(db)
 
 
 def refresh_milestones():
