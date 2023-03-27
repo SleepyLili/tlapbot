@@ -128,6 +128,7 @@ by default.)
 6. OPTIONAL: Create an `instance/redeems.py` file and add your custom redeems.  
   If you don't add a redeems file, the bot will initialize the default redeems from `tlapbot/default_redeems.py`.  
   More details on how to write the config and redeems files are written later in the readme.
+7. If you've added any new counters or milestones, run `refresh-counters` or `refresh-milestones` commands to initialize them into the database.
 
 This installation is fine both for just running Tlapbot as it is, but it also works as a dev setup if you want to make changes or contribute.
 
