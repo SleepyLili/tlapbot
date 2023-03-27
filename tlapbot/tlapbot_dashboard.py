@@ -1,6 +1,6 @@
 from flask import render_template, Blueprint, request, current_app
 from tlapbot.db import get_db
-from tlapbot.redeems import all_counters, all_milestones, pretty_redeem_queue
+from tlapbot.redeems import all_active_counters, all_active_milestones, pretty_redeem_queue
 from tlapbot.owncast_helpers import  read_all_users_with_username
 from datetime import datetime, timezone
 
@@ -18,8 +18,8 @@ def dashboard():
     utc_timezone = timezone.utc
     return render_template('dashboard.html',
                            queue=pretty_redeem_queue(db),
-                           counters=all_counters(db),
-                           milestones=all_milestones(db),
+                           counters=all_active_counters(db),
+                           milestones=all_active_milestones(db),
                            redeems=current_app.config['REDEEMS'],
                            prefix=current_app.config['PREFIX'],
                            passive=current_app.config['PASSIVE'],

@@ -157,6 +157,23 @@ def all_counters(db):
         current_app.logger.error(f"Error occured selecting all counters: {e.args[0]}")
 
 
+def all_active_counters(db):
+    counters = all_counters(db)
+    all_active_counters = []
+    for name, count in counters:
+        if is_redeem_active(name):
+            all_active_counters.append((name, count))
+    return all_active_counters
+
+
+def all_active_milestones(db):
+    milestones = all_milestones(db)
+    all_active_milestones = []
+    for name, progress, goal in milestones:
+        if is_redeem_active(name):
+            all_active_milestones.append((name, progress, goal))
+    return all_active_milestones
+
 def pretty_redeem_queue(db):
     try:
         cursor = db.execute(
@@ -179,3 +196,33 @@ def whole_redeem_queue(db):
     except Error as e:
         current_app.logger.error(f"Error occured selecting redeem queue: {e.args[0]}")
 
+
+def is_redeem_active(redeem_name):
+    """Checks if redeem is active. Pulls the redeem by name from config."""
+    active_categories = current_app.config['ACTIVE_CATEGORIES']
+    redeem_dict = current_app.config['REDEEMS'].get(redeem_name, None)
+    if redeem_dict:
+        if "category" in redeem_dict:
+            for category in redeem_dict["category"]:
+                if category in active_categories:
+                    return True
+            return False
+        else:
+            return True
+    return None # redeem does not exist, unknown active state
+
+
+
+def is_redeem_from_config_active(redeem, active_categories):
+    """Checks if redeem is active. `redeem` is a whole key:value pair from redeems config."""
+    if "category" in redeem[1] and redeem[1]["category"]:
+        for category in redeem[1]["category"]:
+            if category in active_categories:
+                return True
+        return False
+    return True
+
+
+def remove_inactive_redeems(redeems, active_categories):
+    return dict(filter(lambda redeem: is_redeem_from_config_active(redeem, active_categories),
+                       redeems.items()))
