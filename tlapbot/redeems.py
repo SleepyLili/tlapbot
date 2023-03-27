@@ -107,7 +107,8 @@ def milestone_complete(db, redeem_name):
             current_app.logger.warning("Milestone not found in database.")
             current_app.logger.warning("Maybe you forgot to run the refresh-milestones CLI command "
                                        "after you added a new milestone to the config?")
-        return row[0]
+        else:
+            return row[0]
     except Error as e:
         current_app.logger.error(f"Error occured checking if milestone is complete: {e.args[0]}")
 
