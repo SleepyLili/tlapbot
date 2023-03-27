@@ -124,14 +124,15 @@ def check_apply_milestone_completion(db, redeem_name):
             current_app.logger.warning("Milestone not found in database.")
             current_app.logger.warning("Maybe you forgot to run the refresh-milestones CLI command "
                                        "after you added a new milestone to the config?")
-        progress, goal = row
-        if progress == goal:
-            cursor = db.execute(
-                "UPDATE milestones SET complete = TRUE WHERE name = ?",
-                (redeem_name,)
-            )
-            db.commit()
-            return True
+        else:
+            progress, goal = row
+            if progress == goal:
+                cursor = db.execute(
+                    "UPDATE milestones SET complete = TRUE WHERE name = ?",
+                    (redeem_name,)
+                )
+                db.commit()
+                return True
         return False
     except Error as e:
         current_app.logger.error(f"Error occured applying milestone completion: {e.args[0]}")
