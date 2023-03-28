@@ -19,6 +19,7 @@ def handle_redeem(message, user_id):
         return
     if not is_redeem_active(redeem):
         send_chat("Can't redeem, redeem is currently not active.")
+        return
 
     db = get_db()
     price = current_app.config['REDEEMS'][redeem]["price"]
