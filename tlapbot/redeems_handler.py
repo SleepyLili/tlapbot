@@ -2,7 +2,7 @@ from flask import current_app
 from tlapbot.db import get_db
 from tlapbot.owncast_requests import send_chat
 from tlapbot.redeems import (add_to_redeem_queue, add_to_counter, add_to_milestone, 
-        check_apply_milestone_completion, milestone_complete)
+        check_apply_milestone_completion, milestone_complete, is_redeem_active)
 from tlapbot.owncast_helpers import use_points, read_users_points, remove_emoji
 
 
@@ -17,6 +17,8 @@ def handle_redeem(message, user_id):
     if redeem not in current_app.config['REDEEMS']:
         send_chat("Can't redeem, redeem not found.")
         return
+    if not is_redeem_active(redeem):
+        send_chat("Can't redeem, redeem is currently not active.")
 
     db = get_db()
     price = current_app.config['REDEEMS'][redeem]["price"]

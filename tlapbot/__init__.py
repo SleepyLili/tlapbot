@@ -24,10 +24,6 @@ def create_app(test_config=None):
     app.config.from_object('tlapbot.default_redeems')
     app.config.from_pyfile('config.py', silent=True)
     app.config.from_pyfile('redeems.py', silent=True)
-    app.config.from_mapping(
-        REDEEMS=remove_inactive_redeems(app.config['REDEEMS'],
-                                        app.config['ACTIVE_CATEGORIES'])
-    )
 
     # Make logging work for gunicorn-ran instances of tlapbot.
     if app.config['GUNICORN']:

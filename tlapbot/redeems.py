@@ -176,6 +176,21 @@ def all_active_milestones(db):
             all_active_milestones.append((name, progress, goal))
     return all_active_milestones
 
+
+def all_active_redeems(db):
+    redeems = current_app.config['REDEEMS']
+    all_active_redeems = {}
+    for redeem_name, redeem_dict in redeems.items():
+        if redeem_dict.get('category', None):
+            for category in redeem_dict['category']:
+                if category in current_app.config['ACTIVE_CATEGORIES']:
+                    all_active_redeems[redeem_name] = redeem_dict
+                    break
+        else:
+            all_active_redeems[redeem_name] = redeem_dict
+    return all_active_redeems
+
+
 def pretty_redeem_queue(db):
     try:
         cursor = db.execute(
