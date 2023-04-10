@@ -10,3 +10,14 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+
+# Builder
+index.html
+tlapbot
+tlapbot-x86_64.AppImage
+tlapbot.AppDir/
+tlapbot-glibc
+tlapbot-glibc-x86_64.AppImage
+*.spec
+sha256sum.txt
+tlapbot.exe
