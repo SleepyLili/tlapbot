@@ -70,7 +70,7 @@ cd tlapbot
 wine pyinstaller $py_deps_tlapbot --add-data '*.sql:.' --add-data '*.py:.' --add-data 'static/*:static/' --add-data 'templates/*:templates/' \
   -F --onefile --console \
   --additional-hooks-dir=. \
-  -i '../docs/icon.ico' -n tlapbot -c main.py
+  -i '../docs/icon.ico' -n tlapbot -c __init__.py
 
 mv dist/tlapbot.exe ..
 rm -rf dist build log

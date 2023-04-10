@@ -38,7 +38,7 @@ cd tlapbot
 
 DISPLAY=":0" pyinstaller -F --onefile --console \
  --additional-hooks-dir=. --add-data '*.sql:.' --add-data '*.py:.' --add-data 'static/*:static/' --add-data 'templates/*:templates/' \
-  $py_deps_tlapbot -i ../docs/icon.png -n tlapbot -c main.py
+  $py_deps_tlapbot -i ../docs/icon.png -n tlapbot -c __init__.py
 
 mv dist/tlapbot ..
 rm -rf dist build log
