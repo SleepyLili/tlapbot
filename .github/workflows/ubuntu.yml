@@ -8,14 +8,14 @@ jobs:
   GLibC-Build:
     runs-on: ubuntu-latest
 
-    container: 
+    container:
       image: ubuntu
       options: --user root
 
     steps:
         - name: ^ Checkout
           uses: actions/checkout@v2
-        
+
         - name: Create build dir.
           run: mkdir /source
 
@@ -24,9 +24,9 @@ jobs:
 
         - name: Run Init.
           run: cd /source && sh init_ubuntu.sh
-        
+
         - name: Collect Artifacts.
-          run: mkdir -p /artifacts/AppImage && mkdir /artifacts/Binary && cp /runner/page/tlapbot-glibc-x86_64.AppImage /artifacts/AppImage/ && cp /runner/page/tlapbot-glibc /artifacts/Binary/
+          run: mkdir -p /artifacts/AppImage && mkdir /artifacts/Binary && cp /runner/page/tlapbot-glibc-x86_64.AppImage /artifacts/AppImage/tlapbot-x86_64.AppImage && cp /runner/page/tlapbot-glibc /artifacts/Binary/tlapbot
 
         - name: Generate SHA256 checksum for AppImage.
           run: cd /artifacts/AppImage && sha256sum * > sha256sum.txt
@@ -39,7 +39,7 @@ jobs:
           with:
             name: AppImage
             path: /artifacts/AppImage
-        
+
         - name: Upload Binary.
           uses: actions/upload-artifact@v2
           with:
