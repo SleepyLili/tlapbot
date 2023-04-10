@@ -60,7 +60,7 @@ done
 
 py_data_tlapbot=""
 for X in ./tlapbot/*; do
-    if [[ -f "$X" && "$X" != '__init__.py' ]]; then
+    if [ -f "$X" ]; then
         BASENAME=$(basename "$X")
         py_data_tlapbot=$py_data_tlapbot" --add-data $BASENAME:$BASENAME"
     fi

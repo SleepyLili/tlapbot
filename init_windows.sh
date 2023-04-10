@@ -30,11 +30,9 @@ done
 
 py_data_tlapbot=""
 for X in ./tlapbot/*; do
-    if echo "$X" | grep -q '.py'; then
-        py_data_tlapbot=$py_data_tlapbot" --add-data '$X:$X'"
-    fi
-    if echo "$X" | grep -q '.sql'; then
-        py_data_tlapbot=$py_data_tlapbot" --add-data '$X:$X'"
+    if [ -f "$X" ]; then
+        BASENAME=$(basename "$X")
+        py_data_tlapbot=$py_data_tlapbot" --add-data '$BASENAME:$BASENAME'"
     fi
 done
 
