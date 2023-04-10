@@ -54,24 +54,40 @@ for X in $(cat requirements.txt); do
     py_deps_tlapbot=$py_deps_tlapbot' --collect-all '$X
 done
 
-for X in $(find . -name '__pycache__'); do
+for X in $(find tlapbot/ -name '__pycache__'); do
     rm -rf "$X"
+done
+
+py_data_tlapbot=""
+for X in ./tlapbot/*; do
+    if [[ -f "$X" && "$X" != '__init__.py' ]]; then
+        BASENAME=$(basename "$X")
+        py_data_tlapbot=$py_data_tlapbot" --add-data $BASENAME:$BASENAME"
+    fi
+done
+
+py_dirs_tlapbot=""
+for X in ./tlapbot/*; do
+    if [ -d "$X" ]; then
+        BASENAME=$(basename "$X")
+        py_dirs_tlapbot=$py_dirs_tlapbot" --add-data $BASENAME/*:$BASENAME/"
+    fi
 done
 
 cd tlapbot
 
 DISPLAY=":0" pyinstaller -F --onefile --console \
- --additional-hooks-dir=. --add-data '*.sql:.' --add-data '*.py:.' --add-data static/*:static/ \
-  $py_deps_tlapbot --add-data templates/*:templates/ -i ../docs/icon.png -n tlapbot -c __init__.py
+ --additional-hooks-dir=. $py_dirs_tlapbot $py_data_tlapbot \
+  $py_deps_tlapbot -i ../docs/icon.png -n tlapbot -c __init__.py
 
-mv dist/tlapbot ..
+mv dist/tlapbot ../tlapbot-musl
 rm -rf dist build log
 
 cd ..
 
-strip tlapbot
+strip tlapbot-musl
 
-chmod +x tlapbot
+chmod +x tlapbot-musl
 
 wget -q https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/apk-tools-static-2.12.10-r1.apk -O installer.apk
 
@@ -109,7 +125,7 @@ echo 'exec "${tlapbot_RUNPATH}"/lib/ld-musl-x86_64.so.1 "${tlapbot_EXEC}" "$@"' 
 chmod +x tlapbot.AppDir/AppRun
 
 mkdir -p tlapbot.AppDir/usr/bin
-cp tlapbot tlapbot.AppDir/usr/bin/
+cp tlapbot-musl tlapbot.AppDir/usr/bin/tlapbot
 chmod +x tlapbot.AppDir/usr/bin/tlapbot
 
 wget -q https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage -O toolkit.AppImage
@@ -127,9 +143,10 @@ ARCH=x86_64 appimagetool tlapbot.AppDir/
 rm -rf tlapbot.AppDir
 rm -f toolkit.AppImage
 chmod +x tlapbot-x86_64.AppImage
+mv tlapbot-x86_64.AppImage tlapbot-musl-x86_64.AppImage
 
-sha256sum tlapbot > sha256sum.txt
-sha256sum tlapbot-x86_64.AppImage >> sha256sum.txt
+sha256sum tlapbot-musl > sha256sum.txt
+sha256sum tlapbot-musl-x86_64.AppImage >> sha256sum.txt
 
 mkdir -pv /runner/page/
 cp -rv /source/* /runner/page/

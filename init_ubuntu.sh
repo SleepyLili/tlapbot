@@ -34,20 +34,38 @@ for X in $(find . -name '__pycache__'); do
     rm -rf "$X"
 done
 
+py_data_tlapbot=""
+for X in ./tlapbot/*; do
+    if echo "$X" | grep -q '.py'; then
+        py_data_tlapbot=$py_data_tlapbot" --add-data '$X:$X'"
+    fi
+    if echo "$X" | grep -q '.sql'; then
+        py_data_tlapbot=$py_data_tlapbot" --add-data '$X:$X'"
+    fi
+done
+
+py_dirs_tlapbot=""
+for X in ./tlapbot/*; do
+    if [ -d "$X" ]; then
+        BASENAME=$(basename "$X")
+        py_dirs_tlapbot=$py_dirs_tlapbot" --add-data '$BASENAME/*:$BASENAME/'"
+    fi
+done
+
 cd tlapbot
 
 DISPLAY=":0" pyinstaller -F --onefile --console \
- --additional-hooks-dir=. --add-data '*.sql:.' --add-data '*.py:.' --add-data 'static/*:static/' --add-data 'templates/*:templates/' \
+ --additional-hooks-dir=. $py_dirs_tlapbot $py_data_tlapbot \
   $py_deps_tlapbot -i ../docs/icon.png -n tlapbot -c __init__.py
 
-mv dist/tlapbot ..
+mv dist/tlapbot ../tlapbot-glibc
 rm -rf dist build log
 
 cd ..
 
-strip tlapbot
+strip tlapbot-glibc
 
-chmod +x tlapbot
+chmod +x tlapbot-glibc
 
 mkdir -p tlapbot.AppDir/var/lib/dpkg
 mkdir -p tlapbot.AppDir/var/cache/apt/archives
@@ -81,7 +99,7 @@ echo 'exec "${tlapbot_EXEC}" "$@"' >> tlapbot.AppDir/AppRun
 chmod +x tlapbot.AppDir/AppRun
 
 mkdir -p tlapbot.AppDir/usr/bin
-cp tlapbot tlapbot.AppDir/usr/bin/
+cp tlapbot-glibc tlapbot.AppDir/usr/bin/tlapbot
 chmod +x tlapbot.AppDir/usr/bin/tlapbot
 
 wget -q https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage -O toolkit.AppImage
@@ -96,7 +114,6 @@ cd /source
 
 ARCH=x86_64 appimagetool tlapbot.AppDir/
 
-mv tlapbot tlapbot-glibc
 mv tlapbot-x86_64.AppImage tlapbot-glibc-x86_64.AppImage
 
 rm -rf tlapbot.AppDir

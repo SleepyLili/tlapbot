@@ -24,8 +24,26 @@ for X in $(cat requirements.txt); do
     py_deps_tlapbot=$py_deps_tlapbot' --collect-all "'$X'"'
 done
 
-for X in $(find . -name '__pycache__'); do
+for X in $(find tlapbot/ -name '__pycache__'); do
     rm -rf "$X"
+done
+
+py_data_tlapbot=""
+for X in ./tlapbot/*; do
+    if echo "$X" | grep -q '.py'; then
+        py_data_tlapbot=$py_data_tlapbot" --add-data '$X:$X'"
+    fi
+    if echo "$X" | grep -q '.sql'; then
+        py_data_tlapbot=$py_data_tlapbot" --add-data '$X:$X'"
+    fi
+done
+
+py_dirs_tlapbot=""
+for X in ./tlapbot/*; do
+    if [ -d "$X" ]; then
+        BASENAME=$(basename "$X")
+        py_dirs_tlapbot=$py_dirs_tlapbot" --add-data '$BASENAME/*:$BASENAME/'"
+    fi
 done
 
 export WINEPREFIX=/wine
@@ -67,7 +85,7 @@ wine python -m pip install -r requirements.txt
 
 cd tlapbot
 
-wine pyinstaller $py_deps_tlapbot --add-data '*.sql:.' --add-data '*.py:.' --add-data 'static/*:static/' --add-data 'templates/*:templates/' \
+wine pyinstaller $py_deps_tlapbot $py_dirs_tlapbot $py_data_tlapbot \
   -F --onefile --console \
   --additional-hooks-dir=. \
   -i '../docs/icon.ico' -n tlapbot -c __init__.py
