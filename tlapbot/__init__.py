@@ -1,10 +1,14 @@
 import os
+import sys
 import logging
 from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 from tlapbot.db import get_db
 from tlapbot.owncast_requests import is_stream_live, give_points_to_chat
 from tlapbot.redeems import remove_inactive_redeems 
+
+os.chdir(getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__))))
+PYBIN = sys.executable
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
