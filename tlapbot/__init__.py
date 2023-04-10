@@ -5,14 +5,19 @@ from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 from tlapbot.db import get_db
 from tlapbot.owncast_requests import is_stream_live, give_points_to_chat
-from tlapbot.redeems import remove_inactive_redeems 
+from tlapbot.redeems import remove_inactive_redeems
 
 os.chdir(getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.getcwd())
 PYBIN = sys.executable
 
 def create_app(test_config=None):
-    app = Flask(__name__, instance_relative_config=True)
-    
+    if getattr(sys, 'frozen', False):
+        template_folder = os.path.join(sys._MEIPASS, 'templates')
+        app = Flask(__name__, template_folder=template_folder, instance_relative_config=True)
+    else:
+        app = Flask(__name__, instance_relative_config=True)
+
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
@@ -34,7 +39,7 @@ def create_app(test_config=None):
         gunicorn_logger = logging.getLogger('gunicorn.error')
         app.logger.handlers = gunicorn_logger.handlers
         app.logger.setLevel(gunicorn_logger.level)
-    
+
     # Check for wrong config that would break Tlapbot
     if len(app.config['PREFIX']) != 1:
         raise RuntimeError("Prefix is >1 character. "
@@ -53,7 +58,7 @@ def create_app(test_config=None):
     app.cli.add_command(db.refresh_counters_command)
     app.cli.add_command(db.refresh_and_clear_command)
     app.cli.add_command(db.refresh_milestones_command)
-    
+
     # scheduler job for giving points to users
     def proxy_job():
         with app.app_context():
