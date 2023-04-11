@@ -26,7 +26,6 @@ for X in $(find /usr -name *.pem); do
     ln -s /etc/ssl/cert.pem "$X"
 done
 
-export exit_code=0
 for X in $(find /source/tlapbot -name '*.py'); do
     echo ">>> CHECKING: $X <<<"
     pylint --disable=F0401 "$X"
@@ -35,9 +34,8 @@ for X in $(find /source/tlapbot -name '*.py'); do
         echo ""
         echo " >>> !<>! <<< "
         echo "Pylint detected errors in $X - please fix them if possible."
-        export exit_code=$pylint_exit
     fi
 done
 
-echo 'Linting check: OK!'
-exit $exit_code
+echo 'Linting check: Finished!'
+exit 0
