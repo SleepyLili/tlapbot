@@ -1,20 +1,25 @@
 import os
 import sys
 import logging
+import shutil
 from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 from tlapbot.db import get_db
 from tlapbot.owncast_requests import is_stream_live, give_points_to_chat
 from tlapbot.redeems import remove_inactive_redeems
+from tlapbot import timezone
 
 os.chdir(getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(os.getcwd())
 PYBIN = sys.executable
 
 def create_app(test_config=None):
+    timezone.setup()
+
     if getattr(sys, 'frozen', False):
         template_folder = os.path.join(sys._MEIPASS, 'templates')
-        app = Flask(__name__, template_folder=template_folder, instance_relative_config=True)
+        static_folder = os.path.join(sys._MEIPASS, 'static')
+        app = Flask(__name__, template_folder=template_folder, static_folder=static_folder, instance_path=os.path.dirname(sys.executable) + '/instance')
     else:
         app = Flask(__name__, instance_relative_config=True)
 
@@ -24,6 +29,21 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    # ensure config files exists
+    if not os.path.exists(app.instance_path + '/config.py'):
+        shutil.copyfile(os.path.join(sys._MEIPASS, 'default_config.py'), app.instance_path + '/config.py')
+
+    if not os.path.exists(app.instance_path + '/redeems.py'):
+        shutil.copyfile(os.path.join(sys._MEIPASS, 'default_redeems.py'), app.instance_path + '/redeems.py')
+
+    if os.path.isdir(app.instance_path + '/config.py'):
+        print('ERR: \'' + app.instance_path + '/config.py\' is a directory.')
+        sys.exit(1)
+
+    if os.path.isdir(app.instance_path + '/redeems.py'):
+        print('ERR: \'' + app.instance_path + '/redeems.py\' is a directory.')
+        sys.exit(1)
+
     # Prepare config: set db to instance folder, then load default, then
     # overwrite it with config.py and redeems.py
     app.config.from_mapping(
@@ -31,8 +51,8 @@ def create_app(test_config=None):
     )
     app.config.from_object('tlapbot.default_config')
     app.config.from_object('tlapbot.default_redeems')
-    app.config.from_pyfile('config.py', silent=True)
-    app.config.from_pyfile('redeems.py', silent=True)
+    app.config.from_pyfile(app.instance_path + '/config.py', silent=True)
+    app.config.from_pyfile(app.instance_path + '/redeems.py', silent=True)
 
     # Make logging work for gunicorn-ran instances of tlapbot.
     if app.config['GUNICORN']:
@@ -46,13 +66,17 @@ def create_app(test_config=None):
                            "Change your config to set 1-character prefix.")
 
     # prepare webhooks and redeem dashboard blueprints
-    from . import owncast_webhooks
-    from . import tlapbot_dashboard
+    from tlapbot import owncast_webhooks
+    from tlapbot import tlapbot_dashboard
     app.register_blueprint(owncast_webhooks.bp)
     app.register_blueprint(tlapbot_dashboard.bp)
 
     # add db CLI commands
-    from . import db
+    from tlapbot import db
+
+    if not os.path.exists(app.instance_path + '/tlapbot.sqlite'):
+        db.init_db() # HELP
+
     db.init_app(app)
     app.cli.add_command(db.clear_queue_command)
     app.cli.add_command(db.refresh_counters_command)

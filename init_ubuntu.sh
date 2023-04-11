@@ -30,6 +30,9 @@ for X in $(cat requirements.txt); do
     py_deps_tlapbot=$py_deps_tlapbot' --collect-all '$X
 done
 
+py_deps_tlapbot=$py_deps_tlapbot' --collect-all tlapbot.default_config --collect-all tlapbot.default_redeems --collect-all tlapbot.sqlite'
+py_deps_tlapbot=$py_deps_tlapbot' --collect-all tzdata'
+
 for X in $(find . -name '__pycache__'); do
     rm -rf "$X"
 done
@@ -38,7 +41,7 @@ py_data_tlapbot=""
 for X in ./tlapbot/*; do
     if [ -f "$X" ]; then
         BASENAME=$(basename "$X")
-        py_data_tlapbot=$py_data_tlapbot" --add-data $BASENAME:$BASENAME"
+        py_data_tlapbot=$py_data_tlapbot" --add-data $BASENAME:."
     fi
 done
 
@@ -50,11 +53,14 @@ for X in ./tlapbot/*; do
     fi
 done
 
+python3 setup.py build
+python3 setup.py install
+
 cd tlapbot
 
 DISPLAY=":0" pyinstaller -F --onefile --console \
  --additional-hooks-dir=. $py_dirs_tlapbot $py_data_tlapbot \
-  $py_deps_tlapbot -i ../docs/icon.png -n tlapbot -c __init__.py
+  $py_deps_tlapbot -i ../docs/icon.png -n tlapbot -c standalone.py
 
 mv dist/tlapbot ../tlapbot-glibc
 rm -rf dist build log
@@ -116,6 +122,7 @@ mv tlapbot-x86_64.AppImage tlapbot-glibc-x86_64.AppImage
 
 rm -rf tlapbot.AppDir
 rm -f toolkit.AppImage
+rm -rf tlapbot.egg-info
 chmod +x tlapbot-glibc-x86_64.AppImage
 
 sha256sum tlapbot-glibc > sha256sum.txt

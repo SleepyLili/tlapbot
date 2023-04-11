@@ -20,11 +20,15 @@ apt install --yes wine apt-utils tar wget xvfb winetricks > /dev/null
 dpkg --add-architecture i386 && apt-get update > /dev/null && apt-get install --yes wine32 > /dev/null
 
 sed -i 's/gunicorn/jinja2/g' requirements.txt # Remove gunicorn due to missing fnctl for Windows
+sed -i 's/uvicorn/certifi/g' requirements.txt
 
 py_deps_tlapbot=""
 for X in $(cat requirements.txt); do
     py_deps_tlapbot=$py_deps_tlapbot' --collect-all '$X
 done
+
+py_deps_tlapbot=$py_deps_tlapbot' --collect-all tlapbot.default_config --collect-all tlapbot.default_redeems --collect-all tlapbot.sqlite'
+py_deps_tlapbot=$py_deps_tlapbot' --collect-all tzdata'
 
 for X in $(find tlapbot/ -name '__pycache__'); do
     rm -rf "$X"
@@ -34,7 +38,7 @@ py_data_tlapbot=""
 for X in ./tlapbot/*; do
     if [ -f "$X" ]; then
         BASENAME=$(basename "$X")
-        py_data_tlapbot=$py_data_tlapbot" --add-data $BASENAME;$BASENAME"
+        py_data_tlapbot=$py_data_tlapbot" --add-data $BASENAME;."
     fi
 done
 
@@ -83,12 +87,16 @@ cd /source
 
 wine python -m pip install -r requirements.txt
 
+wine python setup.py build
+wine python setup.py install
+rm -rf tlapbot.egg-info
+
 cd tlapbot
 
 wine pyinstaller $py_deps_tlapbot $py_dirs_tlapbot $py_data_tlapbot \
   -F --onefile --console \
   --additional-hooks-dir=. \
-  -i '../docs/icon.ico' -n tlapbot -c __init__.py
+  -i '../docs/icon.ico' -n tlapbot -c standalone.py
 
 mv dist/tlapbot.exe ..
 rm -rf dist build log
@@ -96,6 +104,7 @@ rm -rf dist build log
 cd ..
 
 sed -i 's/jinja2/gunicorn/g' requirements.txt
+sed -i 's/certifi/uvicorn/g' requirements.txt
 
 chmod +x tlapbot.exe
 

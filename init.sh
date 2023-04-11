@@ -54,6 +54,9 @@ for X in $(cat requirements.txt); do
     py_deps_tlapbot=$py_deps_tlapbot' --collect-all '$X
 done
 
+py_deps_tlapbot=$py_deps_tlapbot' --collect-all tlapbot.default_config --collect-all tlapbot.default_redeems --collect-all tlapbot.sqlite'
+py_deps_tlapbot=$py_deps_tlapbot' --collect-all tzdata'
+
 for X in $(find tlapbot/ -name '__pycache__'); do
     rm -rf "$X"
 done
@@ -62,7 +65,7 @@ py_data_tlapbot=""
 for X in ./tlapbot/*; do
     if [ -f "$X" ]; then
         BASENAME=$(basename "$X")
-        py_data_tlapbot=$py_data_tlapbot" --add-data $BASENAME:$BASENAME"
+        py_data_tlapbot=$py_data_tlapbot" --add-data $BASENAME:."
     fi
 done
 
@@ -74,11 +77,14 @@ for X in ./tlapbot/*; do
     fi
 done
 
+python3 setup.py build
+python3 setup.py install
+
 cd tlapbot
 
 DISPLAY=":0" pyinstaller -F --onefile --console \
  --additional-hooks-dir=. $py_dirs_tlapbot $py_data_tlapbot \
-  $py_deps_tlapbot -i ../docs/icon.png -n tlapbot -c __init__.py
+  $py_deps_tlapbot -i ../docs/icon.png -n tlapbot -c standalone.py
 
 mv dist/tlapbot ../tlapbot-musl
 rm -rf dist build log
@@ -120,8 +126,7 @@ echo 'tlapbot_EXEC="${tlapbot_RUNPATH}"/usr/bin/tlapbot' >> tlapbot.AppDir/AppRu
 echo 'export LD_LIBRARY_PATH="${tlapbot_RUNPATH}"/lib:"${tlapbot_RUNPATH}"/lib64:$LD_LIBRARY_PATH' >> tlapbot.AppDir/AppRun
 echo 'export LIBRARY_PATH="${tlapbot_RUNPATH}"/lib:"${tlapbot_RUNPATH}"/lib64:"${tlapbot_RUNPATH}"/usr/lib:"${tlapbot_RUNPATH}"/usr/lib64:$LIBRARY_PATH' >> tlapbot.AppDir/AppRun
 echo 'export PATH="${tlapbot_RUNPATH}/usr/bin/:${tlapbot_RUNPATH}/usr/sbin/:${tlapbot_RUNPATH}/usr/games/:${tlapbot_RUNPATH}/bin/:${tlapbot_RUNPATH}/sbin/${PATH:+:$PATH}"' >> tlapbot.AppDir/AppRun
-echo 'exec "${tlapbot_EXEC}" "$@"' >> tlapbot.AppDir/AppRun
-#echo 'exec "${tlapbot_RUNPATH}"/lib/ld-musl-x86_64.so.1 "${tlapbot_EXEC}" "$@"' >> tlapbot.AppDir/AppRun
+echo 'exec "${tlapbot_RUNPATH}"/lib/ld-musl-x86_64.so.1 "${tlapbot_EXEC}" "$@"' >> tlapbot.AppDir/AppRun
 
 chmod +x tlapbot.AppDir/AppRun
 
@@ -143,6 +148,7 @@ ARCH=x86_64 appimagetool tlapbot.AppDir/
 
 rm -rf tlapbot.AppDir
 rm -f toolkit.AppImage
+rm -rf tlapbot.egg-info
 chmod +x tlapbot-x86_64.AppImage
 mv tlapbot-x86_64.AppImage tlapbot-musl-x86_64.AppImage
 

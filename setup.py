@@ -8,6 +8,7 @@ setup(
     install_requires=[
         'flask',
         'requests',
-        'apscheduler'
+        'apscheduler',
+        'pytest-shutil'
     ],
 )
