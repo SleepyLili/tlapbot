@@ -51,8 +51,8 @@ def create_app(test_config=None):
     )
     app.config.from_object('tlapbot.default_config')
     app.config.from_object('tlapbot.default_redeems')
-    app.config.from_pyfile(app.instance_path + '/config.py', silent=True)
-    app.config.from_pyfile(app.instance_path + '/redeems.py', silent=True)
+    app.config.from_pyfile(app.instance_path + '/config.py', silent=False)
+    app.config.from_pyfile(app.instance_path + '/redeems.py', silent=False)
 
     # Make logging work for gunicorn-ran instances of tlapbot.
     if app.config['GUNICORN']:
@@ -74,9 +74,6 @@ def create_app(test_config=None):
     # add db CLI commands
     from tlapbot import db
 
-    if not os.path.exists(app.instance_path + '/tlapbot.sqlite'):
-        db.init_db() # HELP
-
     db.init_app(app)
     app.cli.add_command(db.clear_queue_command)
     app.cli.add_command(db.refresh_counters_command)
@@ -91,6 +88,10 @@ def create_app(test_config=None):
                 give_points_to_chat(get_db())
             else:
                 app.logger.info("Stream is NOT LIVE. (Not giving points to chat.)")
+
+    if not os.path.exists(app.instance_path + '/tlapbot.sqlite'):
+        with app.app_context():
+            db.init_db()
 
     # start scheduler that will give points to users
     points_giver = BackgroundScheduler()

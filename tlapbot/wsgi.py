@@ -1,5 +1,6 @@
 import os
 import sys
+from tlapbot import timezone
 import multiprocessing
 from gunicorn.app.wsgiapp import WSGIApplication
 import uvicorn
@@ -25,6 +26,7 @@ class WSGIServer(WSGIApplication):
             self.cfg.set(key.lower(), value)
 
 def startup():
+    timezone.setup()
     WSGI_Cfg = {
         "workers": (multiprocessing.cpu_count() * 2) + 1,
         "worker_class": "uvicorn.workers.UvicornWorker"

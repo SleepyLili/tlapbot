@@ -1,5 +1,6 @@
+import os
+import sys
 import sqlite3
-
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
@@ -39,8 +40,13 @@ def insert_counters(db):
 def init_db():
     db = get_db()
 
-    with current_app.open_resource('schema.sql') as f:
-        db.executescript(f.read().decode('utf8'))
+    if getattr(sys, 'frozen', False):
+        work_path = sys._MEIPASS
+    else:
+        work_path = os.path.dirname(__file__)
+
+    with open(work_path + '/schema.sql', 'r', encoding='utf-8') as f:
+        db.executescript(f.read())
 
     insert_counters(db)
 
@@ -154,7 +160,7 @@ def refresh_and_clear_command():
 @click.command('refresh-milestones')
 @with_appcontext
 def refresh_milestones_command():
-    """Initialize all milestones from the redeems file, 
+    """Initialize all milestones from the redeems file,
     delete milestones not in redeem file."""
     refresh_milestones()
     click.echo('Refreshed milestones.')
