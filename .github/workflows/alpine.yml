@@ -12,7 +12,7 @@ jobs:
 
     steps:
         - name: ^ Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
 
         - name: Create build dir.
           run: mkdir /source
@@ -33,13 +33,13 @@ jobs:
           run: cd /artifacts/Binary && sha256sum * > sha256sum.txt
 
         - name: Upload AppImage.
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
             name: AppImage
             path: /artifacts/AppImage
 
         - name: Upload Binary.
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
             name: Binary
             path: /artifacts/Binary
