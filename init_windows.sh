@@ -19,9 +19,11 @@ echo '</html>' >> index.html
 apt install --yes wine apt-utils tar wget xvfb winetricks > /dev/null
 dpkg --add-architecture i386 && apt-get update > /dev/null && apt-get install --yes wine32 > /dev/null
 
+sed -i 's/gunicorn/pip/g' requirements.txt # Remove gunicorn due to missing fnctl for Windows
+
 py_deps_tlapbot=""
 for X in $(cat requirements.txt); do
-    py_deps_tlapbot=$py_deps_tlapbot' --collect-all "'$X'"'
+    py_deps_tlapbot=$py_deps_tlapbot' --collect-all '$X
 done
 
 for X in $(find tlapbot/ -name '__pycache__'); do
@@ -32,7 +34,7 @@ py_data_tlapbot=""
 for X in ./tlapbot/*; do
     if [ -f "$X" ]; then
         BASENAME=$(basename "$X")
-        py_data_tlapbot=$py_data_tlapbot" --add-data $BASENAME:$BASENAME"
+        py_data_tlapbot=$py_data_tlapbot" --add-data $BASENAME;$BASENAME"
     fi
 done
 
@@ -40,7 +42,7 @@ py_dirs_tlapbot=""
 for X in ./tlapbot/*; do
     if [ -d "$X" ]; then
         BASENAME=$(basename "$X")
-        py_dirs_tlapbot=$py_dirs_tlapbot" --add-data $BASENAME/*:$BASENAME/"
+        py_dirs_tlapbot=$py_dirs_tlapbot" --add-data $BASENAME/*;$BASENAME/"
     fi
 done
 
@@ -69,7 +71,7 @@ xvfb-run sh -c "\
     wine /python-${PYTHON_VERSION}-amd64.exe /quiet TargetDir=C:\\Python310 \
       Include_doc=0 InstallAllUsers=1 PrependPath=1; \
     wineserver -w" && \
-  unzip upx*.zip && \
+  unzip -o upx*.zip && \
   mv -v upx*/upx.exe ${WINEPREFIX}/drive_c/windows/
 
 export WINEPATH='C:\Python310\Scripts'
@@ -92,6 +94,8 @@ mv dist/tlapbot.exe ..
 rm -rf dist build log
 
 cd ..
+
+sed -i 's/pip/gunicorn/g' requirements.txt
 
 chmod +x tlapbot.exe
 
