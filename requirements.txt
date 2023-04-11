@@ -4,3 +4,4 @@ apscheduler
 gunicorn
 pytest-shutil
 uvicorn
+tzdata

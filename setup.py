@@ -9,6 +9,7 @@ setup(
         'flask',
         'requests',
         'apscheduler',
-        'pytest-shutil'
+        'pytest-shutil',
+        'tzdata'
     ],
 )
