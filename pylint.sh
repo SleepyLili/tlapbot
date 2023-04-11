@@ -2,7 +2,7 @@
 
 cp /etc/ssl/certs/ca-certificates.crt /
 
-apk add --no-cache py-pip linux-headers build-base python3-dev xvfb > /dev/null
+apk add --no-cache py-pip linux-headers build-base python3-dev > /dev/null 2>&1 3>&1
 
 cp /ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 rm -f /etc/ssl/cert.pem
@@ -16,9 +16,9 @@ done
 
 cd /source
 
-pip install --upgrade wheel setuptools > /dev/null
-pip install -r requirements.txt > /dev/null
-pip install autopep8 pylint > /dev/null
+pip install --upgrade wheel setuptools > /dev/null 2>&1 3>&1
+pip install -r requirements.txt > /dev/null 2>&1 3>&1
+pip install autopep8 pylint > /dev/null 2>&1 3>&1
 
 # FIX CERTIFICATES
 for X in $(find /usr -name *.pem); do
@@ -26,20 +26,18 @@ for X in $(find /usr -name *.pem); do
     ln -s /etc/ssl/cert.pem "$X"
 done
 
-Xvfb -ac :0 -screen 0 1280x1024x24 &
-sleep 5
-
-export DISPLAY=":0"
-
-for X in $(find /source/tlapbot -name *.py); do
-    echo 'CHECKING: '"$X"
+export exit_code=0
+for X in $(find /source/tlapbot -name '*.py'); do
+    echo ">>> CHECKING: $X <<<"
     pylint --disable=F0401 "$X"
     pylint_exit=$?
     if [ $pylint_exit != 0 ]; then
-        echo 'Pylint detected errors in '"$X"' - please fix them if possible.'
-        exit 1
+        echo ""
+        echo " >>> !<>! <<< "
+        echo "Pylint detected errors in $X - please fix them if possible."
+        export exit_code=$pylint_exit
     fi
 done
 
 echo 'Linting check: OK!'
-exit 0
+exit $exit_code
