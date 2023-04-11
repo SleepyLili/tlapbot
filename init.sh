@@ -120,7 +120,8 @@ echo 'tlapbot_EXEC="${tlapbot_RUNPATH}"/usr/bin/tlapbot' >> tlapbot.AppDir/AppRu
 echo 'export LD_LIBRARY_PATH="${tlapbot_RUNPATH}"/lib:"${tlapbot_RUNPATH}"/lib64:$LD_LIBRARY_PATH' >> tlapbot.AppDir/AppRun
 echo 'export LIBRARY_PATH="${tlapbot_RUNPATH}"/lib:"${tlapbot_RUNPATH}"/lib64:"${tlapbot_RUNPATH}"/usr/lib:"${tlapbot_RUNPATH}"/usr/lib64:$LIBRARY_PATH' >> tlapbot.AppDir/AppRun
 echo 'export PATH="${tlapbot_RUNPATH}/usr/bin/:${tlapbot_RUNPATH}/usr/sbin/:${tlapbot_RUNPATH}/usr/games/:${tlapbot_RUNPATH}/bin/:${tlapbot_RUNPATH}/sbin/${PATH:+:$PATH}"' >> tlapbot.AppDir/AppRun
-echo 'exec "${tlapbot_RUNPATH}"/lib/ld-musl-x86_64.so.1 "${tlapbot_EXEC}" "$@"' >> tlapbot.AppDir/AppRun
+echo 'exec "${tlapbot_EXEC}" "$@"' >> tlapbot.AppDir/AppRun
+#echo 'exec "${tlapbot_RUNPATH}"/lib/ld-musl-x86_64.so.1 "${tlapbot_EXEC}" "$@"' >> tlapbot.AppDir/AppRun
 
 chmod +x tlapbot.AppDir/AppRun
 
