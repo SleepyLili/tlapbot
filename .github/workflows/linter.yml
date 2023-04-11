@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  PyLint-Check:
+    runs-on: ubuntu-latest
+
+    container: alpine
+
+    steps:
+        - name: ^ Checkout
+          uses: actions/checkout@v3
+
+        - name: Create build dir.
+          run: mkdir /source
+
+        - name: Copy data.
+          run: cp -r * /source/
+
+        - name: Run Init.
+          run: cd /source && sh pylint.sh
