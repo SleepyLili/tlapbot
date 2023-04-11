@@ -19,7 +19,7 @@ echo '</html>' >> index.html
 apt install --yes wine apt-utils tar wget xvfb winetricks > /dev/null
 dpkg --add-architecture i386 && apt-get update > /dev/null && apt-get install --yes wine32 > /dev/null
 
-sed -i 's/gunicorn/pip/g' requirements.txt # Remove gunicorn due to missing fnctl for Windows
+sed -i 's/gunicorn/jinja2/g' requirements.txt # Remove gunicorn due to missing fnctl for Windows
 
 py_deps_tlapbot=""
 for X in $(cat requirements.txt); do
@@ -95,7 +95,7 @@ rm -rf dist build log
 
 cd ..
 
-sed -i 's/pip/gunicorn/g' requirements.txt
+sed -i 's/jinja2/gunicorn/g' requirements.txt
 
 chmod +x tlapbot.exe
 
