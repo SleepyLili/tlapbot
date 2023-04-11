@@ -2,3 +2,5 @@ flask
 requests
 apscheduler
 gunicorn
+pytest-shutil
+uvicorn
