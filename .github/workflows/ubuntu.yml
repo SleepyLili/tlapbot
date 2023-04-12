@@ -1,3 +1,4 @@
+name: GLibC Build on Ubuntu.
 on:
   push:
     branches:

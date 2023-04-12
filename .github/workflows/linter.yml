@@ -1,3 +1,4 @@
+name: PyLint Linter check
 on:
   push:
     branches:

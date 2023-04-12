@@ -1,3 +1,4 @@
+name: Musl Build on Alpine.
 on:
   push:
     branches:

@@ -1,3 +1,4 @@
+name: EXE Build on Ubuntu Wine.
 on:
   push:
     branches:
