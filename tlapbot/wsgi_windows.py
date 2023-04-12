@@ -17,4 +17,4 @@ def startup(ip = '127.0.0.1', port = '5000', debug = False):
         "debug": debug
     }
     APP = tlapbot.create_app()
-    serve(APP, host = ip, port = port, WSGI_Cfg)
+    serve(APP, host = ip, port = port)
