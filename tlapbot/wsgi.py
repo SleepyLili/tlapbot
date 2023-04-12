@@ -31,7 +31,8 @@ def startup(ip = '127.0.0.1', port = '5000', debug = False):
         "bind": ip + ':' + port,
         "workers": (multiprocessing.cpu_count() * 2) + 1,
         "worker_class": "uvicorn.workers.UvicornWorker",
-        "debug": debug
+        "debug": debug,
+        "factory":True
     }
 
     WSGIServer("tlapbot:create_app", WSGI_Cfg).run()
