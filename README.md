@@ -3,7 +3,7 @@ Tlapbot is an [Owncast](https://owncast.online/) bot that adds channel points an
 channel point redeems to your Owncast page.
 
 The goal is to have an experience similar
-to [Twitch channel points](https://help.twitch.tv/s/article/viewer-channel-point-guide) by making use of [Owncast webhooks](https://owncast.online/thirdparty/webhooks/) and 
+to [Twitch channel points](https://help.twitch.tv/s/article/viewer-channel-point-guide) by making use of [Owncast webhooks](https://owncast.online/thirdparty/webhooks/) and
 [External actions](https://owncast.online/thirdparty/actions/).
 ## Features
 The bot gives points to everyone in chat -- 10 points every 10 minutes by
@@ -125,8 +125,8 @@ by default.)
     OWNCAST_ACCESS_TOKEN # get one from owncast instance
     OWNCAST_INSTANCE_URL # default points to localhost owncast on default port
     ```
-6. OPTIONAL: Create an `instance/redeems.py` file and add your custom redeems.  
-  If you don't add a redeems file, the bot will initialize the default redeems from `tlapbot/default_redeems.py`.  
+6. OPTIONAL: Create an `instance/redeems.py` file and add your custom redeems.
+  If you don't add a redeems file, the bot will initialize the default redeems from `tlapbot/default_redeems.py`.
   More details on how to write the config and redeems files are written later in the readme.
 7. If you've added any new counters or milestones, run `refresh-counters` or `refresh-milestones` commands to initialize them into the database.
 
@@ -193,7 +193,7 @@ $Env:FLASK_APP = "tlapbot"
 ```
 Run the app (in debug mode):
 ```bash
-python -m flask --debug run 
+python -m flask --debug run
 ```
 ### Running in production:
 Set the FLASK_APP variable:
@@ -284,7 +284,7 @@ Including these values is mandatory if you want tlapbot to work.
 #### Optional
 Including these values will overwrite their defaults from `/tlapbot/default_config.py`.
 - `POINTS_CYCLE_TIME` decides how often channel points are given to users in chat,
-in seconds. 
+in seconds.
 - `POINTS_AMOUNT_GIVEN` decides how many channel points users receive.
 - `PASSIVE` if `True`, sets Tlapbot into passive mode, where no redeems are available. The bot will still track username changes and give out points.
 - `LIST_REDEEMS` if `True`, all redeems will be listed after the `!help` command in chat.
@@ -329,3 +329,16 @@ Each dictionary entry is a redeem, and the dictionary keys are strings that deci
 If a category from the list is in `ACTIVE_CATEGORIES` from `config.py`,
 then the redeem will be active. It will not be active if none of the categories
 are in `ACTIVE_CATEGORIES`. Redeems with no category are always active.
+
+# Run through standalone binaries.
+
+### Installation
+
+1. Download the AppImage or Binary ZIP file.
+2. Extract it.
+3. `chmod +x ./tlapbot`
+4. Execute `./tlapbot`.
+
+### Warnings
+
+If you're going to use custom instance path, please write the **absolute path**.
