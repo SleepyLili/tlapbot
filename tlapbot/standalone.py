@@ -91,7 +91,7 @@ if __name__ == '__main__':
         if len(sys.argv) <= _ins_pos + 1:
             print('Tlapbot:Err > missing path value.')
             sys.exit()
-        INSTANCE = sys.argv[_ins_pos + 1]
+        INSTANCE = os.path.abspath(sys.argv[_ins_pos + 1])
 
     PORT = '5000'
     if 'port' in sys.argv:
