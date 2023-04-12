@@ -7,6 +7,10 @@ from datetime import datetime, timezone
 bp = Blueprint('redeem_dashboard', __name__)
 
 
+@app.route('/')
+def main_page():
+    return redirect("/dashboard", code=302)
+
 @bp.route('/dashboard', methods=['GET'])
 def dashboard():
     db = get_db()
