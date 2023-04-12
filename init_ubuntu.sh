@@ -1,7 +1,7 @@
 #!/bin/sh
 
-TZ="Europe/Warsaw"
-DEBIAN_FRONTEND=noninteractive
+export TZ="Europe/Warsaw"
+export DEBIAN_FRONTEND=noninteractive
 
 apt update > /dev/null
 apt install --yes markdown > /dev/null
