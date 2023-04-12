@@ -63,7 +63,7 @@ def show_help(show_command=None):
 
     output_string = "Showing full help:\n"
     for i in HELPER:
-        output_string += 'Tlapbot:Help > ' + i['name']
+        output_string += '\nTlapbot:Help > ' + i['name']
         output_string += '\nUsage: ' + i['usage']
         output_string += '\nDescription:\n\t' + i['description'] + '\n'
 
