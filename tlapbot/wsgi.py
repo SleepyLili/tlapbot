@@ -31,5 +31,4 @@ def startup(ip = '127.0.0.1', port = '5000', debug = False, instance = sys.execu
         "workers": (multiprocessing.cpu_count() * 2) + 1,
         "debug": debug
     }
-    APP = tlapbot.create_app(instance)
-    WSGIServer(APP, WSGI_Cfg).run()
+    WSGIServer('tlapbot:create_app("' + instance + '")', WSGI_Cfg).run()
