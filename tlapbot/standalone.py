@@ -10,9 +10,9 @@ sys.path.append(os.getcwd())
 PYBIN = sys.executable
 
 if getattr(sys, 'frozen', False):
-        EXECUTABLE = sys.executable
-    else:
-        EXECUTABLE = __file__
+    EXECUTABLE = sys.executable
+else:
+    EXECUTABLE = __file__
 
 HELPER = [
     {
