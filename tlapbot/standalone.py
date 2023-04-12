@@ -65,7 +65,7 @@ def show_help(show_command=None):
     for i in HELPER:
         output_string += 'Tlapbot:Help > ' + i['name']
         output_string += '\nUsage: ' + i['usage']
-        output_string += '\nDescription:\n\t' + i['description']
+        output_string += '\nDescription:\n\t' + i['description'] + '\n'
 
     print(output_string)
     print('Example overall usage: ' + EXECUTABLE + ' pro ip 127.0.0.1 port 5000')
