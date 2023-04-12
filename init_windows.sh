@@ -20,7 +20,6 @@ apt install --yes wine apt-utils tar wget xvfb winetricks > /dev/null
 dpkg --add-architecture i386 && apt-get update > /dev/null && apt-get install --yes wine32 > /dev/null
 
 sed -i 's/gunicorn/waitress/g' requirements.txt # Remove gunicorn due to missing fnctl for Windows
-sed -i 's/uvicorn/certifi/g' requirements.txt
 
 py_deps_tlapbot=""
 for X in $(cat requirements.txt); do
@@ -104,7 +103,6 @@ rm -rf dist build log
 cd ..
 
 sed -i 's/waitress/gunicorn/g' requirements.txt
-sed -i 's/certifi/uvicorn/g' requirements.txt
 
 chmod +x tlapbot.exe
 

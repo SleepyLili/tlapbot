@@ -3,5 +3,4 @@ requests
 apscheduler
 gunicorn
 pytest-shutil
-uvicorn
 tzdata

@@ -2,7 +2,6 @@ import os
 import sys
 import multiprocessing
 from gunicorn.app.wsgiapp import WSGIApplication
-import uvicorn
 import tlapbot
 from tlapbot import timezone
 
@@ -30,9 +29,7 @@ def startup(ip = '127.0.0.1', port = '5000', debug = False, instance = sys.execu
     WSGI_Cfg = {
         "bind": ip + ':' + port,
         "workers": (multiprocessing.cpu_count() * 2) + 1,
-        "worker_class": "uvicorn.workers.UvicornWorker",
-        "debug": debug,
-        "factory":True
+        "debug": debug
     }
     APP = tlapbot.create_app(instance)
     WSGIServer(APP, WSGI_Cfg).run()
