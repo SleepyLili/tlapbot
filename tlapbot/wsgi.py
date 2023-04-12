@@ -24,11 +24,11 @@ class WSGIServer(WSGIApplication):
         for key, value in config.items():
             self.cfg.set(key.lower(), value)
 
-def startup(ip = '127.0.0.1', port = '5000', debug = False, instance = sys.executable):
+def startup(ip = '127.0.0.1', port = '5000', debug = False):
     timezone.setup()
     WSGI_Cfg = {
         "bind": ip + ':' + port,
         "workers": (multiprocessing.cpu_count() * 2) + 1,
         "debug": debug
     }
-    WSGIServer('tlapbot:create_app("' + instance + '")', WSGI_Cfg).run()
+    WSGIServer('tlapbot:create_app()', WSGI_Cfg).run()

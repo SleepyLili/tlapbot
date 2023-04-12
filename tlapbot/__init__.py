@@ -13,13 +13,18 @@ os.chdir(getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(os.getcwd())
 PYBIN = sys.executable
 
-def create_app(instance_path=None):
+def create_app():
     timezone.setup()
 
     if getattr(sys, 'frozen', False):
         template_folder = os.path.join(sys._MEIPASS, 'templates')
         static_folder = os.path.join(sys._MEIPASS, 'static')
-        if instance_path:
+        if 'instance' in sys.argv:
+            _ins_pos = sys.argv.index('instance')
+            if len(sys.argv) <= _ins_pos + 1:
+                print('Tlapbot:Err > missing path value.')
+                sys.exit()
+            instance_path = os.path.abspath(sys.argv[_ins_pos + 1])
             app = Flask(__name__, template_folder=template_folder, static_folder=static_folder, instance_path=instance_path)
         else:
             app = Flask(__name__, template_folder=template_folder, static_folder=static_folder, instance_path=os.path.dirname(sys.executable) + '/instance')
