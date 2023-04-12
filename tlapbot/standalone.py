@@ -41,6 +41,11 @@ HELPER = [
         "description":"Run in a debug mode."
     },
     {
+        "name":"instance",
+        "usage":EXECUTABLE + " instance <Path>",
+        "description":"Setup configuration scripts in the specific path."
+    },
+    {
         "name":"help",
         "usage":EXECUTABLE + " help",
         "description":"Showing all available commands."
@@ -76,6 +81,18 @@ if __name__ == '__main__':
     FLASK_APP = "tlapbot"
     DEBUG=False
 
+    if getattr(sys, 'frozen', False):
+        INSTANCE = os.path.dirname(sys.executable) + '/instance'
+    else:
+        INSTANCE = os.path.dirname(__file__) + '/instance'
+
+    if 'instance' in sys.argv:
+        _ins_pos = sys.argv.index('instance')
+        if len(sys.argv) <= _ins_pos + 1:
+            print('Tlapbot:Err > missing path value.')
+            sys.exit()
+        INSTANCE = sys.argv[_ins_pos + 1]
+
     PORT = '5000'
     if 'port' in sys.argv:
         _port_pos = sys.argv.index('port')
@@ -98,14 +115,14 @@ if __name__ == '__main__':
     if 'pro' in sys.argv:
         if platform.uname().system.lower() == 'linux':
             from tlapbot import wsgi
-            wsgi.startup(IP, PORT, DEBUG)
+            wsgi.startup(IP, PORT, DEBUG, INSTANCE)
             sys.exit()
         elif platform.uname().system.lower() == 'windows':
             from tlapbot import wsgi_windows
-            wsgi_windows.startup(IP, PORT, DEBUG)
+            wsgi_windows.startup(IP, PORT, DEBUG, INSTANCE)
             sys.exit()
     elif 'dev' in sys.argv:
-        APP = tlapbot.create_app()
+        APP = tlapbot.create_app(INSTANCE)
         APP.run(host = IP, port = PORT, debug = DEBUG)
         sys.exit()
 

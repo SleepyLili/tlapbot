@@ -25,7 +25,7 @@ class WSGIServer(WSGIApplication):
         for key, value in config.items():
             self.cfg.set(key.lower(), value)
 
-def startup(ip = '127.0.0.1', port = '5000', debug = False):
+def startup(ip = '127.0.0.1', port = '5000', debug = False, instance = sys.executable):
     timezone.setup()
     WSGI_Cfg = {
         "bind": ip + ':' + port,
@@ -34,5 +34,5 @@ def startup(ip = '127.0.0.1', port = '5000', debug = False):
         "debug": debug,
         "factory":True
     }
-
-    WSGIServer("tlapbot:create_app", WSGI_Cfg).run()
+    APP = tlapbot.create_app(instance)
+    WSGIServer(APP, WSGI_Cfg).run()
