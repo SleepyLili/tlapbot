@@ -50,10 +50,10 @@ HELPER = [
 def show_help(show_command=None):
     if show_command:
         for i in HELPER:
-            if i.name == show_command:
+            if i['name'] == show_command:
                 output_string = 'Tlapbot:Help > ' + show_command
-                output_string += '\nUsage: ' + i.usage
-                output_string += '\nDescription:\n\t' + i.description
+                output_string += '\nUsage: ' + i['usage']
+                output_string += '\nDescription:\n\t' + i['description']
                 print(output_string)
                 sys.exit()
 
@@ -63,9 +63,9 @@ def show_help(show_command=None):
 
     output_string = "Showing full help:\n"
     for i in HELPER:
-        output_string += 'Tlapbot:Help > ' + i.name
-        output_string += '\nUsage: ' + i.usage
-        output_string += '\nDescription:\n\t' + i.description
+        output_string += 'Tlapbot:Help > ' + i['name']
+        output_string += '\nUsage: ' + i['usage']
+        output_string += '\nDescription:\n\t' + i['description']
 
     print(output_string)
     print('Example overall usage: ' + EXECUTABLE + ' pro ip 127.0.0.1 port 5000')
