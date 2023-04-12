@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 bp = Blueprint('redeem_dashboard', __name__)
 
 
-@app.route('/')
+@bp.route('/')
 def main_page():
     return redirect("/dashboard", code=302)
 
