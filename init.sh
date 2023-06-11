@@ -14,7 +14,7 @@ markdown README.md >> index.html
 echo '</body>' >> index.html
 echo '</html>' >> index.html
 
-apk add --no-cache py-pip linux-headers build-base python3-dev xvfb appstream tar libc6-compat curl upx > /dev/null
+apk add --no-cache apk-tools-static py-pip linux-headers build-base python3-dev xvfb appstream tar libc6-compat curl upx > /dev/null
 
 cp /ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 rm -f /etc/ssl/cert.pem
@@ -94,8 +94,6 @@ cd ..
 strip tlapbot-musl
 
 chmod +x tlapbot-musl
-
-wget -q https://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86_64/apk-tools-static-2.12.10-r1.apk -O installer.apk
 
 cd /
 tar -xzf /source/installer.apk
