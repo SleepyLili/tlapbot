@@ -16,17 +16,33 @@ def is_stream_live():
 def give_points_to_chat(db):
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/clients'
     headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
-    r = requests.get(url, headers=headers)
+    try:
+        r = requests.get(url, headers=headers)
+    except requests.exceptions.RequestException as e:
+        current_app.logger.error(f"Error occured getting users to give points to: {e.args[0]}")
+        return
+    if r.status_code != 200:
+        current_app.logger.error(f"Error occured when giving points: Response code not 200.")
+        current_app.logger.error(f"Response code received: {r.status_code}.")
+        current_app.logger.error(f"Check owncast instance url and access key.")
+        return
     unique_users = set(map(lambda user_object: user_object["user"]["id"], r.json()))
     for user_id in unique_users:
-        give_points_to_user(db,
-                            user_id,
-                            current_app.config['POINTS_AMOUNT_GIVEN'])
+        give_points_to_user(db, user_id, current_app.config['POINTS_AMOUNT_GIVEN'])
 
 
 def send_chat(message):
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/chat/send'
     headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
-    r = requests.post(url, headers=headers, json={"body": message})
+    try:
+        r = requests.post(url, headers=headers, json={"body": message})
+    except requests.exceptions.RequestException as e:
+        current_app.logger.error(f"Error occured sending chat message: {e.args[0]}")
+        return
+    if r.status_code != 200:
+        current_app.logger.error(f"Error occured when sending chat: Response code not 200.")
+        current_app.logger.error(f"Response code received: {r.status_code}.")
+        current_app.logger.error(f"Check owncast instance url and access key.")
+        return
     return r.json()
 
