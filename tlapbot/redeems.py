@@ -49,24 +49,6 @@ def add_to_redeem_queue(db, user_id, redeem_name, note=None):
     return False
 
 
-def start_milestone(db, redeem_name):
-    try:
-        cursor = db.execute(
-            "SELECT progress, goal FROM milestones WHERE name = ?",
-            (redeem_name,)
-        )
-        milestone = cursor.fetchone()
-        current_app.logger.error(f"Milestone: {milestone}")
-        if milestone is None:
-            cursor = db.execute(
-                    "INSERT INTO milestones(name, progress, goal) VALUES(?, ?, ?)",
-                    (redeem_name, 0, current_app.config['REDEEMS'][redeem_name]['goal'])
-                )
-        db.commit()
-    except Error as e:
-        current_app.logger.error(f"Error occured adding a milestone: {e.args[0]}")
-
-
 def add_to_milestone(db, user_id, redeem_name, points_donated):
     try:
         cursor = db.execute(
