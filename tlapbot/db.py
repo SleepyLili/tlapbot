@@ -4,6 +4,7 @@ import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 
+from tlapbot.redeems import milestone_complete
 
 def get_db():
     if 'db' not in g:
@@ -115,6 +116,25 @@ def refresh_milestones():
         print("Failed inserting milestones to db:", e.args[0])
 
 
+def reset_milestone(milestone):
+    if not redeem_name in current_app.config['REDEEMS']:
+        print(f"Failed resetting milestone, {milestone} not in redeems file.")
+        return None
+    try:
+        db.execute(
+            "DELETE FROM milestones WHERE name = ?",
+            (milestone,)
+        )
+        db.execute(
+            "INSERT INTO milestones(name, progress, goal) VALUES(?, ?, ?)",
+            (milestone, 0, current_app.config['REDEEMS'][milestone]['goal'])
+        )
+        db.commit()
+        return True
+    except Error as e:
+        current_app.logger.error(f"Error occured adding a milestone: {e.args[0]}")
+        return None
+
 
 
 @click.command('init-db')
@@ -159,6 +179,28 @@ def refresh_milestones_command():
     refresh_milestones()
     click.echo('Refreshed milestones.')
 
+
+@click.command('reset-milestone')
+@click.argument('milestone')
+def reset_milestone_command(milestone):
+    """Resets a completed milestone back to zero."""
+    if milestone_complete(milestone):
+        if reset_milestone(milestone):
+            click.echo(f"Reset milestone {milestone}.")
+        else:
+            click.echo(f"Resetting milestone {milestone} failed.")
+    else:
+        click.echo(f"Could not reset milestone {milestone}, milestone not completed.")
+        click.echo("(You can hard-reset-milestone if you really want to reset it.)")
+
+@click.command('hard-reset-milestone')
+@click.argument('milestone')
+def hard_reset_milestone_command(milestone):
+    """Resets any milestone back to zero."""
+    if reset_milestone(milestone):
+            click.echo(f"Hard reset milestone {milestone}.")
+        else:
+            click.echo(f"Hard resetting milestone {milestone} failed.")
 
 def init_app(app):
     app.teardown_appcontext(close_db)
