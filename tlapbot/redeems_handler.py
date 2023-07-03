@@ -22,10 +22,29 @@ def handle_redeem(message, user_id):
         return
 
     db = get_db()
-    price = current_app.config['REDEEMS'][redeem]["price"]
     redeem_type = current_app.config['REDEEMS'][redeem]["type"]
     points = read_users_points(db, user_id)
 
+    # handle milestone first because it doesn't have a price
+    if redeem_type == "milestone":
+        if milestone_complete(db, redeem):
+            send_chat(f"Can't redeem {redeem}, that milestone was already completed!")
+        elif not note:
+            send_chat(f"Cannot redeem {redeem}, no amount of points specified.")
+        elif not note.isdigit():
+            send_chat(f"Cannot redeem {redeem}, amount of points is not an integer.")
+        elif int(note) > points:
+            send_chat(f"Can't redeem {redeem}, you're donating more points than you have.")
+        elif add_to_milestone(db, user_id, redeem, int(note)):
+            send_chat(f"Succesfully donated to {redeem} milestone!")
+            if check_apply_milestone_completion(db, redeem):
+                send_chat(f"Milestone goal {redeem} complete!")
+        else:
+            send_chat(f"Redeeming milestone {redeem} failed.")
+        return
+    
+    # handle redeems with price argument
+    price = current_app.config['REDEEMS'][redeem]["price"]
     if not points or points < price:
         send_chat(f"Can't redeem {redeem}, you don't have enough points.")
         return
@@ -48,21 +67,6 @@ def handle_redeem(message, user_id):
         if (add_to_redeem_queue(db, user_id, redeem, remove_emoji(note)) and
                 use_points(db, user_id, price)):
             send_chat(f"{redeem} redeemed for {price} points.")
-        else:
-            send_chat(f"Redeeming {redeem} failed.")
-    elif redeem_type == "milestone":
-        if milestone_complete(db, redeem):
-            send_chat(f"Can't redeem {redeem}, that milestone was already completed!")
-        elif not note:
-            send_chat(f"Cannot redeem {redeem}, no amount of points specified.")
-        elif not note.isdigit():
-            send_chat(f"Cannot redeem {redeem}, amount of points is not an integer.")
-        elif int(note) > points:
-            send_chat(f"Can't redeem {redeem}, you're donating more points than you have.")
-        elif add_to_milestone(db, user_id, redeem, int(note)):
-            send_chat(f"Succesfully donated to {redeem} milestone!")
-            if check_apply_milestone_completion(db, redeem):
-                send_chat(f"Milestone goal {redeem} complete!")
         else:
             send_chat(f"Redeeming {redeem} failed.")
     else:
