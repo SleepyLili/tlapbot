@@ -127,21 +127,22 @@ def refresh_milestones():
 
 
 def reset_milestone(milestone):
-    if not redeem_name in current_app.config['REDEEMS']:
+    if not milestone in current_app.config['REDEEMS']:
         print(f"Failed resetting milestone, {milestone} not in redeems file.")
         return False
     try:
+        db = get_db()
         db.execute(
             "DELETE FROM milestones WHERE name = ?",
             (milestone,)
         )
         db.execute(
-            "INSERT INTO milestones(name, progress, goal) VALUES(?, ?, ?)",
+            "INSERT INTO milestones(name, progress, goal, complete) VALUES(?, ?, ?, FALSE)",
             (milestone, 0, current_app.config['REDEEMS'][milestone]['goal'])
         )
         db.commit()
         return True
-    except Error as e:
+    except sqlite3.Error as e:
         current_app.logger.error(f"Error occured adding a milestone: {e.args[0]}")
         return False
 
@@ -193,7 +194,7 @@ def refresh_milestones_command():
 @click.argument('milestone')
 def reset_milestone_command(milestone):
     """Resets a completed milestone back to zero."""
-    if milestone_complete(milestone):
+    if milestone_complete(get_db(), milestone):
         if reset_milestone(milestone):
             click.echo(f"Reset milestone {milestone}.")
     else:
