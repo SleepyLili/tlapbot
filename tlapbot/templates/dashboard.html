@@ -139,7 +139,11 @@
                 {% for redeem, redeem_info in redeems.items() %}
                 <tbody>
                     <td>{{ prefix }}{{ redeem }}</td>
+                    {% if redeem_info["type"] == "milestone" %}
+                    <td></td>
+                    {% else %}
                     <td>{{ redeem_info["price"] }}</td>
+                    {% endif %}
                     <td>{{ redeem_info["type"] }}</td>
                     {% if redeem_info["info"] %}
                     <td>{{ redeem_info["info"] }}</td>
