@@ -265,6 +265,16 @@ python -m flask refresh-milestones
 ```
 Running this command shouldn't reset progress on milestones that are already in the database
 and are still in the redeems file.
+#### reset-milestone
+Resets progress on a milestone, but only if the milestone had been completed.
+```bash
+python -m flask reset-milestone milestone
+```
+#### hard-reset-milestone
+Resets progress on a milestone, regardless of completion status.
+```bash
+python -m flask hard-reset-milestone milestone
+```
 ## Configuration files
 Configuration files should be in the instance folder. For folder installation of tlapbot,
 that's `instance/` from the root of the Github repository.
@@ -313,17 +323,21 @@ REDEEMS={
     "lurk": {"price": 1, "type": "counter", "info": "Let us know you're going to lurk."},
     "react": {"price": 200, "type": "note", "info": "Attach link to a video for me to react to."},
     "request": {"price": 100, "type": "note", "info": "Request a level, gamemode, skin, etc."},
-    "go_nap": {"price": 1, "type": "milestone", "info": "Streamer will go nap when the goal is reached.", "goal": 1000},
+    "go_nap": {"type": "milestone", "info": "Streamer will go nap when the goal is reached.", "goal": 1000},
     "inactive": {"price": 100, "type": "note", "info": "Example redeem that is inactive by default", "category": ["inactive"]}
 }
 ```
 #### File format
 `redeems.py` is a config file with just a `REDEEMS` key, that assigns a dictionary of redeems to it.
-Each dictionary entry is a redeem, and the dictionary keys are strings that decides the chat command for the redeem. The value is another dictionary that needs to have entries for `"price"`, `"type"` and optionally `"info"` and `"category"`. If the `"type"` is `"milestone"`, there's an additional required `"goal"` field as well.
+Each dictionary entry is a redeem, and the dictionary keys are strings that decides the chat command for the redeem.
+The value is another dictionary that needs to have entries for `"type"`,
+an entry for `"price"` unless the redeem is a milestone,
+and optionally `"info"` and `"category"`.
+If the `"type"` is `"milestone"`, there's an additional required `"goal"` field as well.
 
-- `"price"` value should be an integer that decides how many points the redeem will cost. For milestone redeems, `"price"` determines minimum bid.
+- `"price"` value should be an integer that decides how many points the redeem will cost. Milestone redeems don't use the `"price"` value.
 - `"type"` value should be either `"list"`, `"counter"`, `"note"` or `"milestone"`. This decided the redeem's type, and whether it will show up as a counter at the top of the dashboard or as an entry in the "recent redeems" chart.
-- `"info"` value should be a string that describes what the command does. It's optional, but I recommend writing one for all `"list"` and `"note"` redeems (so that chatters know that they should write a note).
+- `"info"` value should be a string that describes what the command does. It's optional, but I recommend writing one for all `"list"`, `"note"` and `"milestone"` redeems (so that chatters know what they're redeeming and whether they should leave a note).
 - `"goal"` is a required field for milestone goals. It should be an integer, deciding the amount of points required to complete the milestone.
 - `"category"` is an optional list of strings, the categories the redeem is in.
 If a category from the list is in `ACTIVE_CATEGORIES` from `config.py`,
