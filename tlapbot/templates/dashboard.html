@@ -30,12 +30,14 @@
                         <th>Your points balance</th>
                     </tr>
                 </thead>
-                {% for user in users %}
                 <tbody>
-                    <td> {{ user[0] }} </td>
-                    <td> {{ user[1] }} </td>
-                </tbody>
+                {% for user in users %}
+                    <tr>
+                        <td> {{ user[0] }} </td>
+                        <td> {{ user[1] }} </td>
+                    </tr>
                 {% endfor %}
+                </tbody>
             </table>
             {% endif %}
 
@@ -52,12 +54,14 @@
                         <th>Active counters</th>
                     </tr>
                 </thead>
-                {% for counter in counters %}
                 <tbody>
-                    <td> {{ counter[0] }} </td>
-                    <td> {{ counter[1] }} </td>
-                </tbody>
+                {% for counter in counters %}
+                    <tr>
+                        <td> {{ counter[0] }} </td>
+                        <td> {{ counter[1] }} </td>
+                    </tr>
                 {% endfor %}
+                </tbody>
             </table>
             {% endif %}
             {% if milestones %}
@@ -68,13 +72,15 @@
                         <th>Progress</th>
                     </tr>
                 </thead>
-                {% for milestone in milestones %}
                 <tbody>
-                    <td> {{ milestone[0] }} </td>
-                    <td> <progress id="file" max={{ milestone[2] }} value={{ milestone[1] }}></progress></td>
-                    <td> {{ milestone[1] }} / {{ milestone[2] }}</td>
-                </tbody>
+                {% for milestone in milestones %}
+                    <tr>
+                        <td> {{ milestone[0] }} </td>
+                        <td> <progress id="file" max={{ milestone[2] }} value={{ milestone[1] }}></progress></td>
+                        <td> {{ milestone[1] }} / {{ milestone[2] }}</td>
+                    </tr>
                 {% endfor %}
+                </tbody>
             </table>
             {% endif %}
             {% endif %}
@@ -99,16 +105,18 @@
                         <th>Note</th>
                     </tr>
                 </thead>
-                {% for row in queue %}
                 <tbody>
-                    <td>{{ row[0].replace(tzinfo=utc_timezone).astimezone().strftime("%H:%M") }}</td>
-                    <td>{{ row[1] }}</td>
-                    <td>{{ row[3] }}</td>
-                    {% if row[2] %}
-                    <td>{{ row[2] }}</td>
-                    {% endif %}
-                </tbody>
+                {% for row in queue %}
+                    <tr>
+                        <td>{{ row[0].replace(tzinfo=utc_timezone).astimezone().strftime("%H:%M") }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[3] }}</td>
+                        {% if row[2] %}
+                        <td>{{ row[2] }}</td>
+                        {% endif %}
+                    </tr>
                 {% endfor %}
+                </tbody>
             </table>
             {% endif %}
         </body>
@@ -136,20 +144,22 @@
                         <th>Description</th>
                     </tr>
                 </thead>
-                {% for redeem, redeem_info in redeems.items() %}
                 <tbody>
-                    <td>{{ prefix }}{{ redeem }}</td>
-                    {% if redeem_info["type"] == "milestone" %}
-                    <td></td>
-                    {% else %}
-                    <td>{{ redeem_info["price"] }}</td>
-                    {% endif %}
-                    <td>{{ redeem_info["type"] }}</td>
-                    {% if redeem_info["info"] %}
-                    <td>{{ redeem_info["info"] }}</td>
-                    {% endif %}
-                </tbody>
+                {% for redeem, redeem_info in redeems.items() %}
+                    <tr>
+                        <td>{{ prefix }}{{ redeem }}</td>
+                        {% if redeem_info["type"] == "milestone" %}
+                        <td></td>
+                        {% else %}
+                        <td>{{ redeem_info["price"] }}</td>
+                        {% endif %}
+                        <td>{{ redeem_info["type"] }}</td>
+                        {% if redeem_info["info"] %}
+                        <td>{{ redeem_info["info"] }}</td>
+                        {% endif %}
+                    </tr>
                 {% endfor %}
+                </tbody>
             </table>
             {% endif %}
         </body>
