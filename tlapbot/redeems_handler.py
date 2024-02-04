@@ -3,7 +3,7 @@ from tlapbot.db import get_db
 from tlapbot.owncast_requests import send_chat
 from tlapbot.redeems import (add_to_redeem_queue, add_to_counter, add_to_milestone, 
         check_apply_milestone_completion, milestone_complete, is_redeem_active)
-from tlapbot.owncast_helpers import use_points, read_users_points, remove_emoji
+from tlapbot.owncast_helpers import use_points, read_users_points
 
 
 def handle_redeem(message, user_id):
@@ -64,7 +64,7 @@ def handle_redeem(message, user_id):
         if not note:
             send_chat(f"Cannot redeem {redeem}, no note included.")
             return
-        if (add_to_redeem_queue(db, user_id, redeem, remove_emoji(note)) and
+        if (add_to_redeem_queue(db, user_id, redeem, note) and
                 use_points(db, user_id, price)):
             send_chat(f"{redeem} redeemed for {price} points.")
         else:

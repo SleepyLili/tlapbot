@@ -121,6 +121,7 @@ def remove_duplicate_usernames(db, user_id, username):
 
 
 # # # misc. stuff # # #
+# This is now unused since rawBody attribute of the webhook now returns cleaned-up emotes.
 def remove_emoji(message):
     return sub(
         r'<img class="emoji" alt="(:.*?:)" title=":.*?:" src="/img/emoji/.*?">',
