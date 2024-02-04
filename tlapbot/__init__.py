@@ -2,9 +2,12 @@ import os
 import logging
 from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import datetime
 from tlapbot.db import get_db
 from tlapbot.owncast_requests import is_stream_live, give_points_to_chat
 from tlapbot.redeems import remove_inactive_redeems 
+from tlapbot.helpers import (get_last_online_time, delete_last_online_time,
+        save_last_online_time)
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -56,9 +59,14 @@ def create_app(test_config=None):
     def proxy_job():
         with app.app_context():
             if is_stream_live():
+                if get_last_online_time:
+                    delete_last_online_time()
                 app.logger.info("Stream is LIVE. Giving points to chat.")
                 give_points_to_chat(get_db())
             else:
+                if not get_last_online_time:
+                    # TODO: error state
+                    save_last_online_time(get_db(), datetime.now(), False)
                 app.logger.info("Stream is NOT LIVE. (Not giving points to chat.)")
 
     # start scheduler that will give points to users

@@ -30,3 +30,8 @@ CREATE TABLE redeem_queue (
   note TEXT,
   FOREIGN KEY (redeemer_id) REFERENCES points (id)
 );
+
+CREATE TABLE online_time(
+  id INTEGER PRIMARY KEY,
+  online_time TIMESTAMP NOT NULL
+);

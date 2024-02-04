@@ -1,11 +1,13 @@
 from flask import Flask, request, json, Blueprint, current_app
-from tlapbot.db import get_db
+from datetime import datetime
+from tlapbot.db import get_db, refresh_counters, clear_redeem_queue
 from tlapbot.owncast_requests import send_chat
 from tlapbot.owncast_helpers import (add_user_to_database, change_display_name,
-        read_users_points, remove_duplicate_usernames)
+        read_users_points, remove_duplicate_usernames, get_last_online_time, delete_last_online_time)
 from tlapbot.help_message import send_help
 from tlapbot.redeems_handler import handle_redeem
 
+# might need datetime timestamp
 
 bp = Blueprint('owncast_webhooks', __name__)
 
@@ -14,6 +16,22 @@ bp = Blueprint('owncast_webhooks', __name__)
 def owncast_webhook():
     data = request.json
     db = get_db()
+
+    if data["type"] == "STREAM_STARTED":
+        # TODO: make this a function, import here and in init
+        delete_last_online_time(db)
+        last_online = get_last_online_time(db)
+        if last_online and current_app.config['AUTO_REFRESH']:
+            time_difference = datetime.now() - last_online
+            if time_difference.seconds//60 > current_app.config['RECONNECT_TIME']:
+                if refresh_counters() and clear_redeem_queue():
+                    current_app.logger.debug(f'Counters refreshed, redeem queue cleared.')
+                else:
+                    current_app.logger.error(
+                        f'Error occured when automatically clearing queue and resetting counters.'
+                    )
+    elif data["type"] == "STREAM_STOPPED":
+        save_last_online_time(db, datetime.now(), True)
 
     # Make sure user is in db before doing anything else.
     if data["type"] in ["CHAT", "NAME_CHANGED", "USER_JOINED"]:

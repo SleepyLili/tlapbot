@@ -95,6 +95,37 @@ def add_user_to_database(db, user_id, display_name):
         current_app.logger.error(f"To user id: {user_id}, with display name: {display_name}")
 
 
+def save_last_online_time(db, timestamp, from_owncast):
+    try:
+        db.execute(
+            "INSERT OVERWRITE last_online_time(id, last_online_time, from_owncast)",
+            (1, timestamp, from_owncast)
+        )
+        db.commit()
+    except Error as e:
+        current_app.logger.error(f"Error occured saving last online time: {e.args[0]}")
+        current_app.logger.error(f"Timestamp: {timestamp}, from_owncast: {from_owncast}")
+
+
+def get_last_online_time(db):
+    try:
+        cursor = db.execute(
+            "SELECT last_online_time FROM last_online_time WHERE id = 1"
+        )
+        last_online_time = cursor.fetchone()
+        return last_online_time
+    except Error as e:
+        current_app.logger.error(f"Error occured reading last online time: {e.args[0]}")
+
+
+def delete_last_online_time(db):
+    try:
+        db.execute("DELETE FROM last_online_time")
+        db.commit()
+    except Error as e:
+        current_app.logger.error(f"Error occured deleting last online time: {e.args[0]}")
+
+
 def change_display_name(db, user_id, new_name):
     try:
         cursor = db.execute(
