@@ -37,7 +37,6 @@ def owncast_webhook():
             display_name = data["eventData"]["user"]["displayName"]
             current_app.logger.debug(f'New chat message from {display_name}:')
             current_app.logger.debug(f'{data["eventData"]["rawBody"]}')
-            current_app.logger.debug(f'{data["eventData"]["body"]}')
             if data["eventData"]["rawBody"].startswith(f"{prefix}help"):
                 send_help()
             elif data["eventData"]["rawBody"].startswith(f"{prefix}points"):
