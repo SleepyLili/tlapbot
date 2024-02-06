@@ -32,7 +32,7 @@ def handle_redeem(message, user_id):
         elif not note:
             send_chat(f"Cannot redeem {redeem}, no amount of points specified.")
         elif not note.isdigit():
-            send_chat(f"Cannot redeem {redeem}, amount of points is not an integer.")
+            send_chat(f"Cannot redeem {redeem}, amount of points is not a positive integer.")
         elif int(note) > points:
             send_chat(f"Can't redeem {redeem}, you're donating more points than you have.")
         elif int(note) == 0:
