@@ -35,6 +35,8 @@ def handle_redeem(message, user_id):
             send_chat(f"Cannot redeem {redeem}, amount of points is not an integer.")
         elif int(note) > points:
             send_chat(f"Can't redeem {redeem}, you're donating more points than you have.")
+        elif int(note) == 0:
+            send_chat(f"Can't donate zero points.")
         elif add_to_milestone(db, user_id, redeem, int(note)):
             send_chat(f"Succesfully donated to {redeem} milestone!")
             if check_apply_milestone_completion(db, redeem):
