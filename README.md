@@ -329,7 +329,8 @@ REDEEMS={
 ```
 #### File format
 `redeems.py` is a config file with just a `REDEEMS` key, that assigns a dictionary of redeems to it.
-Each dictionary entry is a redeem, and the dictionary keys are strings that decides the chat command for the redeem.
+Each dictionary entry is a redeem, and the dictionary keys are strings that decide the chat command for the redeem.
+The redeem names shouldn't have spaces in them.
 The value is another dictionary that needs to have an entry for `"type"` and
 an entry for `"price"` for non-milestones or `"goal"` for milestones.
 Optionally, each redeem can also have `"info"` and `"category"` entries.
