@@ -35,6 +35,12 @@ def create_app(test_config=None):
     if len(app.config['PREFIX']) != 1:
         raise RuntimeError("Prefix is >1 character. "
                            "Change your config to set 1-character prefix.")
+    
+    # Check for spaces in redeems (they won't work)
+    for redeem, _ in app.config['REDEEMS']:
+        if ' ' in redeem:
+            app.logger.warning(f"Redeem {redeem} has spaces in its name. It will be impossible to redeem.")
+
 
     # prepare webhooks and redeem dashboard blueprints
     from . import owncast_webhooks
