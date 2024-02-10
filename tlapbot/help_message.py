@@ -14,10 +14,14 @@ def send_help():
     if current_app.config['LIST_REDEEMS']:
         message.append("Active redeems: <br>")
         for redeem, redeem_info in current_app.config['REDEEMS'].items():
-            if 'info' in redeem_info:
-                message.append(f"!{redeem} for {redeem_info['price']} points. {redeem_info['info']} <br>")
+            if 'type' in redeem_info and redeem_info['type'] == 'milestone':
+                message.append(f"!{redeem} milestone with goal of {redeem_info['goal']}.")
             else:
-                message.append(f"!{redeem} for {redeem_info['price']} points. <br>")
+                message.append(f"!{redeem} for {redeem_info['price']} points.")
+            if 'info' in redeem_info:
+                message.append(f" {redeem_info['info']} <br>")
+            else:
+                message.append("<br>")
     else:
         message.append("Check the dashboard for a list of currently active redeems.")
     send_chat(''.join(message))
