@@ -39,7 +39,7 @@ def create_app(test_config=None):
     # Check for spaces in redeems (they won't work)
     for redeem in app.config['REDEEMS']:
         if ' ' in redeem:
-            app.logger.warning(f"Redeem {redeem} has spaces in its name.")
+            app.logger.warning(f"Redeem '{redeem}' has spaces in its name.")
             app.logger.warning("Redeems with spaces are impossible to redeem.")
 
 
