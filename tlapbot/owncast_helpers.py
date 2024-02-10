@@ -97,7 +97,7 @@ def add_user_to_database(db, user_id, display_name):
 
 def change_display_name(db, user_id, new_name):
     try:
-        cursor = db.execute(
+        db.execute(
             "UPDATE points SET name = ? WHERE id = ?",
             (new_name, user_id)
         )
@@ -109,7 +109,7 @@ def change_display_name(db, user_id, new_name):
 
 def remove_duplicate_usernames(db, user_id, username):
     try:
-        cursor = db.execute(
+        db.execute(
             """UPDATE points
             SET name = NULL
             WHERE name = ? AND NOT id = ?""",

@@ -23,7 +23,7 @@ def counter_exists(db, counter_name):
 def add_to_counter(db, counter_name):
     if counter_exists(db, counter_name):
         try:
-            cursor = db.execute(
+            db.execute(
                 "UPDATE counters SET count = count + 1 WHERE name = ?",
                 (counter_name,)
             )
@@ -37,7 +37,7 @@ def add_to_counter(db, counter_name):
 
 def add_to_redeem_queue(db, user_id, redeem_name, note=None):
     try:
-        cursor = db.execute(
+        db.execute(
             "INSERT INTO redeem_queue(redeem, redeemer_id, note) VALUES(?, ?, ?)",
             (redeem_name, user_id, note)
             )
@@ -159,7 +159,7 @@ def all_active_milestones(db):
     return all_active_milestones
 
 
-def all_active_redeems(db):
+def all_active_redeems():
     redeems = current_app.config['REDEEMS']
     all_active_redeems = {}
     for redeem_name, redeem_dict in redeems.items():
