@@ -14,6 +14,9 @@ def send_help():
     if current_app.config['LIST_REDEEMS']:
         message.append("Active redeems: <br>")
         for redeem, redeem_info in current_app.config['REDEEMS'].items():
+            if redeem_info.get('category', None):
+                if not set(redeem_info['category']).intersection(set(current_app.config['ACTIVE_CATEGORIES'])):
+                    continue
             if 'type' in redeem_info and redeem_info['type'] == 'milestone':
                 message.append(f"!{redeem} milestone with goal of {redeem_info['goal']}.")
             else:
