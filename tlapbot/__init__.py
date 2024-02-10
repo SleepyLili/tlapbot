@@ -5,9 +5,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from tlapbot.db import get_db
 from tlapbot.owncast_requests import is_stream_live, give_points_to_chat
 
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-    
+
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
@@ -29,18 +30,17 @@ def create_app(test_config=None):
         gunicorn_logger = logging.getLogger('gunicorn.error')
         app.logger.handlers = gunicorn_logger.handlers
         app.logger.setLevel(gunicorn_logger.level)
-    
+
     # Check for wrong config that would break Tlapbot
     if len(app.config['PREFIX']) != 1:
         raise RuntimeError("Prefix is >1 character. "
                            "Change your config to set 1-character prefix.")
-    
+
     # Check for spaces in redeems (they won't work)
     for redeem in app.config['REDEEMS']:
         if ' ' in redeem:
             app.logger.warning(f"Redeem '{redeem}' has spaces in its name.")
             app.logger.warning("Redeems with spaces are impossible to redeem.")
-
 
     # prepare webhooks and redeem dashboard blueprints
     from . import owncast_webhooks
@@ -57,7 +57,7 @@ def create_app(test_config=None):
     app.cli.add_command(db.refresh_milestones_command)
     app.cli.add_command(db.reset_milestone_command)
     app.cli.add_command(db.hard_reset_milestone_command)
-    
+
     # scheduler job for giving points to users
     def proxy_job():
         with app.app_context():

@@ -6,6 +6,7 @@ from flask.cli import with_appcontext
 
 from tlapbot.redeems import milestone_complete
 
+
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect(
@@ -127,7 +128,7 @@ def refresh_milestones():
 
 
 def reset_milestone(milestone):
-    if not milestone in current_app.config['REDEEMS']:
+    if milestone not in current_app.config['REDEEMS']:
         print(f"Failed resetting milestone, {milestone} not in redeems file.")
         return False
     try:
@@ -145,7 +146,6 @@ def reset_milestone(milestone):
     except sqlite3.Error as e:
         current_app.logger.error(f"Error occured adding a milestone: {e.args[0]}")
         return False
-
 
 
 @click.command('init-db')
@@ -184,7 +184,7 @@ def refresh_and_clear_command():
 @click.command('refresh-milestones')
 @with_appcontext
 def refresh_milestones_command():
-    """Initialize all milestones from the redeems file, 
+    """Initialize all milestones from the redeems file,
     delete milestones not in redeem file."""
     if refresh_milestones():
         click.echo('Refreshed milestones.')

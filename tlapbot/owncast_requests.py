@@ -45,4 +45,3 @@ def send_chat(message):
         current_app.logger.error(f"Check owncast instance url and access key.")
         return
     return r.json()
-

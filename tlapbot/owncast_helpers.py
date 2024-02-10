@@ -2,6 +2,7 @@ from flask import current_app
 from sqlite3 import Error
 from re import sub
 
+
 # # # db stuff # # #
 def read_users_points(db, user_id):
     """Errors out if user doesn't exist."""
