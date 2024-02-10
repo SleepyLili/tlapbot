@@ -37,7 +37,7 @@ def create_app(test_config=None):
                            "Change your config to set 1-character prefix.")
     
     # Check for spaces in redeems (they won't work)
-    for redeem, _ in app.config['REDEEMS']:
+    for redeem in app.config['REDEEMS']:
         if ' ' in redeem:
             app.logger.warning(f"Redeem {redeem} has spaces in its name.")
             app.logger.warning("Redeems with spaces are impossible to redeem.")
