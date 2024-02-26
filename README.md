@@ -2,9 +2,11 @@
 Tlapbot is an [Owncast](https://owncast.online/) bot that adds channel points and
 channel point redeems to your Owncast page.
 
-The goal is to have an experience similar
-to [Twitch channel points](https://help.twitch.tv/s/article/viewer-channel-point-guide) by making use of [Owncast webhooks](https://owncast.online/thirdparty/webhooks/) and 
-[External actions](https://owncast.online/thirdparty/actions/).
+Similar
+to [Twitch channel points](https://help.twitch.tv/s/article/viewer-channel-point-guide), Tlapbot rewards your viewers with points for watching, and allows them to spend their points on fun gimmicks, challenges, reaction requests, or whatever else you decide.
+
+Tlapbot makes use of [Owncast webhooks](https://owncast.online/thirdparty/webhooks/) for chat interactions and 
+[Owncast external actions](https://owncast.online/thirdparty/actions/) to display an informative dashboard.
 ## Features
 The bot gives points to everyone in chat -- 10 points every 10 minutes by
 default, but the time interval and amount of points can be changed.
@@ -12,11 +14,13 @@ default, but the time interval and amount of points can be changed.
 The users in chat can then use their points on redeems -- rewards like "choose my
 background music", "choose what level to play next", "react to this video" etc.
 You can configure redeems to fit your stream and the activities you're
-doing.
+doing, and sort them into categories that can be turned on and off.
 
 The redeems then show on a "Redeems dashboard" that everyone can view
 as an External Action on the Owncast stream, or at its standalone URL.
-This allows easy browsing of active challenges and recent redeems.
+This allows easy browsing of active challenges and recent redeems, without quitting the stream.
+
+Tlapbot currently doesn't support any automated integrations like stream effects with OBS or VTube Studio or individual games. The streamer decides how they respond to redeems or how to make them take effect. (I'd love to support more seamless, automatic redeems in the future!)
 ### Tlapbot bot commands
 Tlapbot has these basic commands:
 - `!help` sends a help string in the chat, explaining how tlapbot works.
@@ -27,12 +31,6 @@ Tlapbot has these basic commands:
 use the new prefix instead.)
 
 Tlapbot also automatically adds a command for each redeem in the redeems file.
-### Passive mode
-Tlapbot can also be run in passive mode. In passive mode, no redeems will be available, and Tlapbot will not send any messages.
-
-However, it will still give points to viewers, and track username changes.
-
-The Tlapbot dashboard will display a passive mode disclaimer instead of redeems.
 
 ### Tlapbot dashboard
 Tlapbot dashboard is a standalone page available at `/dashboard`, made to be easily viewable as an owncast external action. The Tlapbot dashboard shows all redeems and active counters.
@@ -52,8 +50,16 @@ The redeem queue shows a chronological list of note and list redeems with timest
 #### Redeems help tab
 The dashboard also has a "Redeems help" tab. It shows an explanation of redeem types,
 and lists all active redeems, along with their price, type and description.
+
+### Passive mode
+Tlapbot can also be run in passive mode. In passive mode, no redeems will be available, and Tlapbot will not send any messages.
+
+However, it will still give points to viewers, and track username changes.
+
+The Tlapbot dashboard will display a passive mode disclaimer instead of redeems.
+
 ### Tlapbot redeems types
-Tlapbot currently supports three different redeem types. Each type of a redeem
+Tlapbot currently supports four different redeem types. Each type of a redeem
 works slightly differently, and displays differently on the redeems dashboard.
 
 Redeems can also optionally be sorted into "categories" that can be turned on
