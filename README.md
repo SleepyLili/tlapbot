@@ -7,6 +7,7 @@ to [Twitch channel points](https://help.twitch.tv/s/article/viewer-channel-point
 
 Tlapbot makes use of [Owncast webhooks](https://owncast.online/thirdparty/webhooks/) for chat interactions and 
 [Owncast external actions](https://owncast.online/thirdparty/actions/) to display an informative dashboard.
+
 ## Features
 The bot gives points to everyone in chat -- 10 points every 10 minutes by
 default, but the time interval and amount of points can be changed.
@@ -20,7 +21,7 @@ The redeems then show on a "Redeems dashboard" that everyone can view
 as an External Action on the Owncast stream, or at its standalone URL.
 This allows easy browsing of active challenges and recent redeems, without quitting the stream.
 
-Tlapbot currently doesn't support any automated integrations like stream effects with OBS or VTube Studio or individual games. The streamer decides how they respond to redeems or how to make them take effect. (I'd love to support more seamless, automatic redeems in the future!)
+**Tlapbot currently doesn't support any automated integrations (or an API). That means no 'Crowd Control' plugin, no instant effects in OBS or VTube Studio, etc. The streamer decides how they respond to redeems or how to make them take effect.** (I'd love to support more seamless, automatic redeems in the future!)
 ### Tlapbot bot commands
 Tlapbot has these basic commands:
 - `!help` sends a help string in the chat, explaining how tlapbot works.
