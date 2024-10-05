@@ -62,7 +62,7 @@ def clear_redeem_queue():
         )
         db.commit()
     except sqlite3.Error as e:
-        print("Error occured deleting redeem queue:", e.args[0])
+        print("Error occurred deleting redeem queue:", e.args[0])
         return False
     return True
 
@@ -74,7 +74,7 @@ def refresh_counters():
         db.execute("DELETE FROM counters")
         db.commit()
     except sqlite3.Error as e:
-        print("Error occured deleting old counters:", e.args[0])
+        print("Error occurred deleting old counters:", e.args[0])
         return False
     if insert_counters(db):
         return True
@@ -144,7 +144,7 @@ def reset_milestone(milestone):
         db.commit()
         return True
     except sqlite3.Error as e:
-        current_app.logger.error(f"Error occured adding a milestone: {e.args[0]}")
+        current_app.logger.error(f"Error occurred adding a milestone: {e.args[0]}")
         return False
 
 

@@ -16,7 +16,7 @@ def counter_exists(db, counter_name):
             return False
         return True
     except Error as e:
-        current_app.logger.error(f"Error occured checking if counter exists: {e.args[0]}")
+        current_app.logger.error(f"Error occurred checking if counter exists: {e.args[0]}")
         current_app.logger.error(f"For counter: {counter_name}")
 
 
@@ -30,7 +30,7 @@ def add_to_counter(db, counter_name):
             db.commit()
             return True
         except Error as e:
-            current_app.logger.error(f"Error occured adding to counter: {e.args[0]}")
+            current_app.logger.error(f"Error occurred adding to counter: {e.args[0]}")
             current_app.logger.error(f"To counter: {counter_name}")
     return False
 
@@ -44,7 +44,7 @@ def add_to_redeem_queue(db, user_id, redeem_name, note=None):
         db.commit()
         return True
     except Error as e:
-        current_app.logger.error(f"Error occured adding to redeem queue: {e.args[0]}")
+        current_app.logger.error(f"Error occurred adding to redeem queue: {e.args[0]}")
         current_app.logger.error(f"To user: {user_id} with redeem: {redeem_name} with note: {note}")
     return False
 
@@ -74,7 +74,7 @@ def add_to_milestone(db, user_id, redeem_name, points_donated):
             db.commit()
             return True
     except Error as e:
-        current_app.logger.error(f"Error occured updating milestone: {e.args[0]}")
+        current_app.logger.error(f"Error occurred updating milestone: {e.args[0]}")
     return False
 
 
@@ -92,7 +92,7 @@ def milestone_complete(db, redeem_name):
         else:
             return row[0]
     except Error as e:
-        current_app.logger.error(f"Error occured checking if milestone is complete: {e.args[0]}")
+        current_app.logger.error(f"Error occurred checking if milestone is complete: {e.args[0]}")
 
 
 def check_apply_milestone_completion(db, redeem_name):
@@ -117,7 +117,7 @@ def check_apply_milestone_completion(db, redeem_name):
                 return True
         return False
     except Error as e:
-        current_app.logger.error(f"Error occured applying milestone completion: {e.args[0]}")
+        current_app.logger.error(f"Error occurred applying milestone completion: {e.args[0]}")
         return False
 
 
@@ -128,7 +128,7 @@ def all_milestones(db):
         )
         return cursor.fetchall()
     except Error as e:
-        current_app.logger.error(f"Error occured selecting all milestones: {e.args[0]}")
+        current_app.logger.error(f"Error occurred selecting all milestones: {e.args[0]}")
 
 
 def all_counters(db):
@@ -138,7 +138,7 @@ def all_counters(db):
         )
         return cursor.fetchall()
     except Error as e:
-        current_app.logger.error(f"Error occured selecting all counters: {e.args[0]}")
+        current_app.logger.error(f"Error occurred selecting all counters: {e.args[0]}")
 
 
 def all_active_counters(db):
@@ -183,7 +183,7 @@ def pretty_redeem_queue(db):
         )
         return cursor.fetchall()
     except Error as e:
-        current_app.logger.error(f"Error occured selecting pretty redeem queue: {e.args[0]}")
+        current_app.logger.error(f"Error occurred selecting pretty redeem queue: {e.args[0]}")
 
 
 def whole_redeem_queue(db):
@@ -193,7 +193,7 @@ def whole_redeem_queue(db):
         )
         return cursor.fetchall()
     except Error as e:
-        current_app.logger.error(f"Error occured selecting redeem queue: {e.args[0]}")
+        current_app.logger.error(f"Error occurred selecting redeem queue: {e.args[0]}")
 
 
 def is_redeem_active(redeem_name):

@@ -8,7 +8,7 @@ def is_stream_live():
     try:
         r = requests.get(url)
     except requests.exceptions.RequestException as e:
-        current_app.logger.error(f"Error occured checking if stream is live: {e.args[0]}")
+        current_app.logger.error(f"Error occurred checking if stream is live: {e.args[0]}")
         return False
     return r.json()["online"]
 
@@ -19,10 +19,10 @@ def give_points_to_chat(db):
     try:
         r = requests.get(url, headers=headers)
     except requests.exceptions.RequestException as e:
-        current_app.logger.error(f"Error occured getting users to give points to: {e.args[0]}")
+        current_app.logger.error(f"Error occurred getting users to give points to: {e.args[0]}")
         return
     if r.status_code != 200:
-        current_app.logger.error(f"Error occured when giving points: Response code not 200.")
+        current_app.logger.error(f"Error occurred when giving points: Response code not 200.")
         current_app.logger.error(f"Response code received: {r.status_code}.")
         current_app.logger.error(f"Check owncast instance url and access key.")
         return
@@ -37,10 +37,10 @@ def send_chat(message):
     try:
         r = requests.post(url, headers=headers, json={"body": message})
     except requests.exceptions.RequestException as e:
-        current_app.logger.error(f"Error occured sending chat message: {e.args[0]}")
+        current_app.logger.error(f"Error occurred sending chat message: {e.args[0]}")
         return
     if r.status_code != 200:
-        current_app.logger.error(f"Error occured when sending chat: Response code not 200.")
+        current_app.logger.error(f"Error occurred when sending chat: Response code not 200.")
         current_app.logger.error(f"Response code received: {r.status_code}.")
         current_app.logger.error(f"Check owncast instance url and access key.")
         return
