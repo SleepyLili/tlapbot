@@ -2,7 +2,7 @@ from flask import current_app
 from tlapbot.owncast_requests import send_chat
 
 
-def send_help():
+def send_help() -> None:
     message = []
     message.append("Tlapbot gives you points for being in chat, and then allows you to spend those points. <br>")
     message.append(f"People connected to chat receive {current_app.config['POINTS_AMOUNT_GIVEN']} points every {current_app.config['POINTS_CYCLE_TIME']} seconds. <br>")
