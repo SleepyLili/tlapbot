@@ -8,7 +8,7 @@ bp = Blueprint('redeem_dashboard', __name__)
 
 
 @bp.route('/dashboard', methods=['GET'])
-def dashboard():
+def dashboard() -> str:
     db = get_db()
     username = request.args.get("username")
     if username is not None:
