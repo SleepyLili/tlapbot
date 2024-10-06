@@ -6,7 +6,7 @@ from tlapbot.redeems import (add_to_redeem_queue, add_to_counter, add_to_milesto
 from tlapbot.owncast_helpers import use_points, read_users_points
 
 
-def handle_redeem(message, user_id):
+def handle_redeem(message: str, user_id: str) -> None:
     split_message = message[1:].split(maxsplit=1)
     redeem = split_message[0]
     if len(split_message) == 1:
