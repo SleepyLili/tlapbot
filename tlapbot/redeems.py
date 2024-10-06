@@ -2,9 +2,10 @@ from flask import current_app
 from sqlite3 import Error, Connection
 from typing import Tuple, Any
 from tlapbot.owncast_helpers import use_points
-from tlapbot.tlapbot_types import Redeem, Redeems
+from tlapbot.tlapbot_types import Redeems
 
-def counter_exists(db: Connection, counter_name: str) -> bool:
+def counter_exists(db: Connection, counter_name: str) -> bool | None:
+    """Returns None only if error was logged."""
     try:
         cursor = db.execute(
             "SELECT count FROM counters WHERE name = ?",
@@ -80,7 +81,8 @@ def add_to_milestone(db: Connection, user_id: str, redeem_name: str, points_dona
     return False
 
 # TODO: milestone is complete when progress equals goal?
-def milestone_complete(db: Connection, redeem_name: str) -> bool:
+def milestone_complete(db: Connection, redeem_name: str) -> bool | None:
+    """Returns None only if error was logged."""
     try:
         cursor = db.execute(
             "SELECT complete FROM milestones WHERE name = ?",
@@ -123,7 +125,9 @@ def check_apply_milestone_completion(db: Connection, redeem_name: str) -> bool:
         return False
 
 
-def all_milestones(db: Connection) -> list[Tuple[str, int, int]]:
+def all_milestones(db: Connection) -> list[Tuple[str, int, int]] | None:
+    """Returns list of all (even inactive) milestones, their progress and their goal.
+    Returns None only if error was logged."""
     try:
         cursor = db.execute(
             """SELECT name, progress, goal FROM milestones"""
@@ -133,16 +137,21 @@ def all_milestones(db: Connection) -> list[Tuple[str, int, int]]:
         current_app.logger.error(f"Error occurred selecting all milestones: {e.args[0]}")
 
 
-def all_active_milestones(db: Connection) -> list[Tuple[str, int, int]]:
+def all_active_milestones(db: Connection) -> list[Tuple[str, int, int]] | None:
+    """Returns list of all active milestones, their progress and their goal.
+    Returns None only if error was logged."""
     milestones = all_milestones(db)
-    all_active_milestones = []
-    for name, progress, goal in milestones:
-        if is_redeem_active(name):
-            all_active_milestones.append((name, progress, goal))
-    return all_active_milestones
+    if milestones is not None:
+        all_active_milestones = []
+        for name, progress, goal in milestones:
+            if is_redeem_active(name):
+                all_active_milestones.append((name, progress, goal))
+        return all_active_milestones
 
 
-def all_counters(db: Connection) -> list[Tuple[str, int]]:
+def all_counters(db: Connection) -> list[Tuple[str, int]] | None:
+    """Returns list of all (even inactive) counters and their current value.
+    Returns None only if error was logged."""
     try:
         cursor = db.execute(
             """SELECT name, count FROM counters"""
@@ -152,16 +161,20 @@ def all_counters(db: Connection) -> list[Tuple[str, int]]:
         current_app.logger.error(f"Error occurred selecting all counters: {e.args[0]}")
 
 
-def all_active_counters(db: Connection) -> list[Tuple[str, int]]:
+def all_active_counters(db: Connection) -> list[Tuple[str, int]] | None:
+    """Returns list of all active counters, and their current value.
+    Returns None if error was logged."""
     counters = all_counters(db)
-    all_active_counters = []
-    for name, count in counters:
-        if is_redeem_active(name):
-            all_active_counters.append((name, count))
-    return all_active_counters
+    if counters is not None:
+        all_active_counters = []
+        for name, count in counters:
+            if is_redeem_active(name):
+                all_active_counters.append((name, count))
+        return all_active_counters
 
 
-def all_active_redeems() -> dict[str, dict[str, Any]]:
+def all_active_redeems() -> Redeems:
+    """Returns list of all active redeems."""
     redeems = current_app.config['REDEEMS']
     all_active_redeems = {}
     for redeem_name, redeem_dict in redeems.items():
@@ -175,7 +188,9 @@ def all_active_redeems() -> dict[str, dict[str, Any]]:
     return all_active_redeems
 
 
-def pretty_redeem_queue(db: Connection) -> list[Tuple[str, str, str, str]]:
+def pretty_redeem_queue(db: Connection) -> list[Tuple[str, str, str, str]] | None:
+    """Returns a 'pretty' redeem queue, with name of the redeemer joined instead of ID.
+    Returns None only if error was logged."""
     try:
         cursor = db.execute(
             """SELECT redeem_queue.created, redeem_queue.redeem, redeem_queue.note, points.name
@@ -188,7 +203,8 @@ def pretty_redeem_queue(db: Connection) -> list[Tuple[str, str, str, str]]:
         current_app.logger.error(f"Error occurred selecting pretty redeem queue: {e.args[0]}")
 
 
-def whole_redeem_queue(db: Connection) -> list[Any]:
+def whole_redeem_queue(db: Connection) -> list[Any] | None:
+    """Returns None if error was logged."""
     try:
         cursor = db.execute(
             "SELECT * from redeem_queue" #TODO: specify columns to fetch
@@ -199,11 +215,12 @@ def whole_redeem_queue(db: Connection) -> list[Any]:
 
 
 def is_redeem_active(redeem_name: str) -> bool | None:
-    """Checks if redeem is active. Pulls the redeem by name from config."""
+    """Checks if redeem is active. Pulls the redeem by name from config.
+    Returns None if the redeem doesn't exist."""
     active_categories = current_app.config['ACTIVE_CATEGORIES']
     redeem_dict = current_app.config['REDEEMS'].get(redeem_name, None)
     if redeem_dict:
-        if "category" in redeem_dict:
+        if redeem_dict.get('category', None):
             for category in redeem_dict["category"]:
                 if category in active_categories:
                     return True
@@ -211,19 +228,3 @@ def is_redeem_active(redeem_name: str) -> bool | None:
         else:
             return True
     return None # redeem does not exist, unknown active state
-
-
-
-def is_redeem_from_config_active(redeem: tuple[str, Redeem], active_categories: list[str]) -> bool:
-    """Checks if redeem is active. `redeem` is a whole key:value pair from redeems config."""
-    if isinstance(redeem[1].get("category"), list):
-        for category in redeem[1]["category"]:
-            if category in active_categories:
-                return True
-        return False
-    return True
-
-
-def remove_inactive_redeems(redeems: Redeems, active_categories: list[str]) -> Redeems:
-    return dict(filter(lambda redeem: is_redeem_from_config_active(redeem, active_categories),
-                       redeems.items()))
