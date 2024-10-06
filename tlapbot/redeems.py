@@ -2,7 +2,7 @@ from flask import current_app
 from sqlite3 import Error, Connection
 from typing import Tuple, Any
 from tlapbot.owncast_helpers import use_points
-from tlapbot.types import Redeem, Redeems
+from tlapbot.tlapbot_types import Redeem, Redeems
 
 def counter_exists(db: Connection, counter_name: str) -> bool:
     try:
