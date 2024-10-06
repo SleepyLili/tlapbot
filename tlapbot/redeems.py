@@ -224,6 +224,6 @@ def is_redeem_from_config_active(redeem: Redeem, active_categories: list[str]) -
     return True
 
 
-def remove_inactive_redeems(redeems: Redeems, active_categories: list[str]) -> Redeems]:
+def remove_inactive_redeems(redeems: Redeems, active_categories: list[str]) -> Redeems:
     return dict(filter(lambda redeem: is_redeem_from_config_active(redeem, active_categories),
                        redeems.items()))
