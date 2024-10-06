@@ -214,7 +214,7 @@ def is_redeem_active(redeem_name: str) -> bool | None:
 
 
 
-def is_redeem_from_config_active(redeem: Redeem, active_categories: list[str]) -> bool:
+def is_redeem_from_config_active(redeem: tuple[str, Redeem], active_categories: list[str]) -> bool:
     """Checks if redeem is active. `redeem` is a whole key:value pair from redeems config."""
     if isinstance(redeem[1].get("category"), list):
         for category in redeem[1]["category"]:
