@@ -1,13 +1,13 @@
 import sqlite3
 
 import click
-from flask import current_app, g
+from flask import current_app, g, Flask
 from flask.cli import with_appcontext
 
 from tlapbot.redeems import milestone_complete
 
 
-def get_db():
+def get_db() -> sqlite3.Connection:
     if 'db' not in g:
         g.db = sqlite3.connect(
             current_app.config['DATABASE'],
@@ -18,14 +18,14 @@ def get_db():
     return g.db
 
 
-def close_db(e=None):
-    db = g.pop('db', None)
+def close_db() -> None:
+    db: sqlite3.Connection = g.pop('db', None)
 
     if db is not None:
         db.close()
 
 
-def insert_counters(db):
+def insert_counters(db: sqlite3.Connection) -> bool:
     for redeem, redeem_info in current_app.config['REDEEMS'].items():
         if redeem_info["type"] == "counter":
             try:
@@ -40,17 +40,16 @@ def insert_counters(db):
     return True
 
 
-def init_db():
+def init_db() -> bool:
     db = get_db()
 
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
-    if insert_counters(db):
-        return True
+    return insert_counters(db)
 
 
-def clear_redeem_queue():
+def clear_redeem_queue() -> bool:
     db = get_db()
 
     try:
@@ -67,7 +66,7 @@ def clear_redeem_queue():
     return True
 
 
-def refresh_counters():
+def refresh_counters() -> bool:
     db = get_db()
 
     try:
@@ -76,11 +75,10 @@ def refresh_counters():
     except sqlite3.Error as e:
         print("Error occurred deleting old counters:", e.args[0])
         return False
-    if insert_counters(db):
-        return True
+    return insert_counters(db)
 
 
-def refresh_milestones():
+def refresh_milestones() -> bool:
     db = get_db()
     # delete old milestones
     try:
@@ -127,7 +125,7 @@ def refresh_milestones():
     return True
 
 
-def reset_milestone(milestone):
+def reset_milestone(milestone: str) -> bool:
     if milestone not in current_app.config['REDEEMS']:
         print(f"Failed resetting milestone, {milestone} not in redeems file.")
         return False
@@ -150,7 +148,7 @@ def reset_milestone(milestone):
 
 @click.command('init-db')
 @with_appcontext
-def init_db_command():
+def init_db_command() -> None:
     """Clear the existing data and create new tables."""
     if init_db():
         click.echo('Initialized the database.')
@@ -158,7 +156,7 @@ def init_db_command():
 
 @click.command('clear-queue')
 @with_appcontext
-def clear_queue_command():
+def clear_queue_command() -> None:
     """Remove all redeems from the redeem queue."""
     if clear_redeem_queue():
         click.echo('Cleared redeem queue.')
@@ -166,7 +164,7 @@ def clear_queue_command():
 
 @click.command('refresh-counters')
 @with_appcontext
-def refresh_counters_command():
+def refresh_counters_command() -> None:
     """Refresh counters from current config file.
     (Remove old ones, add new ones.)"""
     if refresh_counters():
@@ -175,7 +173,7 @@ def refresh_counters_command():
 
 @click.command('clear-refresh')
 @with_appcontext
-def refresh_and_clear_command():
+def refresh_and_clear_command() -> None:
     """Refresh counters and clear queue."""
     if refresh_counters() and clear_redeem_queue():
         click.echo('Counters refreshed and queue cleared.')
@@ -183,7 +181,7 @@ def refresh_and_clear_command():
 
 @click.command('refresh-milestones')
 @with_appcontext
-def refresh_milestones_command():
+def refresh_milestones_command() -> None:
     """Initialize all milestones from the redeems file,
     delete milestones not in redeem file."""
     if refresh_milestones():
@@ -192,7 +190,7 @@ def refresh_milestones_command():
 
 @click.command('reset-milestone')
 @click.argument('milestone')
-def reset_milestone_command(milestone):
+def reset_milestone_command(milestone: str) -> None:
     """Resets a completed milestone back to zero."""
     if milestone_complete(get_db(), milestone):
         if reset_milestone(milestone):
@@ -204,12 +202,12 @@ def reset_milestone_command(milestone):
 
 @click.command('hard-reset-milestone')
 @click.argument('milestone')
-def hard_reset_milestone_command(milestone):
+def hard_reset_milestone_command(milestone: str) -> None:
     """Resets any milestone back to zero."""
     if reset_milestone(milestone):
         click.echo(f"Hard reset milestone {milestone}.")
 
 
-def init_app(app):
+def init_app(app: Flask) -> None:
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
