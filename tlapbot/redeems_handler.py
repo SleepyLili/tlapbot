@@ -25,6 +25,11 @@ def handle_redeem(message: str, user_id: str) -> None:
     redeem_type = current_app.config['REDEEMS'][redeem]["type"]
     points = read_users_points(db, user_id)
 
+    if points is None:
+        send_chat(f"Can't redeem {redeem}, failed to read users' points.")
+        return
+
+
     # handle milestone first because it doesn't have a price
     if redeem_type == "milestone":
         if milestone_complete(db, redeem):
