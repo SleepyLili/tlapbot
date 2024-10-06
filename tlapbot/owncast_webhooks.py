@@ -1,4 +1,6 @@
 from flask import Flask, request, json, Blueprint, current_app
+from sqlite3 import Connection
+from typing import Any
 from tlapbot.db import get_db
 from tlapbot.owncast_requests import send_chat
 from tlapbot.owncast_helpers import (add_user_to_database, change_display_name,
@@ -11,9 +13,12 @@ bp = Blueprint('owncast_webhooks', __name__)
 
 
 @bp.route('/owncastWebhook', methods=['POST'])
-def owncast_webhook():
-    data = request.json
-    db = get_db()
+def owncast_webhook() -> Any | None:
+    """Reads webhook json -- adds new users, removes duplicate usernames,
+    handles name changes and chat messages with commands.
+    Returns the 'data' json from the request."""
+    data: Any | None = request.json
+    db: Connection = get_db()
 
     # Make sure user is in db before doing anything else.
     if data["type"] in ["CHAT", "NAME_CHANGED", "USER_JOINED"]:
