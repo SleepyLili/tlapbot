@@ -1,9 +1,11 @@
 import requests
 from flask import current_app
 from tlapbot.owncast_helpers import give_points_to_user
+from sqlite3 import Connection
+from typing import Any
 
 
-def is_stream_live():
+def is_stream_live() -> bool:
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/status'
     try:
         r = requests.get(url)
@@ -13,7 +15,7 @@ def is_stream_live():
     return r.json()["online"]
 
 
-def give_points_to_chat(db):
+def give_points_to_chat(db: Connection) -> None:
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/clients'
     headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
     try:
@@ -31,7 +33,7 @@ def give_points_to_chat(db):
         give_points_to_user(db, user_id, current_app.config['POINTS_AMOUNT_GIVEN'])
 
 
-def send_chat(message):
+def send_chat(message: str) -> Any:
     url = current_app.config['OWNCAST_INSTANCE_URL'] + '/api/integrations/chat/send'
     headers = {"Authorization": "Bearer " + current_app.config['OWNCAST_ACCESS_TOKEN']}
     try:
