@@ -5,8 +5,8 @@ from typing import Tuple
 
 
 # # # db stuff # # #
-def read_users_points(db: Connection, user_id: str) -> int:
-    """Errors out if user doesn't exist."""
+def read_users_points(db: Connection, user_id: str) -> int | None:
+    """Returns None and logs error in case of error, or if user doesn't exist."""
     try:
         cursor = db.execute(
             "SELECT points FROM points WHERE id = ?",
@@ -18,7 +18,8 @@ def read_users_points(db: Connection, user_id: str) -> int:
         current_app.logger.error(f"Of user: {user_id}")
 
 
-def read_all_users_with_username(db: Connection, username: str) -> list[Tuple[str, int]]:
+def read_all_users_with_username(db: Connection, username: str) -> list[Tuple[str, int]] | None:
+    """Returns None only if Error was logged."""
     try:
         cursor = db.execute(
             "SELECT name, points FROM points WHERE name = ?",
@@ -57,7 +58,8 @@ def use_points(db: Connection, user_id: str, points: int) -> bool:
         return False
 
 
-def user_exists(db: Connection, user_id: str) -> bool:
+def user_exists(db: Connection, user_id: str) -> bool | None:
+    """Returns None only if an error was logged."""
     try:
         cursor = db.execute(
             "SELECT points FROM points WHERE id = ?",
