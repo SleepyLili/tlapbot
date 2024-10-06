@@ -6,7 +6,7 @@ from tlapbot.db import get_db
 from tlapbot.owncast_requests import is_stream_live, give_points_to_chat
 
 
-def create_app(test_config=None):
+def create_app(test_config: None = None) -> Flask:
     app = Flask(__name__, instance_relative_config=True)
 
     # ensure the instance folder exists
@@ -59,7 +59,7 @@ def create_app(test_config=None):
     app.cli.add_command(db.hard_reset_milestone_command)
 
     # scheduler job for giving points to users
-    def proxy_job():
+    def proxy_job() -> None:
         with app.app_context():
             if is_stream_live():
                 app.logger.info("Stream is LIVE. Giving points to chat.")
