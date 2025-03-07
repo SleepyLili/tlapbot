@@ -80,26 +80,8 @@ def add_to_milestone(db: Connection, user_id: str, redeem_name: str, points_dona
         current_app.logger.error(f"Error occurred updating milestone: {e.args[0]}")
     return False
 
-# TODO: milestone is complete when progress equals goal?
 def milestone_complete(db: Connection, redeem_name: str) -> bool | None:
     """Returns None only if error was logged."""
-    try:
-        cursor = db.execute(
-            "SELECT complete FROM milestones WHERE name = ?",
-            (redeem_name,)
-        )
-        row = cursor.fetchone()
-        if row is None:
-            current_app.logger.warning("Milestone not found in database.")
-            current_app.logger.warning("Maybe you forgot to run the refresh-milestones CLI command "
-                                       "after you added a new milestone to the config?")
-        else:
-            return row[0]
-    except Error as e:
-        current_app.logger.error(f"Error occurred checking if milestone is complete: {e.args[0]}")
-
-
-def check_apply_milestone_completion(db: Connection, redeem_name: str) -> bool:
     try:
         cursor = db.execute(
             "SELECT progress, goal FROM milestones WHERE name = ?",
@@ -113,16 +95,11 @@ def check_apply_milestone_completion(db: Connection, redeem_name: str) -> bool:
         else:
             progress, goal = row
             if progress == goal:
-                cursor = db.execute(
-                    "UPDATE milestones SET complete = TRUE WHERE name = ?",
-                    (redeem_name,)
-                )
-                db.commit()
                 return True
-        return False
+            return False
     except Error as e:
-        current_app.logger.error(f"Error occurred applying milestone completion: {e.args[0]}")
-        return False
+        current_app.logger.error(f"Error occurred checking if milestone is complete: {e.args[0]}")
+
 
 
 def all_milestones(db: Connection) -> list[Tuple[str, int, int]] | None:

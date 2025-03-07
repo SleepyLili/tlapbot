@@ -2,7 +2,7 @@ from flask import current_app
 from tlapbot.db import get_db
 from tlapbot.owncast_requests import send_chat
 from tlapbot.redeems import (add_to_redeem_queue, add_to_counter, add_to_milestone,
-        check_apply_milestone_completion, milestone_complete, is_redeem_active)
+        milestone_complete, is_redeem_active)
 from tlapbot.owncast_helpers import use_points, read_users_points
 
 
@@ -44,7 +44,7 @@ def handle_redeem(message: str, user_id: str) -> None:
             send_chat(f"Can't donate zero points.")
         elif add_to_milestone(db, user_id, redeem, int(note)):
             send_chat(f"Succesfully donated to {redeem} milestone!")
-            if check_apply_milestone_completion(db, redeem):
+            if milestone_complete(db, redeem):
                 send_chat(f"Milestone goal {redeem} complete!")
         else:
             send_chat(f"Redeeming milestone {redeem} failed.")

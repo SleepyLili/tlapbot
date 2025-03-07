@@ -109,7 +109,7 @@ def refresh_milestones() -> bool:
                 result = cursor.fetchone()
                 if result is None:
                     cursor.execute(
-                        "INSERT INTO milestones(name, progress, goal, complete) VALUES(?, 0, ?, FALSE)",
+                        "INSERT INTO milestones(name, progress, goal) VALUES(?, 0, ?)",
                         (redeem, redeem_info['goal'])
                     )
                 # update existing milestone to new goal
@@ -136,7 +136,7 @@ def reset_milestone(milestone: str) -> bool:
             (milestone,)
         )
         db.execute(
-            "INSERT INTO milestones(name, progress, goal, complete) VALUES(?, ?, ?, FALSE)",
+            "INSERT INTO milestones(name, progress, goal) VALUES(?, ?, ?)",
             (milestone, 0, current_app.config['REDEEMS'][milestone]['goal'])
         )
         db.commit()
