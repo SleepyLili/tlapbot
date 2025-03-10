@@ -5,6 +5,7 @@ from tlapbot.owncast_helpers import use_points
 from tlapbot.redeems import is_redeem_active
 
 
+# TODO: add a milestone_exists check?
 def add_to_milestone(db: Connection, user_id: str, redeem_name: str, points_donated: int) -> bool:
     try:
         cursor = db.execute(
