@@ -122,7 +122,7 @@ as a package in editable more.
     python -m flask init-db
     ```
 5. Create an `instance/config.py` file and fill it in as needed.
-Default values are included in `tlapbot/default_config.py`, and values in
+Default values are included in `tlapbot/defaults/default_config.py`, and values in
 `config.py` overwrite them. (The database also lives in the instance folder
 by default.)
 
@@ -133,7 +133,7 @@ by default.)
     OWNCAST_INSTANCE_URL # default points to localhost owncast on default port
     ```
 6. OPTIONAL: Create an `instance/redeems.py` file and add your custom redeems.  
-  If you don't add a redeems file, the bot will initialize the default redeems from `tlapbot/default_redeems.py`.  
+  If you don't add a redeems file, the bot will initialize the default redeems from `tlapbot/defaults/default_redeems.py`.  
   More details on how to write the config and redeems files are written later in the readme.
 7. If you've added any new counters or milestones, run `refresh-counters` or `refresh-milestones` commands to initialize them into the database.
 
@@ -299,7 +299,7 @@ Including these values is mandatory if you want tlapbot to work.
 - `OWNCAST_ACCESS_TOKEN` is the owncast access token that owncast will use to get list of users in chat. Generate one in your owncast instance.
 - `OWNCAST_INSTANCE_URL` is the full URL of your owncast instance, like `"http://MyTlapbotServer.example"`
 #### Optional
-Including these values will overwrite their defaults from `/tlapbot/default_config.py`.
+Including these values will overwrite their defaults from `/tlapbot/defaults/default_config.py`.
 - `POINTS_CYCLE_TIME` decides how often channel points are given to users in chat,
 in seconds. 
 - `POINTS_AMOUNT_GIVEN` decides how many channel points users receive.
@@ -320,7 +320,7 @@ LIST_REDEEMS=True
 ACTIVE_CATEGORIES=["gaming"]
 ```
 ### redeems.py
-`redeems.py` is a file where you define all your custom redeems. Tlapbot will work without it, but it will load a few default, generic redeems from `tlapbot/default_redeems.py`.
+`redeems.py` is a file where you define all your custom redeems. Tlapbot will work without it, but it will load a few default, generic redeems from `tlapbot/defaults/default_redeems.py`.
 
 (`redeems.py` should be in the instance folder: `instance/redeems.py` for folder install.)
 #### `default_redeems.py`:

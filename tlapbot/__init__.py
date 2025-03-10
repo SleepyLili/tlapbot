@@ -20,8 +20,8 @@ def create_app(test_config: None = None) -> Flask:
     app.config.from_mapping(
         DATABASE=os.path.join(app.instance_path, "tlapbot.sqlite")
     )
-    app.config.from_object('tlapbot.default_config')
-    app.config.from_object('tlapbot.default_redeems')
+    app.config.from_object('tlapbot.defaults.default_config')
+    app.config.from_object('tlapbot.defaults.default_redeems')
     app.config.from_pyfile('config.py', silent=True)
     app.config.from_pyfile('redeems.py', silent=True)
 
