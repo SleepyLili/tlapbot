@@ -7,6 +7,7 @@ from tlapbot.owncast_helpers import (add_user_to_database, change_display_name,
         read_users_points, remove_duplicate_usernames)
 from tlapbot.help_message import send_help
 from tlapbot.redeems_handler import handle_redeem
+from tlapbot.poll_handler import handle_poll_vote
 
 
 bp = Blueprint('owncast_webhooks', __name__)
@@ -57,6 +58,8 @@ def owncast_webhook() -> Any | None:
                 change_display_name(db, user_id, display_name)
                 if data["eventData"]["user"]["authenticated"]:
                     remove_duplicate_usernames(db, user_id, display_name)
+            elif data["eventData"]["rawBody"].startswith(f"{prefix}vote"):
+                handle_poll_vote(data["eventData"]["rawBody"], user_id)
             elif data["eventData"]["rawBody"].startswith(prefix):
                 handle_redeem(data["eventData"]["rawBody"], user_id)
     return data

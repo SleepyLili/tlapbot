@@ -40,6 +40,20 @@ def insert_counters(db: sqlite3.Connection) -> bool:
     return True
 
 
+def insert_polls(db: sqlite3.Connection) -> bool:
+    for poll, poll_info in current_app.config['POLLS'].items():
+        for option in poll_info["options"]:
+            try:
+                db.execute(
+                    "INSERT INTO polls(poll_name, option, points) VALUES(?, ?, 0)",
+                    (poll, option)
+                )
+            except sqlite3.Error as e:
+                print(f"Failed inserting poll option {poll} {option} to db: {e.args[0]}")
+                return False
+    return True
+
+
 def init_db() -> bool:
     db = get_db()
 
@@ -76,6 +90,32 @@ def refresh_counters() -> bool:
         print("Error occurred deleting old counters:", e.args[0])
         return False
     return insert_counters(db)
+
+
+def refresh_polls() -> bool:
+    db = get_db()
+
+    try:
+        db.execute("DELETE FROM polls")
+        db.commit()
+    except sqlite3.Error as e:
+        print("Error occurred deleting old counters:", e.args[0])
+        return False
+    return insert_polls(db)
+
+
+def reset_poll(poll: str) -> bool:
+    try:
+        db = get_db()
+        db.execute(
+            "UPDATE polls SET points = 0 WHERE poll_name = ?",
+            (poll,)
+        )
+        db.commit()
+        return True
+    except sqlite3.Error as e:
+        current_app.logger.error(f"Error occurred adding a milestone: {e.args[0]}")
+        return False
 
 
 def refresh_milestones() -> bool:
@@ -206,6 +246,25 @@ def hard_reset_milestone_command(milestone: str) -> None:
     """Resets any milestone back to zero."""
     if reset_milestone(milestone):
         click.echo(f"Hard reset milestone {milestone}.")
+
+
+@click.command('refresh-polls')
+@with_appcontext
+def refresh_polls_command() -> None:
+    """Initialize all polls from the polls file,
+    delete polls not in polls file."""
+    if refresh_polls():
+        click.echo('Refreshed polls.')
+
+
+@click.command('reset-polls')
+@click.argument('milestone')
+def reset_poll_command(poll: str) -> None:
+    """Resets polls progress back to zero."""
+    if reset_poll(poll):
+        click.echo(f"Reset poll {poll}.")
+    else:
+        click.echo(f"Could not reset poll {poll}.")
 
 
 def init_app(app: Flask) -> None:

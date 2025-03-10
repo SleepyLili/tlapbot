@@ -29,3 +29,10 @@ CREATE TABLE redeem_queue (
   note TEXT,
   FOREIGN KEY (redeemer_id) REFERENCES points (id)
 );
+
+CREATE TABLE polls (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  points INTEGER NOT NULL,
+  option TEXT NOT NULL,
+  poll_name TEXT NOT NULL,
+)

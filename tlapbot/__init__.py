@@ -25,6 +25,11 @@ def create_app(test_config: None = None) -> Flask:
     app.config.from_pyfile('config.py', silent=True)
     app.config.from_pyfile('redeems.py', silent=True)
 
+    # set up polls if they're enabled
+    if app.config['POLLS']:
+        app.config.from_object('tlapbot.defaults.default_polls')
+        app.config.from_pyfile('polls.py', silent=True)
+
     # Make logging work for gunicorn-ran instances of tlapbot.
     if app.config['GUNICORN']:
         gunicorn_logger = logging.getLogger('gunicorn.error')
