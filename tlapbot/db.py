@@ -4,7 +4,7 @@ import click
 from flask import current_app, g, Flask
 from flask.cli import with_appcontext
 
-from tlapbot.redeems import milestone_complete
+from tlapbot.redeems.milestones import milestone_complete
 
 
 def get_db() -> sqlite3.Connection:
