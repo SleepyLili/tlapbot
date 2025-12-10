@@ -2,7 +2,7 @@ from flask import current_app
 from sqlite3 import Error, Connection
 from typing import Tuple, Any
 from tlapbot.owncast_helpers import use_points
-from tlapbot.redeems import is_redeem_active
+from tlapbot.redeems.redeems import is_redeem_active
 
 
 # TODO: add a milestone_exists check?
