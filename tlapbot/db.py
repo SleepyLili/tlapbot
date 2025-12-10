@@ -105,16 +105,24 @@ def refresh_polls() -> bool:
 
 
 def reset_poll(poll: str) -> bool:
+    if poll not in current_app.config['POLLS']:
+        print(f"Failed resetting poll, {poll} not in polls file.")
+        return False
     try:
         db = get_db()
         db.execute(
-            "UPDATE polls SET points = 0 WHERE poll_name = ?",
+            "DELETE FROM polls WHERE poll_name = ?",
             (poll,)
         )
+        for option in current_app.config['POLLS'][poll]:
+            db.execute(
+                "INSERT INTO polls(poll_name, points, option) VALUES(?, ?, ?)",
+                (poll, 0, option)
+            )
         db.commit()
         return True
     except sqlite3.Error as e:
-        current_app.logger.error(f"Error occurred adding a milestone: {e.args[0]}")
+        current_app.logger.error(f"Error occurred resetting poll: {e.args[0]}")
         return False
 
 
@@ -257,8 +265,8 @@ def refresh_polls_command() -> None:
         click.echo('Refreshed polls.')
 
 
-@click.command('reset-polls')
-@click.argument('milestone')
+@click.command('reset-poll')
+@click.argument('poll')
 def reset_poll_command(poll: str) -> None:
     """Resets polls progress back to zero."""
     if reset_poll(poll):

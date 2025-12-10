@@ -62,6 +62,8 @@ def create_app(test_config: None = None) -> Flask:
     app.cli.add_command(db.refresh_milestones_command)
     app.cli.add_command(db.reset_milestone_command)
     app.cli.add_command(db.hard_reset_milestone_command)
+    app.cli.add_command(db.refresh_polls_command)
+    app.cli.add_command(db.reset_poll_command)
 
     # scheduler job for giving points to users
     def proxy_job() -> None:
