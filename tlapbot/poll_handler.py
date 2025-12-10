@@ -6,9 +6,10 @@ from tlapbot.redeems.polls import poll_option_exists, vote_in_poll
 
 
 def handle_poll_vote(message: str, user_id: str) -> None:
-    split_message = message[5:].split(maxsplit=1)
-    if len(split_message < 3):
+    split_message = message[5:].split(maxsplit=2)
+    if len(split_message) < 3:
         send_chat("Can't vote for poll, not enough arguments in message.")
+        return
     poll_name = split_message[0]
     option = split_message[1]
     poll_points = split_message[2]
