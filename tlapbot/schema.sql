@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS counters;
 DROP TABLE IF EXISTS redeem_queue;
 DROP TABLE IF EXISTS milestones;
+DROP TABLE IF EXISTS polls;
 
 CREATE TABLE IF NOT EXISTS points (
   id TEXT PRIMARY KEY,
@@ -34,5 +35,5 @@ CREATE TABLE polls (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   points INTEGER NOT NULL,
   option TEXT NOT NULL,
-  poll_name TEXT NOT NULL,
-)
+  poll_name TEXT NOT NULL
+);
