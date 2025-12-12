@@ -28,11 +28,11 @@ def vote_in_poll(db: Connection, poll_name: str, option: str, points: int) -> bo
     if poll_option_exists(db, poll_name, option):
         try:
             cursor = db.execute(
-                "UPDATE polls SET progress = progress + ? WHERE poll_name = ? and option = ?",
+                "UPDATE polls SET points = points + ? WHERE poll_name = ? and option = ?",
                 (points, poll_name, option)
                 )
             db.commit()
             return True
         except Error as e:
-            current_app.logger.error(f"Error occurred updating milestone: {e.args[0]}")
+            current_app.logger.error(f"Error occurred updating poll: {e.args[0]}")
         return False

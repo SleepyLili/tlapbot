@@ -26,9 +26,14 @@ def create_app(test_config: None = None) -> Flask:
     app.config.from_pyfile('redeems.py', silent=True)
 
     # set up polls if they're enabled
-    if app.config['POLLS']:
+    if app.config['POLLS_ENABLED']:
         app.config.from_object('tlapbot.defaults.default_polls')
         app.config.from_pyfile('polls.py', silent=True)
+
+        for poll in app.config['POLLS']:
+            if ' ' in poll:
+                app.logger.warning(f"Poll '{poll}' has spaces in its name.")
+                app.logger.warning("Poll with spaces are impossible to redeem.")
 
     # Make logging work for gunicorn-ran instances of tlapbot.
     if app.config['GUNICORN']:

@@ -92,11 +92,23 @@ def refresh_counters() -> bool:
     return insert_counters(db)
 
 
+def populate_poll_options(db: sqlite3.Connection, poll: str) -> bool:
+    for option in current_app.config['POLLS'][poll]['options']:
+        db.execute(
+            "INSERT INTO polls(poll_name, points, option) VALUES(?, ?, ?)",
+            (poll, 0, option)
+        )
+    db.commit()
+    return True
+
+
 def refresh_polls() -> bool:
     db = get_db()
-
     try:
         db.execute("DELETE FROM polls")
+        db.commit()
+        for poll in current_app.config['POLLS']:
+            populate_poll_options(db, poll)
         db.commit()
     except sqlite3.Error as e:
         print("Error occurred deleting old counters:", e.args[0])
@@ -114,12 +126,7 @@ def reset_poll(poll: str) -> bool:
             "DELETE FROM polls WHERE poll_name = ?",
             (poll,)
         )
-        for option in current_app.config['POLLS'][poll]:
-            db.execute(
-                "INSERT INTO polls(poll_name, points, option) VALUES(?, ?, ?)",
-                (poll, 0, option)
-            )
-        db.commit()
+        populate_poll_options(db, poll)
         return True
     except sqlite3.Error as e:
         current_app.logger.error(f"Error occurred resetting poll: {e.args[0]}")
