@@ -28,6 +28,7 @@ def handle_poll_vote(message: str, user_id: str) -> None:
     poll_points = int(poll_points)
     if user_points < poll_points:
         send_chat(f"Can't vote in {poll_name} poll, you're voting with more points than you have.")
+        return
     if (vote_in_poll(db, poll_name, option, poll_points) and 
             use_points(db, user_id, poll_points)):
-        send_chat(f"{poll_points} donated to {option} in poll {poll_name}")
+        send_chat(f"{poll_points} points donated to {option} in poll {poll_name}")

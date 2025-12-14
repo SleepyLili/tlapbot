@@ -3,6 +3,7 @@ from tlapbot.db import get_db
 from tlapbot.redeems.redeems import all_active_redeems, pretty_redeem_queue
 from tlapbot.redeems.counters import all_active_counters
 from tlapbot.redeems.milestones import all_active_milestones
+from tlapbot.redeems.polls import all_active_polls, max_poll_votes
 from tlapbot.owncast_helpers import read_all_users_with_username
 from datetime import timezone
 
@@ -22,7 +23,9 @@ def dashboard() -> str:
                            queue=pretty_redeem_queue(db),
                            counters=all_active_counters(db),
                            milestones=all_active_milestones(db),
+                           polls=all_active_polls(db),
                            redeems=all_active_redeems(),
+                           max_poll_votes=max_poll_votes,
                            prefix=current_app.config['PREFIX'],
                            passive=current_app.config['PASSIVE'],
                            username=username,

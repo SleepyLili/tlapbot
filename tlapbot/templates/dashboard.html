@@ -23,7 +23,7 @@
 
         <body>
             <h3>Redeems Dashboard</h3>
-            {% if (username and users ) %}
+            {% if (username and users) %}
             <table>
                 <thead>
                     <tr>
@@ -47,6 +47,31 @@
             {% endif %}
 
             {% if not passive %}
+            {% if polls %}
+
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2">Active polls</th>
+                        <th colspan="2">Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for poll_name, poll_dict in polls.items() %}
+                {% for option in poll_dict.keys() %}
+                {% set max_vote = max_poll_votes(poll_dict) %}
+                    <tr>
+                        <td> {{ poll_name }} </td>
+                        <td> {{ option }} </td>
+                        <td> {{ poll_dict[option] }} </td>
+                        <td> <progress id="file" max={{ max_vote }} value={{ poll_dict[option] }}></progress></td>
+                    </tr>
+                {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% endif %}
             {% if counters %}
             <table>
                 <thead>
