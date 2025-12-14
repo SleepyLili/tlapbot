@@ -59,7 +59,8 @@ def owncast_webhook() -> Any | None:
                 if data["eventData"]["user"]["authenticated"]:
                     remove_duplicate_usernames(db, user_id, display_name)
             elif data["eventData"]["rawBody"].startswith(f"{prefix}vote"):
-                handle_poll_vote(data["eventData"]["rawBody"], user_id)
+                if current_app.config['POLLS_ENABLED']:
+                    handle_poll_vote(data["eventData"]["rawBody"], user_id)
             elif data["eventData"]["rawBody"].startswith(prefix):
                 handle_redeem(data["eventData"]["rawBody"], user_id)
     return data
