@@ -97,6 +97,16 @@ Milestone redeems can be used as long-term community challenges, to start stream
 challenges, decide new games to play, etc.
 
 
+#### Polls
+Poll redeems are viewer votes, choices or answers. A poll can have multiple options,
+and viewers choose which option they're voting for. The dashboard then shows all options, their number of points (=number of votes), and a progress bar indicating which poll option is leading.
+
+Poll redeems can be used to decide what to do next, what game to play, or just a fun viewer interaction where people vote if they like pineapple on pizza.
+
+There is no "limit" or official closure of poll redeems.
+
+Polls only work if `POLLS_ENABLED` is `True` in the config.
+
 ## License & Contributions
 Tlapbot as it currently is does not come with a license. If you're a content creator, streamer, vtuber, etc. I'll be happy to give you permission to use Tlapbot, or make changes that'd fit your stream.
 
@@ -282,6 +292,19 @@ Resets progress on a milestone, regardless of completion status.
 ```bash
 python -m flask hard-reset-milestone milestone
 ```
+
+#### refresh-polls
+Resets progress on all polls, removes old polls not in config, adds new polls from config.
+```bash
+python -m flask refresh-polls
+```
+
+#### reset-poll
+Resets progress on a single poll. (Can be used to add a single poll from config while not resetting the other polls.)
+```bash
+python -m flask reset-poll poll-name
+```
+
 ## Configuration files
 Configuration files should be in the instance folder. For folder installation of tlapbot,
 that's `instance/` from the root of the Github repository.
@@ -309,6 +332,7 @@ This makes the !help output quite long, so it's `False` by default.
 - `GUNICORN` if `True`, sets logging to use gunicorn's logger. Only set this to True if you're using Gunicorn to run tlapbot.
 - `ACTIVE_CATEGORIES` can be an empty list `[]`, or a list of strings of activated categories (i.e. `["chatting", "singing"]`). Redeems with a category included in the list will be active, redeems from other categories will not be active. Redeems with no category are always active.
 - `PREFIX` is a *single character string* that decides what character gets used as a prefix for tlapbot commands. (i.e. you can use `?` instead of `!`). Symbols are recommended. Prefix cannot be longer than one character.
+- `POLLS_ENABLED` decides if polls are enabled. `True` by default. You can disable polls by setting it to `False`.
 #### Example config:
 An example to show what your config like could look like
 ```python
@@ -334,6 +358,7 @@ REDEEMS={
     "inactive": {"price": 100, "type": "note", "info": "Example redeem that is inactive by default", "category": ["inactive"]}
 }
 ```
+
 #### File format
 `redeems.py` is a config file with just a `REDEEMS` key, that assigns a dictionary of redeems to it.
 Each dictionary entry is a redeem, and the dictionary keys are strings that decide the chat command for the redeem.
@@ -350,3 +375,14 @@ Optionally, each redeem can also have `"info"` and `"category"` entries.
 If a category from the list is in `ACTIVE_CATEGORIES` from `config.py`,
 then the redeem will be active. It will not be active if none of the categories
 are in `ACTIVE_CATEGORIES`. Redeems with no category are always active.
+
+### polls.py
+`polls.py` is where you define your custom polls. Tlapbot will work without it, and you don't need to supply your file if you turned off polls.
+
+(`polls.py` should be in the instance folder: `instance/polls.py` for folder install.)
+```python
+POLLS={
+    "favourite_food2": {"info": "Vote for your favourite food.", "options": ["pizza", "soup", "curry", "schnitzel"]},
+    "test_other_thing": {"info": "thing", "options": ["no", "yes"]}
+}
+```
